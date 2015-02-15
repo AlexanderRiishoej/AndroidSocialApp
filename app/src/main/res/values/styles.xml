@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- LinearLayoutStyle -->
+    <style name="PrimaryLinearLayoutLoginStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="SubLinearLayoutLoginStyle" parent="PrimaryLinearLayoutLoginStyle">
+    <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="LinearLayoutHorizontalLoginStyle" parent="SubLinearLayoutLoginStyle">
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <!-- TextViewStyle -->
+    <style name="TextViewLoginStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <!-- ButtonStyle -->
+    <style name="ButtonRaisedLoginStyle">
+    <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:minWidth">88dp</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
+
+    <style name="ButtonFlatLoginStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:minWidth">88dp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:borderlessButtonStyle">?android:attr/borderlessButtonStyle</item>
+    </style>
+
+    <!-- DividerStyle -->
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">5dp</item>
+        <item name="android:background">@color/dividers</item>
+    </style>
+
+    <style name="TextFieldDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">8dp</item>
+    </style>
+
+    <style name="DividerSmallLineStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/dividers</item>
+    </style>
+
+    <style name="DividerSmallLineLightThemeStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:background">@color/dividers_light_theme</item>
+    </style>
+
+    <style name="bigDivider">
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    <!-- EditText -->
+    <style name="EditTextLoginStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/secondary_text_icons_light_theme</item>
+        <item name="android:fontFamily">sans-serif-regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <!-- ImageView -->
+    <style name="ImageViewLoginStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    --------------------------------------------------------------------------------------------------------------------------------
+    <!-- Base themes -->
+    <style name="AppTheme" parent="AppTheme.Base" />
+
+    <style name="AppThemeIndigo" parent="AppTheme.Indigo" />
+
+    <style name="AppThemeTeal" parent="AppTheme.Teal" />
+
+    <style name="ToolbarTealTheme" parent="Base.Widget.AppCompat.Toolbar.Teal" />
+
+    <style name="ToolbarPopupTealTheme" parent="Base.Widget.AppCompat.Toolbar.Popup.Teal" />
+
+    <style name="customTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    --------------------------------------------------------------------------------------------------------------------------------
+    <!-- Theme for MaterialDark -->
+    <style name="AppTheme.Base" parent="Theme.AppCompat">
+        <!--   your app branding color for the app bar -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">@color/totally_black</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:textViewStyle">@style/customTextViewStyle</item>
+    </style>
+    --------------------------------------------------------------------------------------------------------------------------------
+    <!-- Theme for Material Blue -->
+    <style name="AppTheme.Indigo" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/indigo_500</item>
+        <item name="colorPrimaryDark">@color/indigo_700</item>
+        <item name="android:windowBackground">@color/indigo_400</item>
+        <item name="android:textColorPrimary">@color/text</item>
+        <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
+        <item name="colorAccent">@color/secondary_text_icons</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:textViewStyle">@style/customTextViewStyle</item>
+    </style>
+    --------------------------------------------------------------------------------------------------------------------------------
+    <!-- Theme for Material Teal -->
+    <!-- Useful guide: http://www.murrayc.com/permalink/2014/10/28/android-changing-the-toolbars-text-color-and-overflow-icon-color/ -->
+    <style name="AppTheme.Teal" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/teal_500</item>
+        <item name="colorPrimaryDark">@color/teal_700</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColorPrimary">@color/text_light_theme</item>
+        <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
+        <item name="colorAccent">@color/secondary_text_icons_light_theme</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:textViewStyle">@style/customTextViewStyle</item>
+    </style>
+
+    <style name="Base.Widget.AppCompat.Toolbar.Teal" parent="Theme.AppCompat.NoActionBar">
+        <!-- android:textColorPrimary is the  color of the title text in the Toolbar, in the Theme.AppCompat theme:  -->
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:textViewStyle">@style/customTextViewStyle</item>
+        <!-- android:textColorPrimaryInverse is the  color of the title text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
+        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+
+        <!-- android:actionMenuTextColor is the color of the text of action (menu) items in the Toolbar, at least in the Theme.AppCompat theme.
+              For some reason, they already get the textColorPrimary when running on API 21, but not on older versions of Android, so this is
+              only necessary to support older Android versions.-->
+        <item name="actionMenuTextColor">@color/text</item>
+
+        <!-- android:textColorSecondary is the color of the menu overflow icon (three vertical dots) -->
+        <item name="android:textColorSecondary">@color/secondary_text_icons</item>
+
+        <!-- This would set the toolbar's background color, but setting this also changes the popup menu's background, even if we define popupTheme for our <Toolbar> -->
+        <!--<item name="android:background">@color/teal_500</item>-->
+    </style>
+
+    <style name="Base.Widget.AppCompat.Toolbar.Popup.Teal" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Background of popup item -->
+        <item name="android:colorBackground">@color/white</item>
+        <!-- Color of popup item text -->
+        <item name="android:textColorPrimary">@color/text_light_theme</item>
+    </style>
+    --------------------------------------------------------------------------------------------------------------------------------
+
+</resources>

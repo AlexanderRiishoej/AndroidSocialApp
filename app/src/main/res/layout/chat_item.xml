@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:drawableRight="@drawable/arrow"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:text="TextView"
+    android:textColor="@color/text_light_theme"
+    android:textSize="18sp"
+    android:drawableLeft="@drawable/ic_online"
+    android:drawablePadding="10dp"
+    />
