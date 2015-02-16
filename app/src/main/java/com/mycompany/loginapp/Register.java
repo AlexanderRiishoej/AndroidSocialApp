@@ -35,8 +35,8 @@ public class Register extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarIcon(R.drawable.ic_menu_white_18dp);
         setActionBarTitle(R.string.title_activity_register);
+        setDisplayHomeAsUpEnabled(true);
 
         user = (EditText) findViewById(R.id.Username);
         pwd = (EditText) findViewById(R.id.Password);

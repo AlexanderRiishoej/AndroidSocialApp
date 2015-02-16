@@ -2,6 +2,7 @@ package com.mycompany.loginapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -22,7 +23,9 @@ public class UserActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.account);
+        setActionBarTitle(R.string.account);
+        setActionBarIcon(R.drawable.ic_menu_white_18dp);
+        setDisplayHomeAsUpEnabled(false);
 
         // Get the TexView and assign the username to it
         user = (TextView) findViewById(R.id.signedInAs);
@@ -51,6 +54,12 @@ public class UserActivity extends BaseActivity {
         switch (id){
             case R.id.action_chat:
                 startActivity(new Intent(UserActivity.this, UserList.class));
+                return true;
+            case R.id.action_logout:
+                ParseUser.logOut();
+                //this.finish();
+                startActivity(new Intent(UserActivity.this, Login.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

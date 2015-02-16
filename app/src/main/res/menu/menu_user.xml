@@ -5,6 +5,16 @@
     <item
         android:id="@+id/action_chat"
         android:title="@string/chat"
-        android:orderInCategory="0"
+        android:orderInCategory="1"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_logout"
+        android:title="@string/logout"
+        android:orderInCategory="2"
+        app:showAsAction="withText|ifRoom" />
+    <item
+        android:id="@+id/action_test"
+        android:title="test"
+        android:orderInCategory="3"
         app:showAsAction="withText|ifRoom" />
 </menu>

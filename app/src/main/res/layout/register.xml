@@ -74,7 +74,6 @@
                             android:layout_toRightOf="@+id/UsernameImage"
                             android:hint="@string/username">
 
-                            <requestFocus />
                         </EditText>
                     </RelativeLayout>
                 </LinearLayout>
@@ -104,7 +103,6 @@
                             android:hint="@string/password"
                             android:inputType="textPassword">
 
-                            <requestFocus />
                         </EditText>
                     </RelativeLayout>
                 </LinearLayout>

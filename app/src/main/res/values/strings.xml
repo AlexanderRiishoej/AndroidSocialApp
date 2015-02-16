@@ -3,10 +3,10 @@
 
     <string name="app_name">Sign in</string>
     <string name="action_settings">Settings</string>
-    <string name="logon">Logon</string>
+    <string name="logon">Log on</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="login">Login</string>
+    <string name="login">Log in</string>
     <string name="register">Register</string>
     <string name="status_text">Status text</string>
     <string name="login_form">Login form</string>
@@ -36,8 +36,15 @@
     <string name="msg_no_user_found">No users found for chat!</string>
     <string name="title_activity_register">Register</string>
     <string name="hello_world">Hello world!</string>
+
     <string name="title_activity_user">UserActivity</string>
     <string name="chat">Chat</string>
     <string name="title_activity_user_list">UserList</string>
+    <string name="logout">Log out</string>
+    <string name="title_activity_test">Test</string>
+    <string name="title_activity_reset_password">Reset password</string>
+    <string name="reset_password">Reset password</string>
+    <string name="reset_pw_description">In order to reset your password, type in your email in the field below.</string>
+    <string name="err_reset_pw">Error occurred while resetting password:</string>
 
 </resources>

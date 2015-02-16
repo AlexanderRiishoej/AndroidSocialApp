@@ -20,7 +20,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            // Sets the ToolBar's title appearance
+            toolbar.setTitleTextAppearance(this, R.style.customTextViewStyle);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -32,5 +34,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected void setActionBarTitle(int titleId) {
         toolbar.setTitle(titleId);
+    }
+
+    protected void setDisplayHomeAsUpEnabled(boolean isEnabled){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(isEnabled);
     }
 }

@@ -42,7 +42,8 @@ public class Login extends BaseActivity {
         super.onCreate(savedInstanceState);
         chatApp = new ChatApp();
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
-        setActionBarIcon(R.drawable.ic_menu_white_18dp);
+        setDisplayHomeAsUpEnabled(false);
+        setActionBarTitle(R.string.app_name);
 
         user = (EditText) findViewById(R.id.Username);
         pwd = (EditText) findViewById(R.id.Password);
@@ -69,9 +70,18 @@ public class Login extends BaseActivity {
 //        }
     }
 
+    /**
+     * Called when Activity starts and resumes
+     */
     @Override
     protected int getLayoutResource() {
         return R.layout.login_form;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CurrentUserLoggedIn();
     }
 
     @Override
@@ -87,7 +97,7 @@ public class Login extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (item.getItemId()) {
+        switch (id) {
             case android.R.id.home:
                 //drawer.openDrawer(Gravity.START);
                 return true;
@@ -98,6 +108,11 @@ public class Login extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Logs the User in.
+     * If User credentials are wrong an error is shown with Parse.com's error description.
+     * Finishes the current activity with call, finish()
+     */
     public void LoginPressed(View view) {
         editText = (EditText) findViewById(R.id.status_text);
         editText.setText("Login pressed!");
@@ -111,6 +126,7 @@ public class Login extends BaseActivity {
         }
         final ProgressDialog dia = ProgressDialog.show(this, null,
                 getString(R.string.alert_wait));
+
         ParseUser.logInInBackground(u, p, new LogInCallback() {
 
             @Override
@@ -133,14 +149,36 @@ public class Login extends BaseActivity {
         });
     }
 
-    // If Register Button is pressed.
+    /**
+     * Starts the Register activity.
+     */
     public void RegisterPressed(View view) {
         editText = (EditText) findViewById(R.id.status_text);
         editText.setText("Register pressed!");
 
         // If Register Button is pressed - Start the activity for the Register class
         //startActivityForResult(new Intent(this, Register.class), 10);
-        startActivityForResult(new Intent(this, Register.class), 10);
+        startActivity(new Intent(this, Register.class));
+    }
+
+    /**
+     * Whenever you use any signup or login methods, the user is cached on disk.
+     * You can treat this cache as a session, and automatically assume the user is logged in
+     */
+    private void CurrentUserLoggedIn(){
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            UserActivity.username = currentUser;
+            UserList.user = currentUser;
+            startActivityForResult(new Intent(this, UserActivity.class), 9);
+        } else {
+            return;
+            // show the signup or login screen
+        }
+    }
+
+    public void ForgotPassword(View view){
+        startActivity(new Intent(Login.this, ResetPassword.class));
     }
 
     /* (non-Javadoc)
@@ -153,7 +191,6 @@ public class Login extends BaseActivity {
             Log.d("Result_OK", "Result is ok");
             //finish();
         }
-
     }
 //
 //    private void SetUpActionBar() {

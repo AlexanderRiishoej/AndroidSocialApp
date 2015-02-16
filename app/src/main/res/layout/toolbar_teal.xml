@@ -4,7 +4,7 @@
     android:id="@+id/toolbar_teal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
     android:background="@color/teal_500"
-    app:title="@string/logon"
     app:theme="@style/ToolbarTealTheme"
     app:popupTheme="@style/ToolbarPopupTealTheme" />

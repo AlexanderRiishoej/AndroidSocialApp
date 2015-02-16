@@ -74,10 +74,7 @@
                             style="@style/EditTextLoginStyle"
                             android:layout_toRightOf="@+id/PasswordImage"
                             android:hint="@string/password"
-                            android:inputType="textPassword">
-
-                            <requestFocus />
-                        </EditText>
+                            android:inputType="textPassword">                        </EditText>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -114,7 +111,8 @@
                     android:layout_gravity="right"
                     android:minWidth="88dp"
                     android:text="@string/forgot_password"
-                    android:textColor="@color/text_light_theme" />
+                    android:textColor="@color/text_light_theme"
+                    android:onClick="ForgotPassword"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
