@@ -20,8 +20,8 @@ public abstract class BaseActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            // Sets the ToolBar's title appearance
-            toolbar.setTitleTextAppearance(this, R.style.customTextViewStyle);
+            setTitle(null);
+            toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
             //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }

@@ -1,7 +1,18 @@
 package com.mycompany.loginapp;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.AutoTransition;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionSet;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +30,7 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class UserList extends BaseActivity {
 
     /**
@@ -36,6 +47,10 @@ public class UserList extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         updateUserStatus(true);
+        getWindow().setEnterTransition(makeEnterTransition());
+        getWindow().setExitTransition(makeExitTransition());
+        getWindow().setReenterTransition(makeReenterTransition());
+        ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
     }
 
     @Override
@@ -123,11 +138,14 @@ public class UserList extends BaseActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> arg0,
                                                         View arg1, int pos, long arg3) {
-//                                    startActivity(new Intent(UserList.this,
-//                                            Chat.class).putExtra(
-//                                            Const.EXTRA_DATA, userList.get(pos)
-//                                                    .getUsername()));
-                                    Utilities.showDialog(UserList.this, "Hey bro");
+                                    startActivity(new Intent(UserList.this,
+                                            Chat.class).putExtra(
+                                            Constants.EXTRA_DATA, userList.get(pos)
+                                                    .getUsername()));
+                                    Log.d("VIEW: ", arg1.toString());
+                                    Log.d("POSITION: ", "" + pos);
+                                    Log.d("LONG: ", "" + arg3);
+                                    //Utilities.showDialog(UserList.this, "Hey bro");
                                 }
                             });
                         } else {
@@ -139,6 +157,46 @@ public class UserList extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    private Transition makeEnterTransition() {
+        TransitionSet enterTransition = new TransitionSet();
+
+        Transition t = new Slide(Gravity.TOP).setDuration(600);
+        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+        enterTransition.excludeTarget(R.id.toolbar_teal, true);
+        enterTransition.addTransition(t);
+
+        Transition tt = new Fade();
+        enterTransition.addTransition(tt).setDuration(1000);
+        return enterTransition;
+    }
+
+    private Transition makeExitTransition() {
+        TransitionSet exitTransition = new TransitionSet();
+
+        exitTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+        exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
+        exitTransition.excludeTarget(R.id.toolbar_teal, true);
+        Transition fade = new Fade();
+        exitTransition.addTransition(fade);
+
+        exitTransition.setDuration(500);
+        return exitTransition;
+    }
+
+    private Transition makeReenterTransition() {
+        TransitionSet enterTransition = new TransitionSet();
+        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+        enterTransition.excludeTarget(R.id.toolbar_teal, true);
+
+        Transition autoTransition = new AutoTransition().setDuration(700);
+        Transition fade = new Fade().setDuration(800);
+        enterTransition.addTransition(fade);
+        enterTransition.addTransition(autoTransition);
+        return enterTransition;
     }
 
     /**

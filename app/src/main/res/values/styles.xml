@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Relative layout style -->
+    <style name="BaseRelativeLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="RelativeLayoutInnerDesignStyle" parent="BaseRelativeLayoutStyle">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RelativeLayoutOuterDesignStyle" parent="BaseRelativeLayoutStyle">
+        <item name="android:layout_height">@dimen/relative_layout_height</item>
+    </style>
+
+    <style name="RelativeLayoutSubHeaderDesignStyle" parent="BaseRelativeLayoutStyle">
+        <item name="android:layout_height">@dimen/subheader_layout_height</item>
+
+        <item name="android:orientation">vertical</item>
+    </style>
     <!-- LinearLayoutStyle -->
     <style name="PrimaryLinearLayoutLoginStyle">
         <item name="android:layout_width">match_parent</item>
@@ -9,7 +27,7 @@
     </style>
 
     <style name="SubLinearLayoutLoginStyle" parent="PrimaryLinearLayoutLoginStyle">
-    <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="LinearLayoutHorizontalLoginStyle" parent="SubLinearLayoutLoginStyle">
@@ -17,90 +35,197 @@
     </style>
     <!-- TextViewStyle -->
     <style name="TextViewLoginStyle">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/text</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:fontFamily">sans-serif-regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <!-- Label -->
+    <style name="TextViewLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:fontFamily">sans-serif-regular</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="android:layout_marginLeft">@dimen/keyLine2</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="TextViewSubHeaderStyle">
+        <item name="android:id">@id/sub_header_text_view</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
 
     <!-- ButtonStyle -->
     <style name="ButtonRaisedLoginStyle">
-    <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">36dp</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:height">48dp</item>
         <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">48dp</item>
         <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/selector</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <!--<item name="android:paddingTop">@dimen/button_vertical_padding</item>-->
+        <!--<item name="android:paddingBottom">@dimen/button_vertical_padding</item>-->
     </style>
 
     <style name="ButtonFlatLoginStyle">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:height">36dp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <!--<item name="android:paddingLeft">@dimen/button_horizontal_padding</item>-->
+        <!--<item name="android:paddingRight">@dimen/button_horizontal_padding</item>-->
+        <!--<item name="android:paddingTop">@dimen/button_vertical_padding</item>-->
+        <!--<item name="android:paddingBottom">@dimen/button_vertical_padding</item>-->
         <item name="android:minWidth">88dp</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:borderlessButtonStyle">?android:attr/borderlessButtonStyle</item>
+        <item name="android:selectableItemBackground">?android:attr/selectableItemBackground</item>
     </style>
 
     <!-- DividerStyle -->
-    <style name="Divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">5dp</item>
-        <item name="android:background">@color/dividers</item>
-    </style>
-
-    <style name="TextFieldDivider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">8dp</item>
-    </style>
-
-    <style name="DividerSmallLineStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/dividers</item>
-    </style>
-
     <style name="DividerSmallLineLightThemeStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:layout_margin">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginLeft">@dimen/keyLine2</item>
+        <item name="android:background">@color/dividers_light_theme</item>
+        <item name="android:thickness">1dp</item>
+    </style>
+
+    <style name="divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <!--<item name="android:layout_marginLeft">@dimen/keyLine2</item>-->
         <item name="android:background">@color/dividers_light_theme</item>
     </style>
 
-    <style name="bigDivider">
-        <item name="android:layout_height">64dp</item>
+    <style name="divider_margin_bot">
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <!--<item name="android:layout_marginTop">8dp</item>-->
+        <!--<item name="android:layout_marginLeft">@dimen/keyLine2</item>-->
+        <item name="android:background">@color/dividers_light_theme</item>
+        <item name="android:thickness">1dp</item>
     </style>
+
+    <style name="divider_margin_top">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <!--<item name="android:layout_marginTop">8dp</item>-->
+        <!--<item name="android:layout_marginLeft">@dimen/keyLine2</item>-->
+        <item name="android:background">@color/dividers_light_theme</item>
+        <item name="android:thickness">1dp</item>
+    </style>
+
+    <style name="dividerInvisible">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginLeft">@dimen/keyLine2</item>
+        <item name="android:background">@color/dividers_light_theme</item>
+    </style>
+
     <!-- EditText -->
     <style name="EditTextLoginStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/secondary_text_icons_light_theme</item>
+        <!--<item name="android:textColor">@color/secondary_text_icons_light_theme</item>-->
         <item name="android:fontFamily">sans-serif-regular</item>
         <item name="android:textSize">16sp</item>
         <item name="android:singleLine">true</item>
+        <item name="android:layout_marginLeft">@dimen/keyLine2</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
 
     <!-- ImageView -->
     <style name="ImageViewLoginStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">15dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
     </style>
 
 
     <!-- TextStyle used for the app -->
     <style name="customTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:fontFamily">sans-serif-regular</item>
+        <!--<item name="android:fontFamily">sans-serif-condensed</item>-->
     </style>
 
     <!-- TextStyle used for the app -->
     <style name="customTextTitleViewStyle" parent="Base.Widget.AppCompat.Toolbar">
-        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:fontFamily">sans-serif-regular</item>
+    </style>
+
+    <!-- Chat........................................................................................... -->
+    <style name="editext_graybg" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/editext_bg_gray</item>
+        <item name="android:drawablePadding">@dimen/pad_10dp</item>
+        <item name="android:ems">10</item>
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:paddingLeft">@dimen/pad_10dp</item>
+        <item name="android:paddingRight">@dimen/pad_10dp</item>
+        <item name="android:textSize">@dimen/txt_16sp</item>
+    </style>
+    <style name="btn_white_large" parent="@style/btn">
+        <item name="android:background">@drawable/green_btn</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/txt_18sp</item>
+    </style>
+
+    <style name="btn" parent="android:Widget.Holo.Light.Button">
+        <item name="android:minHeight">1dp</item>
+        <item name="android:minWidth">1dp</item>
+    </style>
+
+    <style name="edittext_msg" parent="android:Widget.Holo.Light.EditText">
+        <item name="android:background">@drawable/edittext_bg</item>
+        <item name="android:ems">10</item>
+        <item name="android:imeActionId">100</item>
+        <item name="android:imeOptions">actionSend</item>
+        <item name="android:inputType">text</item>
+        <item name="android:layout_marginLeft">@dimen/pad_5dp</item>
+        <item name="android:layout_marginRight">@dimen/pad_5dp</item>
+        <item name="android:paddingLeft">@dimen/pad_5dp</item>
+        <item name="android:paddingRight">@dimen/pad_5dp</item>
+        <item name="android:textColorHint">@color/secondary_text_icons_light_theme</item>
+        <item name="android:textSize">@dimen/txt_16sp</item>
+    </style>
+
+    <style name="editext_white" parent="android:Widget.Holo.Light.EditText">
+        <item name="android:background">@color/white</item>
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:paddingBottom">@dimen/pad_10dp</item>
+        <item name="android:paddingTop">@dimen/pad_10dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/txt_14sp</item>
+    </style>
+    <style name="btn_green_white_bg" parent="@style/btn">
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingBottom">@dimen/pad_10dp</item>
+        <item name="android:paddingRight">@dimen/pad_15dp</item>
+        <item name="android:paddingTop">@dimen/pad_10dp</item>
+        <item name="android:textColor">@color/green_500</item>
+        <item name="android:textSize">@dimen/txt_16sp</item>
     </style>
 </resources>

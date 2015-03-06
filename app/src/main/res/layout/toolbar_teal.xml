@@ -4,7 +4,21 @@
     android:id="@+id/toolbar_teal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?attr/actionBarSize"
+    android:height="@dimen/toolbar_height"
     android:background="@color/teal_500"
-    app:theme="@style/ToolbarTealTheme"
-    app:popupTheme="@style/ToolbarPopupTealTheme" />
+    android:elevation="4dp"
+    android:minHeight="?attr/actionBarSize"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="72dp"
+    app:navigationIcon="@drawable/ic_menu_white_24dp"
+    app:popupTheme="@style/ToolbarPopupTealTheme"
+    app:theme="@style/ToolbarTealTheme">
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start|center"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+</android.support.v7.widget.Toolbar>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- The main content view -->
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar_teal"
+                layout="@layout/toolbar_teal" />
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@color/white"
+                android:dividerHeight="@dimen/pad_5dp"
+                android:fastScrollEnabled="true"
+                android:paddingBottom="@dimen/pad_10dp"
+                android:paddingTop="@dimen/pad_10dp"
+                tools:listitem="@layout/chat_item_receive" />
+
+            <View style="@style/divider_margin_bot" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txt"
+                    style="@style/EditTextLoginStyle"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:hint="Write a message..."/>
+
+                <View style="@style/dividerInvisible"
+                    android:layout_marginBottom="0dp"/>
+
+                <Button
+                    android:id="@+id/btnSend"
+                    style="@style/ButtonFlatLoginStyle"
+                    android:layout_gravity="end"
+                    android:onClick="sendMessage"
+                    android:text="Send"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+                <View style="@style/divider_margin_top" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/navList"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start|start"
+        android:background="#ffeeeeee" />
+</android.support.v4.widget.DrawerLayout>

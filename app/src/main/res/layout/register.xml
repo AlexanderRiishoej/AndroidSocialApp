@@ -1,151 +1,188 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <!-- The main content view -->
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            style="@style/PrimaryLinearLayoutLoginStyle">
+        <LinearLayout
+            style="@style/PrimaryLinearLayoutLoginStyle"
+            tools:context=".MainActivity">
 
             <include
                 android:id="@+id/toolbar_teal"
                 layout="@layout/toolbar_teal" />
 
-            <LinearLayout
-                style="@style/PrimaryLinearLayoutLoginStyle"
-                android:layout_margin="10dp"
-                tools:context=".MainActivity">
+            <RelativeLayout
+                android:id="@+id/view_group"
+                style="@style/RelativeLayoutSubHeaderDesignStyle"
+                android:background="@color/divider">
 
-                <View style="@style/bigDivider" />
-
-                <LinearLayout
-                    style="@style/SubLinearLayoutLoginStyle"
-                    android:layout_margin="5dp">
-
-                    <View style="@style/TextFieldDivider" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/EmailImage"
-                            style="@style/ImageViewLoginStyle"
-                            android:layout_alignBottom="@+id/Email"
-                            android:src="@drawable/ic_account_box_grey600_24dp" />
-
-                        <EditText
-                            android:id="@+id/Email"
-                            style="@style/EditTextLoginStyle"
-                            android:layout_toRightOf="@+id/EmailImage"
-                            android:hint="@string/email"
-                            android:inputType="textEmailAddress">
-
-                            <requestFocus />
-                        </EditText>
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/SubLinearLayoutLoginStyle"
-                    android:layout_margin="5dp">
-
-                    <TextView style="@style/TextViewLoginStyle" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/UsernameImage"
-                            style="@style/ImageViewLoginStyle"
-                            android:layout_alignBottom="@+id/Username"
-                            android:src="@drawable/ic_timer_auto_grey600_24dp" />
-
-                        <EditText
-                            android:id="@+id/Username"
-                            style="@style/EditTextLoginStyle"
-                            android:layout_toRightOf="@+id/UsernameImage"
-                            android:hint="@string/username">
-
-                        </EditText>
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/SubLinearLayoutLoginStyle"
-                    android:layout_margin="5dp">
-
-                    <TextView style="@style/TextViewLoginStyle" />
-
-                    <View style="@style/TextFieldDivider" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/PasswordImage"
-                            style="@style/ImageViewLoginStyle"
-                            android:layout_alignBottom="@+id/Password"
-                            android:src="@drawable/ic_lock_grey600_24dp" />
-
-                        <EditText
-                            android:id="@+id/Password"
-                            style="@style/EditTextLoginStyle"
-                            android:layout_toRightOf="@+id/PasswordImage"
-                            android:hint="@string/password"
-                            android:inputType="textPassword">
-
-                        </EditText>
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <View style="@style/TextFieldDivider" />
-
-                <RelativeLayout
+                <TextView
+                    style="@style/TextViewSubHeaderStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp">
+                    android:layout_centerVertical="true"
+                    android:text="@string/sign_into_account" />
+            </RelativeLayout>
 
-                    <Button
-                        android:id="@+id/Register"
-                        style="@style/ButtonRaisedLoginStyle"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/selector"
-                        android:onClick="register"
-                        android:text="@string/register" />
-                </RelativeLayout>
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/main_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="5dp">
 
-                <View style="@style/DividerSmallLineLightThemeStyle" />
+                <LinearLayout style="@style/PrimaryLinearLayoutLoginStyle">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/relative_layout_height"
+                        android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        <TextView
+                            style="@style/TextViewLabel"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:text="Email address" />
 
-                    <EditText
-                        android:id="@+id/status_text"
-                        style="@style/EditTextLoginStyle"
-                        android:layout_alignParentBottom="true"
-                        android:inputType="text"
-                        android:text="@string/status_text"
-                        android:textAlignment="center" />
-                </RelativeLayout>
-            </LinearLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/EmailImage"
+                                style="@style/ImageViewLoginStyle"
+                                android:layout_centerVertical="true"
+                                android:contentDescription="@string/username"
+                                android:src="@drawable/ic_action_email" />
+
+                            <EditText
+                                android:id="@+id/Email"
+                                style="@style/EditTextLoginStyle"
+                                android:layout_centerVertical="true"
+                                android:hint="Your email"
+                                android:inputType="textEmailAddress"
+                                android:transitionName="@string/transition_username">
+
+                                <requestFocus />
+                            </EditText>
+                        </RelativeLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/relative_layout_height"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextViewLabel"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:text="@string/username" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/UsernameImage"
+                                style="@style/ImageViewLoginStyle"
+                                android:layout_centerVertical="true"
+                                android:contentDescription="@string/username"
+                                android:src="@drawable/ic_person_grey600_24dp" />
+
+                            <EditText
+                                android:id="@+id/Username"
+                                style="@style/EditTextLoginStyle"
+                                android:layout_centerVertical="true"
+                                android:hint="@string/username"
+                                android:transitionName="@string/transition_username">
+
+                                <requestFocus />
+                            </EditText>
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/relative_layout_height"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextViewLabel"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="3dp"
+                            android:text="@string/password" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/PasswordImage"
+                                style="@style/ImageViewLoginStyle"
+                                android:layout_centerVertical="true"
+                                android:contentDescription="@string/password"
+                                android:src="@drawable/ic_lock_grey600_24dp" />
+
+                            <EditText
+                                android:id="@+id/Password"
+                                style="@style/EditTextLoginStyle"
+                                android:layout_centerVertical="true"
+                                android:hint="@string/password"
+                                android:inputType="textPassword"
+                                android:transitionName="@string/transition_password" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <View style="@style/dividerInvisible" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/login_buttons"
+                        style="@style/RelativeLayoutInnerDesignStyle"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+                        <Button
+                            android:id="@+id/Register"
+                            style="@style/ButtonRaisedWhiteLoginStyle"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:onClick="register"
+                            android:text="@string/register" />
+                    </RelativeLayout>
+
+                    <!--<View style="@style/divider" />-->
+
+                    <!--<Button-->
+                        <!--style="@style/ButtonFlatLoginStyle"-->
+                        <!--android:minWidth="88dp"-->
+                        <!--android:onClick="ForgotPassword"-->
+                        <!--android:text="@string/forgot_password"-->
+                        <!--android:layout_gravity="end"/>-->
+
+                    <!--<View style="@style/divider" />-->
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
-    </FrameLayout>
 
+    </FrameLayout>
     <!-- The navigation drawer -->
     <ListView
         android:id="@+id/navList"
-        android:layout_width="200dp"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
-        android:layout_gravity="left|start"
+        android:layout_gravity="start|start"
         android:background="#ffeeeeee" />
 </android.support.v4.widget.DrawerLayout>

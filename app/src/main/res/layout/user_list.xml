@@ -13,5 +13,4 @@
         android:dividerHeight="1dp"
         tools:listitem="@layout/chat_item" >
     </ListView>
-
 </LinearLayout>

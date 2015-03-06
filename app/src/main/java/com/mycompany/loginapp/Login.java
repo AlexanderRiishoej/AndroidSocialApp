@@ -1,16 +1,28 @@
 package com.mycompany.loginapp;
 
 import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.AutoTransition;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -24,9 +36,6 @@ import com.parse.ParseUser;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Login extends BaseActivity {
 
-    ChatApp chatApp;
-
-    EditText editText;
     /**
      * The username edittext.
      */
@@ -37,37 +46,22 @@ public class Login extends BaseActivity {
      */
     private EditText pwd;
 
+    private AQuery aq;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        chatApp = new ChatApp();
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
-        setDisplayHomeAsUpEnabled(false);
-        setActionBarTitle(R.string.app_name);
-
+        this.getWindow().setReenterTransition(makeReenterTransition());
+        this.getWindow().setEnterTransition(makeReenterTransition());
+        ActivityOptions.makeSceneTransitionAnimation(Login.this).toBundle();
+        //setDisplayHomeAsUpEnabled(false);
+        //setActionBarIcon(R.drawable.ic_menu_white_24dp);
+        aq = new AQuery(this);
         user = (EditText) findViewById(R.id.Username);
         pwd = (EditText) findViewById(R.id.Password);
-//        if (toolbar != null) {
-////            setSupportActionBar(toolbar);
-////            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//                @Override
-//                public boolean onMenuItemClick(MenuItem item) {
-//                    // Handle the menu item
-//                    int id = item.getItemId();
-//
-//                    //noinspection SimplifiableIfStatement
-//                    if (id == R.id.action_settings) {
-//                        return true;
-//                    }
-//                    return true;
-//                }
-//            });
-//
-//            // Inflate a menu to be displayed in the toolbar
-//            toolbar.inflateMenu(R.menu.menu_main);
-//        }
+        //Used to store values from your app and accessing them later
+        user.setText(MainApp.getDefaultSharedPreferences().getString("username", ""));
+        pwd.setText(MainApp.getDefaultSharedPreferences().getString("password", ""));
     }
 
     /**
@@ -76,12 +70,6 @@ public class Login extends BaseActivity {
     @Override
     protected int getLayoutResource() {
         return R.layout.login_form;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CurrentUserLoggedIn();
     }
 
     @Override
@@ -114,10 +102,6 @@ public class Login extends BaseActivity {
      * Finishes the current activity with call, finish()
      */
     public void LoginPressed(View view) {
-        editText = (EditText) findViewById(R.id.status_text);
-        editText.setText("Login pressed!");
-        //Utilities.showDialog(this, getString(R.string.err_login));
-
         String u = user.getText().toString();
         String p = pwd.getText().toString();
         if (u.length() == 0 || p.length() == 0) {
@@ -136,8 +120,14 @@ public class Login extends BaseActivity {
                     // Start the logged in activity with the name of the person who logged in
                     UserActivity.username = pu;
                     UserList.user = pu;
+                    TextView t = (TextView)findViewById(R.id.username_textView);
+                    t.setTransitionName("bob");
                     startActivity(new Intent(Login.this, UserActivity.class));
-                    finish();
+//                    startActivity(new Intent(Login.this, UserActivity.class), ActivityOptions.makeSceneTransitionAnimation(
+//                            Login.this).toBundle());
+                    //getWindow().setExitTransition(makeExitTransition());
+                    //ActivityOptions.makeSceneTransitionAnimation(Login.this).toBundle();
+                    Login.this.finishAfterTransition();
                 } else {
                     Utilities.showDialog(
                             Login.this,
@@ -153,12 +143,7 @@ public class Login extends BaseActivity {
      * Starts the Register activity.
      */
     public void RegisterPressed(View view) {
-        editText = (EditText) findViewById(R.id.status_text);
-        editText.setText("Register pressed!");
-
-        // If Register Button is pressed - Start the activity for the Register class
-        //startActivityForResult(new Intent(this, Register.class), 10);
-        startActivity(new Intent(this, Register.class));
+        startActivity(new Intent(this, Register.class), ActivityOptions.makeSceneTransitionAnimation(Login.this).toBundle());
     }
 
     /**
@@ -171,14 +156,19 @@ public class Login extends BaseActivity {
             UserActivity.username = currentUser;
             UserList.user = currentUser;
             startActivityForResult(new Intent(this, UserActivity.class), 9);
+            this.finishAfterTransition();
         } else {
             return;
             // show the signup or login screen
         }
     }
 
+    /**
+     * If a user wants to reset a password
+     * @param view
+     */
     public void ForgotPassword(View view){
-        startActivity(new Intent(Login.this, ResetPassword.class));
+        startActivity(new Intent(Login.this, ResetPassword.class), ActivityOptions.makeSceneTransitionAnimation(Login.this).toBundle());
     }
 
     /* (non-Javadoc)
@@ -192,12 +182,76 @@ public class Login extends BaseActivity {
             //finish();
         }
     }
+
+    private Transition makeExitTransition() {
+        TransitionSet exitTransition = new TransitionSet();
+
+//        RelativeLayout subHeader = (RelativeLayout)findViewById(R.id.view_group);
+//        RelativeLayout loginButtons = (RelativeLayout)findViewById(R.id.login_buttons);
+//        RelativeLayout forgotPassword = (RelativeLayout)findViewById(R.id.login_forgot_password);
+//        subHeader.setTransitionGroup(true);
+//        loginButtons.setTransitionGroup(true);
+//        forgotPassword.setTransitionGroup(true);
 //
-//    private void SetUpActionBar() {
-//        // Make sure we're running on Honeycomb or higher to use ActionBar APIs
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//            ActionBar actionBar = getActionBar();
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
-//    }
+        exitTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+        exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
+        exitTransition.excludeTarget(R.id.toolbar_teal, true);
+
+        Transition autoTransition = new AutoTransition().setDuration(7000);
+
+        Transition fade = new Fade().setDuration(5000);
+        exitTransition.addTransition(fade);
+        exitTransition.addTransition(autoTransition);
+
+        exitTransition.setDuration(5000);
+        return exitTransition;
+    }
+
+    private Transition makeReenterTransition() {
+        TransitionSet enterTransition = new TransitionSet();
+        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+        enterTransition.excludeTarget(R.id.toolbar_teal, true);
+
+        Transition fade = new Fade().setDuration(800);
+        enterTransition.addTransition(fade);
+        return enterTransition;
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finishAfterTransition();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void finishAfterTransition() {
+        this.getWindow().setExitTransition(makeExitTransition());
+        this.getWindow().setReturnTransition(makeExitTransition());
+        Log.d("Finishing Login", "Login");
+        super.finishAfterTransition();
+    }
+
+    /**
+     * Called when this activity starts or resumes
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CurrentUserLoggedIn();
+    }
+
+    /**
+     * Called when another activity is in focus
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainApp.getDefaultSharedPreferences()
+                .edit()
+                .putString("username", user.getText().toString())
+                .putString("password", pwd.getText().toString())
+                .apply();
+        //commit writes data to persistent data immediately while apply will handle it in the background
+    }
 }
