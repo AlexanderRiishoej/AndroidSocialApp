@@ -10,20 +10,19 @@ import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
 import com.androidquery.AQuery;
+import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class ResetPassword extends BaseActivity {
+public class ResetPassword_act extends BaseActivity {
 
     private EditText email;
     private AQuery aQuery;
@@ -65,11 +64,11 @@ public class ResetPassword extends BaseActivity {
                     public void done(ParseException e) {
                         dia.dismiss();
                         if (e == null) {
-                            Utilities.showDialog(ResetPassword.this, "A message has been sent to your email address with a request to reset your password.");
-                            ResetPassword.this.finishAfterTransition();
+                            Utilities.showDialog(ResetPassword_act.this, "A message has been sent to your email address with a request to reset your password.");
+                            ResetPassword_act.this.finishAfterTransition();
                         } else {
                             Utilities.showDialog(
-                                    ResetPassword.this, getString(R.string.err_reset_pw) + " " + e.getMessage());
+                                    ResetPassword_act.this, getString(R.string.err_reset_pw) + " " + e.getMessage());
                             e.printStackTrace();
                         }
                     }

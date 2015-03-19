@@ -1,4 +1,4 @@
-package com.mycompany.loginapp;
+package com.mycompany.loginapp.utilities;
 
 import android.app.Activity;
 import android.app.AlertDialog;

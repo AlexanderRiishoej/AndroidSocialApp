@@ -4,35 +4,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    >
+    android:gravity="start">
 
     <LinearLayout
         android:id="@+id/v1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/pad_10dp"
+        android:layout_marginEnd="@dimen/pad_10dp"
         android:background="@drawable/chat_bubble_gray"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingBottom="@dimen/pad_5dp"
-        android:paddingLeft="@dimen/pad_chat_item"
-        android:paddingTop="@dimen/pad_5dp" >
+        android:paddingLeft="50dp"
+        android:paddingStart="50dp"
+        android:paddingTop="@dimen/pad_5dp"
+        android:paddingRight="@dimen/pad_15dp"
+        android:paddingEnd="@dimen/pad_15dp">
 
         <TextView
             android:id="@+id/lbl1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/message"
             android:textColor="@color/grey_700"
             android:textSize="@dimen/txt_13sp" />
         <TextView
             android:id="@+id/lbl2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="text"
+            android:text="@string/send_message"
             android:textColor="@color/grey_700"
-            android:textSize="@dimen/txt_14sp"
-            android:maxLines="4"/>
+            android:textSize="@dimen/txt_14sp"/>
 
     </LinearLayout>
 

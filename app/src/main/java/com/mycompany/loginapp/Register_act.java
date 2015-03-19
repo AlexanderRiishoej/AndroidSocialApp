@@ -5,39 +5,36 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.ChangeBounds;
-import android.transition.ChangeClipBounds;
-import android.transition.ChangeImageTransform;
-import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.transition.Explode;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.androidquery.AQuery;
+import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.eventMessages.MessageEvent;
+import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The Class Register is the Activity class that shows user registration screen
  * that allows user to register itself on Parse server.
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class Register extends BaseActivity {
+public class Register_act extends BaseActivity {
 
     /**
-     * The username EditText.
+     * The parseUser EditText.
      */
     private EditText user;
 
@@ -67,7 +64,6 @@ public class Register extends BaseActivity {
         aQuery.id(R.id.sub_header_text_view).text(R.string.register_account);
         getWindow().setEnterTransition(makeEnterTransition());
         ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-
     }
 
     @Override
@@ -93,7 +89,7 @@ public class Register extends BaseActivity {
         //noinspection SimplifiableIfStatement
         switch (id){
             case android.R.id.home:
-                Register.this.finishAfterTransition();
+                Register_act.this.finishAfterTransition();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -126,13 +122,36 @@ public class Register extends BaseActivity {
                     finishAfterTransition();
                 } else {
                     Utilities.showDialog(
-                            Register.this,
+                            Register_act.this,
                             getString(R.string.err_singup) + " "
                                     + e.getMessage());
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(MessageEvent event){
+        //Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        Log.d("EVENT RECEIVED AT REGISTER WITH MESSAGE: ", event.message);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override

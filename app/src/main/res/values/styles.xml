@@ -105,7 +105,6 @@
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginLeft">@dimen/keyLine2</item>
         <item name="android:background">@color/dividers_light_theme</item>
-        <item name="android:thickness">1dp</item>
     </style>
 
     <style name="divider">

@@ -54,5 +54,10 @@
     <string name="sign_into_account">Sign in or register your account</string>
     <string name="register_account">Register your account</string>
     <string name="title_activity_chat">Chat</string>
+    <string name="write_a_message">Write a message ...</string>
+    <string name="send_message">Send</string>
+    <string name="message">Message</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="recent_chat">Recent chat</string>
 
 </resources>

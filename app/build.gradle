@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.mycompany.loginapp"
-        minSdkVersion 16
         targetSdkVersion 21
+        minSdkVersion 16
         versionCode 1
         versionName "1.0"
     }
@@ -22,15 +22,15 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:21.0.+'
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.android.support:palette-v7:21.0.+'
     compile 'com.parse.bolts:bolts-android:1.+'
-    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
-    compile 'com.squareup.picasso:picasso:2.5.0'
-    compile 'org.lucasr.dspec:dspec:0.1.1'
-    compile fileTree(dir: 'libs', include: 'android-query-full.0.26.8.jar')
+    compile fileTree(dir: 'libs', include: 'Parse-*.jar') // Parse.com backend
+    compile 'com.squareup.picasso:picasso:2.5.0' // http://square.github.io/picasso/
+    compile fileTree(dir: 'libs', include: 'android-query-full.0.26.8.jar') // https://code.google.com/p/android-query/
+    compile 'de.greenrobot:eventbus:2.4.0' // https://github.com/greenrobot/EventBus/blob/master/README.md
+    compile fileTree(dir: 'libs', include: 'guava-18.0.jar') // https://code.google.com/p/guava-libraries/
+    compile 'com.pkmmte.view:circularimageview:1.1' //https://github.com/Pkmmte/CircularImageView
 }
-
-// http://square.github.io/picasso/

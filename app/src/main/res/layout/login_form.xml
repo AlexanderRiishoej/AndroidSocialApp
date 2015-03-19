@@ -11,6 +11,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/main_linear_layout"
             style="@style/PrimaryLinearLayoutLoginStyle"
             tools:context=".MainActivity">
 

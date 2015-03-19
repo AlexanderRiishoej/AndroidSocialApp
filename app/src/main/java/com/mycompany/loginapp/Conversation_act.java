@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Alexander on 05-03-2015.
  */
-public class Conversation {
+public class Conversation_act {
 
         /** The Constant STATUS_SENDING. */
         public static final int STATUS_SENDING = 0;
@@ -37,7 +37,7 @@ public class Conversation {
          * @param sender
          *            the sender
          */
-        public Conversation(String msg, Date date, String sender)
+        public Conversation_act(String msg, Date date, String sender)
         {
             this.msg = msg;
             this.date = date;
@@ -47,7 +47,7 @@ public class Conversation {
         /**
          * Instantiates a new conversation.
          */
-        public Conversation()
+        public Conversation_act()
         {
         }
 
@@ -79,7 +79,7 @@ public class Conversation {
          */
         public boolean isSent()
         {
-            return UserList.user.getUsername().equals(sender);
+            return UserList_act.user.getUsername().equals(sender);
         }
 
         /**

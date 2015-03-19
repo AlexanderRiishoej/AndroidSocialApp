@@ -10,6 +10,7 @@
     android:minHeight="?attr/actionBarSize"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="72dp"
+    app:contentInsetRight="@dimen/activity_horizontal_margin"
     app:navigationIcon="@drawable/ic_menu_white_24dp"
     app:popupTheme="@style/ToolbarPopupTealTheme"
     app:theme="@style/ToolbarTealTheme">

@@ -1,13 +1,12 @@
-package com.mycompany.loginapp;
+package com.mycompany.loginapp.base;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.androidquery.AQuery;
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseRole;
 
 /**
  * Created by Alexander on 14-02-2015.
@@ -17,17 +16,21 @@ import com.parse.ParseACL;
 public class MainApp extends Application {
 
     private static SharedPreferences sharedPreferences;
+    private static MainApp mainApp;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mainApp = new MainApp();
         Parse.initialize(this, "N0vbt1RSFJBDS5RXGnM0DLqzCCxydwFsUcSUDEV6", "lAXzmFMVSAiQVSuZspt1pcDzvb70S3LXqdtPSKki");
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //aQuery = new AQuery(this);
 
         // Security reasons: With access for only current user
-//        ParseACL defaultACL = new ParseACL();
-//        ParseACL.setDefaultACL(defaultACL, true);
+        ParseACL defaultACL = new ParseACL();
+        defaultACL.setPublicReadAccess(true);
+        defaultACL.setPublicWriteAccess(true);
+        ParseACL.setDefaultACL(defaultACL, true);
     }
 
     public static SharedPreferences getDefaultSharedPreferences() {
