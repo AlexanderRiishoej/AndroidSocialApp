@@ -45,7 +45,7 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="android:textColorPrimary">@color/text_light_theme</item>
         <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
-        <item name="colorAccent">@color/secondary_text_icons_light_theme</item>
+        <item name="colorAccent">@color/blue_grey_500</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:textViewStyle">@style/customTextViewStyle</item>

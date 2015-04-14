@@ -15,9 +15,16 @@ public final class ParseConstants {
     public static final String CHAT_RECEIVER = "receiver";
     public static final String CREATED_AT = "createdAt";
     public static final String MESSAGE = "message";
+    public static final String LAST_MESSAGE_RECEIVED = "lastMsgReceived";
+    public static final String LAST_MESSAGE_RECEIVED_AT = "lastMsgReceivedAt";
+
+    /** Relations */
     public static final String FRIENDS = "friendsRelation";
+    public static final String CHAT_RELATION = "ChatRelation";
+    public static final String USER_CHAT_RELATION = "UserChatRelation";
 
     /** Class specific queries */
     public static final String CHAT = "Chat";
+    public static final String CHAT_USERS = "ChatUsers";
 
 }

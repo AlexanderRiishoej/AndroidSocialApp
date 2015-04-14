@@ -2,23 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycompany.loginapp" >
 
-    <!--<uses-sdk-->
-        <!--android:minSdkVersion="16"-->
-        <!--android:targetSdkVersion="21" />-->
+    <!-- <uses-sdk -->
+    <!-- android:minSdkVersion="16" -->
+    <!-- android:targetSdkVersion="21" /> -->
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--<uses-permission-->
-        <!--android:name="android.permission.WRITE_EXTERNAL_STORAGE"-->
-        <!--android:maxSdkVersion="18" />-->
+    <!-- <uses-permission -->
+    <!-- android:name="android.permission.WRITE_EXTERNAL_STORAGE" -->
+    <!-- android:maxSdkVersion="18" /> -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--<uses-permission-->
-        <!--android:name="android.permission.READ_EXTERNAL_STORAGE"-->
-        <!--android:maxSdkVersion="18" />-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- <uses-permission -->
+    <!-- android:name="android.permission.READ_EXTERNAL_STORAGE" -->
+    <!-- android:maxSdkVersion="18" /> -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-feature android:name="android.hardware.camera2"
+
+    <uses-feature
+        android:name="android.hardware.camera2"
         android:required="false" />
 
     <application
@@ -50,14 +51,14 @@
         <activity
             android:name=".User_act"
             android:label="@string/title_activity_user"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Login_act" >
+            android:parentActivityName=".Login_act"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Login_act" />
         </activity>
         <activity
-            android:name=".UserList_act"
+            android:name=".chat.UserList_act"
             android:label="@string/title_activity_user_list"
             android:parentActivityName=".User_act" >
             <meta-data
@@ -73,9 +74,13 @@
                 android:value=".Login_act" />
         </activity>
         <activity
-            android:name=".Chat_act"
+            android:name=".chat.Chat_act"
             android:label="@string/title_activity_chat"
             android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
+        <activity
+            android:name=".chat.NewUserChat_act"
+            android:label="@string/title_activity_new_user_chat" >
         </activity>
     </application>
 

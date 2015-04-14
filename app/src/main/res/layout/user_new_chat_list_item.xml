@@ -2,47 +2,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="@dimen/pad_56dp"
     android:gravity="center_vertical">
 
     <ProgressBar
-        android:id="@+id/user_list_image_progress_bar"
+        android:id="@+id/new_user_list_image_progress_bar"
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_centerVertical="true"
         android:layout_marginLeft="31dp"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:maxWidth="10dip"
         android:minWidth="10dip"
-        android:maxWidth="10dip"/>
+        android:visibility="gone" />
 
     <com.pkmmte.view.CircularImageView
         android:id="@+id/user_list_username_profile_parse_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_centerVertical="true"
         app:border="true"
-        app:border_color="@color/secondary_text_icons_light_theme"
-        app:border_width="1dp"/>
+        app:border_color="@color/secondary_text_icons"
+        app:border_width="1dp" />
 
-    <TextView
-        android:id="@+id/user_list_username"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/keyLine2"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="24dp"
-        android:paddingTop="20dp"
-        android:text="@string/username"
-        android:textColor="@color/text_light_theme"
-        android:textSize="@dimen/txt_16sp"
-        android:gravity="center_vertical"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        />
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingLeft="@dimen/pad_72dp"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:id="@+id/user_list_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:text="@string/username"
+            android:textColor="@color/text_light_theme"
+            android:textSize="@dimen/txt_16sp" />
+
+    </LinearLayout>
     <!--         android:drawableLeft="@drawable/ic_online"
         android:drawableRight="@drawable/arrow"-->
 </RelativeLayout>

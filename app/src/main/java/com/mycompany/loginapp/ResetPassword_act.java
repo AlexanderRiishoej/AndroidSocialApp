@@ -21,7 +21,7 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ResetPassword_act extends BaseActivity {
 
     private EditText email;
@@ -30,17 +30,11 @@ public class ResetPassword_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDisplayHomeAsUpEnabled(true);
+        this.makeWindowTransition();
         aQuery = new AQuery(this);
         email = (EditText)findViewById(R.id.Email);
         aQuery.id(R.id.toolbar_title).text(null);
         aQuery.id(R.id.sub_header_text_view).text(R.string.reset_password);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
-            getWindow().setEnterTransition(makeEnterTransition());
-            ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-        }
-
     }
 
     @Override
@@ -49,7 +43,6 @@ public class ResetPassword_act extends BaseActivity {
     }
 
     public void resetPassword(View view){
-
         String em = email.getText().toString();
 
         if (em.length() == 0 || em.length() == 0) {
@@ -65,7 +58,10 @@ public class ResetPassword_act extends BaseActivity {
                         dia.dismiss();
                         if (e == null) {
                             Utilities.showDialog(ResetPassword_act.this, "A message has been sent to your email address with a request to reset your password.");
-                            ResetPassword_act.this.finishAfterTransition();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                ResetPassword_act.this.finishAfterTransition();
+                            }
+                            else ResetPassword_act.this.finish();
                         } else {
                             Utilities.showDialog(
                                     ResetPassword_act.this, getString(R.string.err_reset_pw) + " " + e.getMessage());
@@ -78,43 +74,61 @@ public class ResetPassword_act extends BaseActivity {
     @Override
     public void finishAfterTransition() {
         Log.d("finishAfterTransition()", "ResetPassword");
-        getWindow().setReturnTransition(makeReturnTransition());
+        //getWindow().setReturnTransition(makeReturnTransition());
         super.finishAfterTransition();
     }
 
     @Override
     public void onBackPressed() {
-        finishAfterTransition();
         super.onBackPressed();
     }
 
+    /**
+     * -------------------------------------------------------------------------------------------------------------------------------------------------
+     * Window Transitions
+     */
+    private void makeWindowTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(makeEnterTransition());
+            getWindow().setExitTransition(makeReturnTransition());
+            ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+        }
+    }
     private Transition makeEnterTransition() {
-        TransitionSet enterTransition = new TransitionSet();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        Transition t = new Slide(Gravity.LEFT).setDuration(600);
-        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-        enterTransition.excludeTarget(R.id.toolbar_teal, true);
-        enterTransition.addTransition(t);
+            TransitionSet enterTransition = new TransitionSet();
 
-        Transition tt = new Fade();
-        enterTransition.addTransition(tt).setDuration(1000);
-        return enterTransition;
+            Transition t = new Slide(Gravity.LEFT).setDuration(600);
+            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+            enterTransition.excludeTarget(R.id.toolbar_teal, true);
+            enterTransition.addTransition(t);
+
+            Transition tt = new Fade();
+            enterTransition.addTransition(tt).setDuration(1000);
+            return enterTransition;
+        }
+        else return null;
     }
 
     private Transition makeReturnTransition() {
-        TransitionSet returnTransition = new TransitionSet();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        Transition upperPartSlide = new Slide(Gravity.LEFT);
-        returnTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-        returnTransition.excludeTarget(android.R.id.statusBarBackground, true);
-        returnTransition.excludeTarget(R.id.toolbar_teal, true);
-        returnTransition.addTransition(upperPartSlide);
+            TransitionSet returnTransition = new TransitionSet();
 
-        Transition fade = new Fade();
-        returnTransition.addTransition(fade);
+            Transition upperPartSlide = new Slide(Gravity.LEFT);
+            returnTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+            returnTransition.excludeTarget(android.R.id.statusBarBackground, true);
+            returnTransition.excludeTarget(R.id.toolbar_teal, true);
+            returnTransition.addTransition(upperPartSlide);
 
-        returnTransition.setDuration(500);
-        return returnTransition;
+            Transition fade = new Fade();
+            returnTransition.addTransition(fade);
+
+            returnTransition.setDuration(500);
+            return returnTransition;
+        }
+        else return null;
     }
 }

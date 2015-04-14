@@ -21,7 +21,7 @@
     <item
         android:id="@+id/action_pictures"
         android:icon="@drawable/ic_view_module_white_24dp"
-        android:title="Camera"
+        android:title="Pictures"
         app:showAsAction="always"
         android:orderInCategory="2"/>
 </menu>

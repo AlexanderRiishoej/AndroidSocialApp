@@ -1,12 +1,10 @@
 package com.mycompany.loginapp;
 
-import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.AutoTransition;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -22,6 +20,8 @@ import android.widget.LinearLayout;
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.base.MainApp;
+import com.mycompany.loginapp.base.MySingleton;
+import com.mycompany.loginapp.chat.UserList_act;
 import com.mycompany.loginapp.eventMessages.MessageEvent;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.LogInCallback;
@@ -36,8 +36,10 @@ import de.greenrobot.event.EventBus;
  * for Register. On login button click, it sends the Login details to Parse
  * server to verify user.
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Login_act extends BaseActivity {
+
+    public static final String LOG = Login_act.class.getSimpleName();
 
     /**
      * The parseUser edittext.
@@ -54,17 +56,16 @@ public class Login_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setReenterTransition(makeReenterTransition());
-        this.getWindow().setEnterTransition(makeReenterTransition());
-        ActivityOptions.makeSceneTransitionAnimation(Login_act.this).toBundle();
-        //setDisplayHomeAsUpEnabled(false);
-        //setActionBarIcon(R.drawable.ic_menu_white_24dp);
+        this.makeWindowTransition();
         aq = new AQuery(this);
         user = (EditText) findViewById(R.id.Username);
         pwd = (EditText) findViewById(R.id.Password);
         //Used to store values from your app and accessing them later
-        user.setText(MainApp.getDefaultSharedPreferences().getString("parseUser", ""));
-        pwd.setText(MainApp.getDefaultSharedPreferences().getString("password", ""));
+        //user.setText(MainApp.getSingleton().getDefaultSharedPreferences().getString("parseUser", ""));
+        //pwd.setText(MainApp.getSingleton().getDefaultSharedPreferences().getString("password", ""));
+
+        user.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("parseUser", ""));
+        pwd.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("password", ""));
     }
 
     /**
@@ -121,7 +122,7 @@ public class Login_act extends BaseActivity {
                 dia.dismiss();
                 if (pu != null) {
                     // Start the logged in activity with the name of the person who logged in
-                    User_act.parseUser = pu;
+                    //User_act.parseUser = pu;
                     UserList_act.user = pu;
                     startActivity(new Intent(Login_act.this, User_act.class));
 //                    startActivity(new Intent(Login.this, UserActivity.class), ActivityOptions.makeSceneTransitionAnimation(
@@ -144,7 +145,11 @@ public class Login_act extends BaseActivity {
      * Starts the Register activity.
      */
     public void RegisterPressed(View view) {
-        startActivity(new Intent(this, Register_act.class), ActivityOptions.makeSceneTransitionAnimation(Login_act.this).toBundle());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivityForResult(new Intent(this, Register_act.class), 10, ActivityOptions.makeSceneTransitionAnimation(Login_act.this).toBundle());
+        } else {
+            startActivity(new Intent(this, Register_act.class));
+        }
         EventBus.getDefault().post(new MessageEvent("Hello everyone!"));
     }
 
@@ -152,7 +157,7 @@ public class Login_act extends BaseActivity {
      * Whenever you use any signup or login methods, the user is cached on disk.
      * You can treat this cache as a session, and automatically assume the user is logged in
      */
-    private void CurrentUserLoggedIn(){
+    private void CurrentUserLoggedIn() {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             User_act.parseUser = currentUser;
@@ -167,10 +172,16 @@ public class Login_act extends BaseActivity {
 
     /**
      * If a user wants to reset a password
+     *
      * @param view
      */
-    public void ForgotPassword(View view){
-        startActivity(new Intent(Login_act.this, ResetPassword_act.class), ActivityOptions.makeSceneTransitionAnimation(Login_act.this).toBundle());
+    public void ForgotPassword(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            startActivity(new Intent(Login_act.this, ResetPassword_act.class), ActivityOptions.makeSceneTransitionAnimation(Login_act.this).toBundle());
+        } else {
+            startActivity(new Intent(Login_act.this, ResetPassword_act.class));
+        }
     }
 
     /* (non-Javadoc)
@@ -181,7 +192,7 @@ public class Login_act extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == RESULT_OK) {
             Log.d("Result_OK", "Result is ok");
-            //finish();
+            this.finish();
         }
     }
 
@@ -192,21 +203,20 @@ public class Login_act extends BaseActivity {
 
     @Override
     public void finishAfterTransition() {
-        this.getWindow().setExitTransition(makeExitTransition());
         Log.d("Finishing Login", "Login");
         super.finishAfterTransition();
     }
 
     // This method will be called when a MessageEvent is posted
-    public void onEvent(MessageEvent event){
+    public void onEvent(MessageEvent event) {
         //Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        Log.d("EVENT RECEIVED AT LOGIN WITH MESSAGE: ", event.message);
+        Log.d(LOG, event.message);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if(!EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
@@ -245,45 +255,37 @@ public class Login_act extends BaseActivity {
         //commit writes data to persistent data immediately while apply will handle it in the background
     }
 
-    private Transition makeExitTransition() {
-        TransitionSet exitTransition = new TransitionSet();
-
-//        RelativeLayout subHeader = (RelativeLayout)findViewById(R.id.view_group);
-//        RelativeLayout loginButtons = (RelativeLayout)findViewById(R.id.login_buttons);
-//        RelativeLayout forgotPassword = (RelativeLayout)findViewById(R.id.login_forgot_password);
-//        subHeader.setTransitionGroup(true);
-//        loginButtons.setTransitionGroup(true);
-//        forgotPassword.setTransitionGroup(true);
-//
-        exitTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-        exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
-        exitTransition.excludeTarget(R.id.toolbar_teal, true);
-
-        Transition autoTransition = new AutoTransition().setDuration(7000);
-
-        Transition fade = new Fade().setDuration(5000);
-        exitTransition.addTransition(fade);
-        exitTransition.addTransition(autoTransition);
-
-        exitTransition.setDuration(5000);
-        return exitTransition;
+    /**
+     * -------------------------------------------------------------------------------------------------------------------------------------------------
+     * Window Transitions
+     */
+    private void makeWindowTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.getWindow().setReenterTransition(makeReenterTransition());
+            this.getWindow().setEnterTransition(makeReenterTransition());
+            ActivityOptions.makeSceneTransitionAnimation(Login_act.this).toBundle();
+        }
     }
 
     private Transition makeReenterTransition() {
-        TransitionSet enterTransition = new TransitionSet();
-        LinearLayout mainLinearLayout = (LinearLayout)findViewById(R.id.main_linear_layout);
-        Transition t = new Slide(Gravity.BOTTOM).setDuration(300);
-        t.addTarget(mainLinearLayout);
-        mainLinearLayout.setTransitionGroup(true);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            TransitionSet enterTransition = new TransitionSet();
+            LinearLayout mainLinearLayout = (LinearLayout) findViewById(R.id.main_linear_layout);
+            Transition t = new Slide(Gravity.BOTTOM).setDuration(300);
+            t.addTarget(mainLinearLayout);
+            mainLinearLayout.setTransitionGroup(true);
 //        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
 //        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
 //        enterTransition.excludeTarget(R.id.toolbar_teal, true);
 
-        Transition slide = new Slide(Gravity.BOTTOM).setDuration(200);
-        Transition fade = new Fade().setDuration(500);
+            Transition slide = new Slide(Gravity.BOTTOM).setDuration(200);
+            Transition fade = new Fade().setDuration(500);
 //        enterTransition.addTransition(fade);
-        enterTransition.addTransition(t);
+            enterTransition.addTransition(t);
 
-        return enterTransition;
+            return enterTransition;
+        }
+        else return null;
     }
 }

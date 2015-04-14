@@ -20,4 +20,10 @@ public final class Constants {
     /** Constants for Chat ListView View-layout */
     public static final int CHAT_ITEM_SENT = 0;
     public static final int CHAT_ITEM_RECEIVE = 1;
+
+    /** Constants for NavigationAdapter */
+    public final static String USER_ACT_NAME = "User_act";
+    public final static String USER_LIST_ACT_NAME = "UserList_act";
+    public final static String NEW_USER_CHAT_ACT_NAME = "NewUserChat_act";
+
 }

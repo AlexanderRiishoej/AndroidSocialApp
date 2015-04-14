@@ -2,7 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="keyLine2">72dp</dimen>
+    <dimen name="pad_72dp">72dp</dimen>
 
     <!-- ToolBar height -->
     <dimen name="toolbar_height">56dp</dimen>
@@ -27,6 +27,7 @@
     <dimen name="pad_5dp">5dp</dimen>
     <dimen name="pad_10dp">10dp</dimen>
     <dimen name="pad_15dp">15dp</dimen>
+    <dimen name="pad_16dp">16dp</dimen>
     <dimen name="pad_20dp">20dp</dimen>
     <dimen name="pad_30dp">30dp</dimen>
     <dimen name="pad_chat_item">45dp</dimen>
@@ -40,4 +41,9 @@
     <dimen name="txt_16sp">16sp</dimen>
     <dimen name="txt_18sp">18sp</dimen>
     <dimen name="txt_20sp">20sp</dimen>
+
+    <dimen name="pad_56dp">56dp</dimen>
+    <dimen name="pad_48dp">48dp</dimen>
+    <dimen name="pad_8dp">8dp</dimen>
+
 </resources>

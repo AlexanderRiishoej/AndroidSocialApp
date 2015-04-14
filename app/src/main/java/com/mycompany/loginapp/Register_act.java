@@ -3,6 +3,7 @@ package com.mycompany.loginapp;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.chat.UserList_act;
 import com.mycompany.loginapp.eventMessages.MessageEvent;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
@@ -30,8 +32,10 @@ import de.greenrobot.event.EventBus;
  * The Class Register is the Activity class that shows user registration screen
  * that allows user to register itself on Parse server.
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Register_act extends BaseActivity {
+
+    public static final String LOG = Register_act.class.getSimpleName();
 
     /**
      * The parseUser EditText.
@@ -53,17 +57,15 @@ public class Register_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarTitle(R.string.title_activity_register);
-        setDisplayHomeAsUpEnabled(true);
+        makeWindowTransition();
         aQuery = new AQuery(this);
         aQuery.id(R.id.toolbar_title).text(null);
         user = (EditText) findViewById(R.id.Username);
         pwd = (EditText) findViewById(R.id.Password);
         email = (EditText) findViewById(R.id.Email);
 
+        aQuery.id(R.id.toolbar_title).text(R.string.title_activity_register);
         aQuery.id(R.id.sub_header_text_view).text(R.string.register_account);
-        getWindow().setEnterTransition(makeEnterTransition());
-        ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
     }
 
     @Override
@@ -89,8 +91,8 @@ public class Register_act extends BaseActivity {
         //noinspection SimplifiableIfStatement
         switch (id){
             case android.R.id.home:
-                Register_act.this.finishAfterTransition();
-                return true;
+//                Register_act.this.finishAfterTransition();
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -117,9 +119,13 @@ public class Register_act extends BaseActivity {
                 dia.dismiss();
                 if (e == null) {
 //                    UserList.user = pu;
-//                    startActivity(new Intent(Register.this, UserList.class));
+                    startActivity(new Intent(Register_act.this, UserList_act.class));
+                    Log.d(LOG, "Current user is: " + ParseUser.getCurrentUser().getUsername());
                     setResult(RESULT_OK);
-                    finishAfterTransition();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        finishAfterTransition();
+                    }
+                    else Register_act.this.finish();
                 } else {
                     Utilities.showDialog(
                             Register_act.this,
@@ -134,7 +140,7 @@ public class Register_act extends BaseActivity {
     // This method will be called when a MessageEvent is posted
     public void onEvent(MessageEvent event){
         //Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        Log.d("EVENT RECEIVED AT REGISTER WITH MESSAGE: ", event.message);
+        Log.d(LOG, event.message);
     }
 
     @Override
@@ -157,7 +163,6 @@ public class Register_act extends BaseActivity {
     @Override
     public void finishAfterTransition() {
         Log.d("finishAfterTransition()", "Ran");
-        getWindow().setReturnTransition(makeReturnTransition());
         super.finishAfterTransition();
     }
 
@@ -166,33 +171,52 @@ public class Register_act extends BaseActivity {
         super.onBackPressed();
     }
 
+    /**
+     * -------------------------------------------------------------------------------------------------------------------------------------------------
+     * Window Transitions
+     */
+    private void makeWindowTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(makeEnterTransition());
+            getWindow().setReturnTransition(makeReturnTransition());
+            ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+        }
+    }
+
     private Transition makeEnterTransition() {
-        TransitionSet enterTransition = new TransitionSet();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        Transition t = new Slide(Gravity.LEFT).setDuration(600);
-        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-        enterTransition.excludeTarget(R.id.toolbar_teal, true);
-        enterTransition.addTransition(t);
+            TransitionSet enterTransition = new TransitionSet();
 
-        Transition tt = new Fade();
-        enterTransition.addTransition(tt).setDuration(1000);
-        return enterTransition;
+            Transition t = new Slide(Gravity.LEFT).setDuration(600);
+            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+            enterTransition.excludeTarget(R.id.toolbar_teal, true);
+            enterTransition.addTransition(t);
+
+            Transition tt = new Fade();
+            enterTransition.addTransition(tt).setDuration(1000);
+            return enterTransition;
+        }
+        else return null;
     }
 
     private Transition makeReturnTransition() {
-        TransitionSet enterTransition = new TransitionSet();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TransitionSet enterTransition = new TransitionSet();
 
-        Transition upperPartSlide = new Slide(Gravity.LEFT);
-        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-        enterTransition.excludeTarget(R.id.toolbar_teal, true);
-        enterTransition.addTransition(upperPartSlide);
+            Transition upperPartSlide = new Slide(Gravity.LEFT);
+            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+            enterTransition.excludeTarget(R.id.toolbar_teal, true);
+            enterTransition.addTransition(upperPartSlide);
 
-        Transition fade = new Fade();
-        enterTransition.addTransition(fade);
+            Transition fade = new Fade();
+            enterTransition.addTransition(fade);
 
-        enterTransition.setDuration(500);
-        return enterTransition;
+            enterTransition.setDuration(500);
+            return enterTransition;
+        }
+        else return null;
     }
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="178dp"
+    android:background="@color/teal_500"
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:paddingBottom="@dimen/pad_8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/white"
+            android:text="Alexander Riishøj"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="@dimen/txt_14sp"
+
+            />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="16dp"
+            android:text="alexander_blazer@hotmail.com"
+            android:fontFamily="sans-serif-regular"
+            android:textSize="@dimen/txt_14sp"
+            />
+    </LinearLayout>
+
+    <com.pkmmte.view.CircularImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="37dp"
+        android:id="@+id/circleView"
+        app:border="true"
+        app:border_color="@color/secondary_text_icons"
+        app:border_width="1dp"/>
+</RelativeLayout>

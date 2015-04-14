@@ -85,7 +85,7 @@
         <item name="android:fontFamily">sans-serif-regular</item>
         <item name="android:textSize">16sp</item>
         <item name="android:singleLine">true</item>
-        <item name="android:layout_marginLeft">@dimen/keyLine2</item>
+        <item name="android:layout_marginLeft">@dimen/pad_72dp</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
         <item name="android:colorFocusedHighlight">@color/teal_500</item>
         <item name="android:paddingTop">8dp</item>
@@ -98,7 +98,7 @@
         <!--<item name="android:textStyle">bold</item>-->
         <item name="android:fontFamily">sans-serif-regular</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:layout_marginLeft">@dimen/keyLine2</item>
+        <item name="android:layout_marginLeft">@dimen/pad_72dp</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textColor">@color/teal_500</item>
         <item name="android:paddingTop">16dp</item>

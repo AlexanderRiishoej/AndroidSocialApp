@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<ripple-->
+<!--<recycler_ripple-->
     <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--android:color="?android:colorControlHighlight">-->
     <!--<item android:id="@android:id/mask">-->
@@ -12,7 +12,7 @@
                 <!--android:width="1dp" />-->
         <!--</shape>-->
     <!--</item>-->
-<!--</ripple>-->
+<!--</recycler_ripple>-->
 
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="?android:colorControlHighlight">
@@ -27,7 +27,7 @@
     </item>
 </ripple>
 
-    <!-- Stroke of the shape = border for the ripple and width = its size -->
+    <!-- Stroke of the shape = border for the recycler_ripple and width = its size -->
     <!-- DashGap android:dashGap = gap in the border, and android:dashWidth = width of the visible gaps -->
     <!-- Corners of the shape android:radius="2dp" = rounded border -->
-    <!-- Mask is used to keep the ripple inside of of the shape -->
+    <!-- Mask is used to keep the recycler_ripple inside of of the shape -->
