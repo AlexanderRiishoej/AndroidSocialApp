@@ -32,5 +32,9 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0' // https://github.com/greenrobot/EventBus/blob/master/README.md
     compile fileTree(dir: 'libs', include: 'guava-18.0.jar') // https://code.google.com/p/guava-libraries/
     compile 'com.pkmmte.view:circularimageview:1.1' //https://github.com/Pkmmte/CircularImageView
+    compile 'com.afollestad:material-dialogs:0.7.2.2' // material dialogs https://github.com/afollestad/material-dialogs
+    compile 'it.neokree:MaterialTabs:0.11' // material tabs https://github.com/neokree/MaterialTabs
+    compile 'com.jpardogo.materialtabstrip:library:1.0.9'
+    compile 'com.github.traex.rippleeffect:library:1.2.4' // ripples for API 9 >  https://github.com/traex/RippleEffect
     //compile 'de.hdodenhof:circleimageview:1.2.2' //https://github.com/hdodenhof/CircleImageView
 }

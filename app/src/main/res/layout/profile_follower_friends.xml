@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!-- insert CardView -->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/pad_8dp"
+        android:layout_marginStart="@dimen/pad_8dp"
+        android:layout_marginRight="@dimen/pad_8dp"
+        android:layout_marginEnd="@dimen/pad_8dp"
+        android:layout_marginBottom="@dimen/pad_8dp"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/pad_16dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/friends"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="577"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/friends"
+                        android:gravity="center_horizontal"
+                        android:text="friends" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/in_common"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="9"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/in_common"
+                        android:gravity="center_horizontal"
+                        android:text="in common" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/followers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="488"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/followers"
+                        android:gravity="center_horizontal"
+                        android:text="followers" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/videos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="244"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/videos"
+                        android:gravity="center_horizontal"
+                        android:text="videos" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/pad_16dp"
+                android:layout_marginRight="@dimen/pad_16dp"
+                android:background="@color/dividers_light_theme" />
+
+            <TextView
+                android:id="@+id/photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_20dp"
+                android:layout_marginLeft="@dimen/pad_16dp"
+                android:layout_marginStart="@dimen/pad_16dp"
+                android:layout_marginTop="@dimen/pad_20dp"
+                android:text="296 photos" />
+        </LinearLayout>
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/photo_recycler_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:layout_gravity="left|start"-->
+        <!--android:background="@color/grey_300"-->
+        <!--android:scrollbars="none"/>-->
+        <!--
+            android:scrollbars="vertical"-->
+    </android.support.v7.widget.CardView>
+</LinearLayout>

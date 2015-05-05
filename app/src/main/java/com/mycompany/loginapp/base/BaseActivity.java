@@ -5,15 +5,25 @@ package com.mycompany.loginapp.base;
  */
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.mycompany.loginapp.NavigationDrawerFragment;
+import com.mycompany.loginapp.fragments.NavigationDrawerFragment;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
+import com.mycompany.loginapp.tabs.SlidingTabLayout;
 
 import de.greenrobot.event.EventBus;
 
@@ -29,24 +39,28 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             setTitle(null);
-            toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+            if (mDrawerLayout != null) {
+                toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+            } else {
+                toolbar.setNavigationIcon(null);
+            }
             //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        if(mDrawerLayout != null) {
+        if (mDrawerLayout != null) {
             mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.teal_700));
-        }
 
-        navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().
-                findFragmentById(R.id.fragment_navigation_drawer);
-        if(navigationDrawerFragment != null && mDrawerLayout != null) {
-            navigationDrawerFragment.setUpDrawer(R.id.scrimInsetsFrameLayout, mDrawerLayout);
+            navigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().
+                    findFragmentById(R.id.fragment_navigation_drawer);
+            if (navigationDrawerFragment != null && mDrawerLayout != null) {
+                navigationDrawerFragment.setUpDrawer(R.id.scrimInsetsFrameLayout, mDrawerLayout);
+            }
         }
     }
 
@@ -60,7 +74,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         toolbar.setTitle(titleId);
     }
 
-    protected void setDisplayHomeAsUpEnabled(boolean isEnabled){
+    protected void setDisplayHomeAsUpEnabled(boolean isEnabled) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(isEnabled);
     }
 
@@ -75,7 +89,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             return true;
         }
 
-        switch (id){
+        switch (id) {
             case R.id.action_logout:
                 EventBus.getDefault().post(new MessageFinishActivities());
                 return true;

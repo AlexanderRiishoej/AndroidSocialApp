@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.chat.UserList_act;
+import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -26,7 +26,7 @@ import java.util.List;
  * Created by Alexander on 11-04-2015.
  */
 public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatListRecyclerAdapter.MyViewHolder> {
-    public static final String LOG = UserList_act.class.getSimpleName();
+    public static final String LOG = UserChatList_act.class.getSimpleName();
     private Context activityContext;
     private List<ParseObject> userChatList;
     private LayoutInflater layoutInflater;

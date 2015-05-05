@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Theme for Material.Dark -->
-    <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
-    </style>
-
-    <!-- Theme for Indigo-Blue -->
-    <style name="AppThemeIndigo" parent="AppTheme.Indigo">
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
-    </style>
-
     <!-- Theme for Teal -->
     <style name="AppThemeTeal" parent="AppTheme.Teal">
-        <item name="android:colorPrimary">@color/teal_500</item>
-        <item name="android:colorPrimaryDark">@color/teal_700</item>
+        <!--<item name="android:colorPrimary">@color/teal_500</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/teal_700</item>-->
+        <!--<item name="android:colorPrimary">@color/specialBlueColorPrimary</item>-->
+        <!--<item name="android:colorPrimaryDark">@color/specialBlueColorPrimaryDark</item>-->
         <item name="android:colorControlActivated">@color/teal_500</item>
         <item name="android:colorAccent">@color/blue_grey_500</item>
 
@@ -51,4 +34,41 @@
         <item name="android:windowSharedElementReenterTransition">@transition/shared_element_reenter</item>
         <item name="android:windowSharedElementReturnTransition">@transition/shared_element_return</item>
     </style>
+
+    <style name="CustomToolBarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:selectableItemBackgroundBorderless">@drawable/ripple_toolbar_item</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <!--<item name="android:selectableItemBackground">@drawable/ripple_toolbar_item</item>-->
+        <!--<item name="android:colorControlHighlight">@drawable/ripple_toolbar_item</item>-->
+        <!--<item name="android:textColor">@color/secondary_text_icons</item>-->
+    </style>
+
+    <style name="Base.Widget.AppCompat.Toolbar.Teal" parent="Base.Widget.AppCompat.Toolbar">
+        <!-- android:textColorPrimary is the  color of the title text in the Toolbar, in the Theme.AppCompat theme:  -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textViewStyle">@style/customTextViewStyle</item>
+        <!-- android:textColorPrimaryInverse is the  color of the title text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
+        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+        <!-- android:textColorSecondary is the color of the menu overflow icon (three vertical dots) -->
+        <!--<item name="android:textColorSecondary">@color/secondary_text_icons</item>-->
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <!-- Toolbar Popup Theme -->
+    <style name="Base.Widget.AppCompat.Toolbar.Popup.Teal" parent="Base.Widget.AppCompat.Toolbar">
+        <!-- Background of popup item -->
+        <item name="android:colorBackground">@color/white</item>
+        <!-- Color of popup item text -->
+        <item name="android:textColorPrimary">@color/text_light_theme</item>
+        <item name="android:textViewStyle">@style/customTextViewStyle</item>
+        <item name="android:selectableItemBackgroundBorderless">@drawable/ripple_toolbar_item</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <!--<item name="selectableItemBackgroundBorderless">@drawable/ripple_toolbar_item</item>-->
+    </style>
+
 </resources>

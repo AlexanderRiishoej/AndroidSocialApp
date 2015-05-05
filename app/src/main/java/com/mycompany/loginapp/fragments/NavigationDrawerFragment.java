@@ -1,8 +1,7 @@
-package com.mycompany.loginapp;
+package com.mycompany.loginapp.fragments;
 
 
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,22 +11,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.mycompany.loginapp.adapters.ClickListener;
+import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.activities.News_act;
+import com.mycompany.loginapp.activities.ProfilePrivate_act;
+import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.adapters.NavigationRecyclerAdapter;
-import com.mycompany.loginapp.adapters.RecyclerOnTouchListener;
-import com.mycompany.loginapp.base.MySingleton;
+import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
+import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.singletons.MySingleton;
 import com.mycompany.loginapp.chat.NewUserChat_act;
-import com.mycompany.loginapp.chat.UserList_act;
+import com.mycompany.loginapp.chat.UserChatList_act;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -38,7 +37,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     /** Recycler */
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    private RecyclerView.Adapter mRecyclerAdapter;                        // Declaring Adapter For Recycler View
+    private NavigationRecyclerAdapter mRecyclerAdapter;                        // Declaring Adapter For Recycler View
     private RecyclerView.LayoutManager mLayoutManager;
 
     private NavigationRecyclerAdapter navigationAdapter;
@@ -81,31 +80,7 @@ public class NavigationDrawerFragment extends Fragment {
         mRecyclerView.setAdapter(mRecyclerAdapter);                              // Setting the adapter to RecyclerView
         mLayoutManager = new LinearLayoutManager(getActivity());         // Creating a layout Manager
         mRecyclerView.setLayoutManager(mLayoutManager);
-        //  recyclerViewAddOnItemClickListener();
         /** OnItemTouchListener for the RecyclerView */
-//        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), mRecyclerView, new ClickListener() {
-//
-//            @Override
-//            public void onClick(View view, int position) {
-//                if(position == 0) return;
-//                mDrawerLayout.closeDrawers();
-//                //Toast.makeText(getActivity(), "The Item Clicked is: " + position, Toast.LENGTH_SHORT).show();
-//
-//                final int childViewPosition = position;
-//                mRunnable = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        selectDrawerItem(childViewPosition); //Implement your switch case logic in this func
-//                    }
-//                };
-//            }
-//
-//            @Override
-//            public void onLongClick(View view, int position) {
-//
-//            }
-//        }));
-
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -127,6 +102,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             }
         }));
+
         return drawerLayout;
     }
 
@@ -175,21 +151,27 @@ public class NavigationDrawerFragment extends Fragment {
     private void selectDrawerItem(int item){
         switch (item){
             case 1: // item is Home/User activity
-                if(getActivity().getClass() == User_act.class) break;
+                if(getActivity().getClass() == ProfilePrivate_act.class) break;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), User_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    getActivity().startActivity(new Intent(getActivity(), ProfilePrivate_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 } else {
-                    startActivity(new Intent(getActivity(), User_act.class));
+                    startActivity(new Intent(getActivity(), ProfilePrivate_act.class));
                 }
                 break;
             case 2: // item is profile not implemented yet
+                if(getActivity().getClass() == News_act.class) break;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().startActivity(new Intent(getActivity(), News_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                } else {
+                    startActivity(new Intent(getActivity(), News_act.class));
+                }
                 break;
             case 3: // item is active chat user list
-                if(getActivity().getClass() == UserList_act.class) break;
+                if(getActivity().getClass() == UserChatList_act.class) break;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), UserList_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    getActivity().startActivity(new Intent(getActivity(), UserChatList_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 } else {
-                    startActivity(new Intent(getActivity(), UserList_act.class));
+                    startActivity(new Intent(getActivity(), UserChatList_act.class));
                 }
                 break;
             case 4: // item is create new chat
@@ -203,6 +185,21 @@ public class NavigationDrawerFragment extends Fragment {
             case 5: // item is settings - not implemented yet
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    /** Event received when a new profile picture has been chosen
+     *  User_act starts this event from the OnActivityResult() */
+    public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
+        mRecyclerAdapter.profilePicturePath = newProfilePictureEvent.imageUri;
+        mRecyclerAdapter.updateRecyclerItem();
     }
 
     public ActionBarDrawerToggle getNavigationDrawerToggle(){

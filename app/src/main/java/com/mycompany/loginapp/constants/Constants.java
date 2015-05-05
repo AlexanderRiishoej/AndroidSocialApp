@@ -25,5 +25,12 @@ public final class Constants {
     public final static String USER_ACT_NAME = "User_act";
     public final static String USER_LIST_ACT_NAME = "UserList_act";
     public final static String NEW_USER_CHAT_ACT_NAME = "NewUserChat_act";
+    public final static String NEWS = "News_act";
+
+    /** Constants for ProfileRecyclerAdapter */
+    public static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on
+    // IF the view under inflation and population is navigation_header or Items
+    public static final int TYPE_SECOND_ITEM = 1;
+    public static final int TYPE_ITEM = 2;
 
 }

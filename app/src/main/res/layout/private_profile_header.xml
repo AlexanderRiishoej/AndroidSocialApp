@@ -1,0 +1,226 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- To match the height of the news.xml, which contains a ViewPager with height 48dp + the height of the wallpost_header
+     which is 79dp it adds up to 127dp -->
+    <!-- 79dp - 23dp = 56dp = toolbar height -->
+    <View
+        android:id="@+id/fill_view"
+        android:layout_width="match_parent"
+        android:layout_height="127dp"
+        android:background="@color/teal_500" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--         android:layout_marginTop="23dp"
+        -->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardElevation="2dp"
+            card_view:cardCornerRadius="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/card_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    app:popupTheme="@style/CustomToolBarStyle"
+                    app:contentInsetLeft="@dimen/activity_horizontal_margin">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp">
+
+                        <com.pkmmte.view.CircularImageView
+                            android:id="@+id/profile_picture"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="@dimen/pad_16dp"
+                            app:border="true"
+                            app:border_color="@color/secondary_text_icons"
+                            app:border_width="1dp" />
+
+                        <!-- android:layout_marginBottom="@dimen/pad_20dp"
+                        android:layout_marginTop="@dimen/pad_20dp" -->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/pad_72dp"
+                            android:layout_marginStart="@dimen/pad_72dp"
+                            android:layout_marginRight="@dimen/activity_horizontal_margin"
+                            android:layout_marginEnd="@dimen/pad_16dp"
+                            android:layout_centerVertical="true">
+
+                            <TextView
+                                android:id="@+id/wall_post_username"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:text="Alexander Riishøj"
+                                android:textColor="@color/text_light_theme"
+                                android:textSize="@dimen/txt_16sp" />
+
+                            <TextView
+                                android:id="@+id/status"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:singleLine="true"
+                                android:text="online"
+                                android:textColor="@color/secondary_text_icons_light_theme"
+                                android:textSize="@dimen/txt_14sp"
+                                android:layout_below="@+id/wall_post_username"/>
+
+                        </RelativeLayout>
+                    </RelativeLayout>
+                </android.support.v7.widget.Toolbar>
+                <!-- divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme"
+                    android:layout_marginLeft="88dp"
+                    android:layout_marginStart="88dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_56dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/city_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:src="@drawable/ic_location_city_grey600_24dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/pad_16dp"
+                        android:layout_marginBottom="@dimen/pad_16dp"
+                        android:layout_marginLeft="88dp"
+                        android:layout_marginStart="88dp"
+                        android:layout_marginRight="@dimen/pad_16dp"
+                        android:layout_marginEnd="@dimen/pad_16dp">
+
+                        <TextView
+                            android:id="@+id/city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:text="Espergærde, 3060"
+                            android:textColor="@color/text_light_theme"
+                            android:textSize="@dimen/txt_16sp" />
+
+                    </LinearLayout>
+                    <!--         android:drawableLeft="@drawable/ic_online"
+                        android:drawableRight="@drawable/arrow"-->
+                </RelativeLayout>
+
+                <!-- divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme"
+                    android:layout_marginLeft="88dp"
+                    android:layout_marginStart="88dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_56dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/birthday_date_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:src="@drawable/ic_cake_grey600_24dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/pad_16dp"
+                        android:layout_marginBottom="@dimen/pad_16dp"
+                        android:layout_marginLeft="88dp"
+                        android:layout_marginStart="88dp"
+                        android:layout_marginRight="@dimen/pad_16dp"
+                        android:layout_marginEnd="@dimen/pad_16dp">
+
+                        <TextView
+                            android:id="@+id/birth_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:text="Maj 23, 1991"
+                            android:textColor="@color/text_light_theme"
+                            android:textSize="@dimen/txt_16sp" />
+
+                    </LinearLayout>
+                    <!--         android:drawableLeft="@drawable/ic_online"
+                        android:drawableRight="@drawable/arrow"-->
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/login_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/pad_8dp"
+                    android:layout_marginRight="@dimen/pad_8dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/edit_profile"
+                        style="@style/ButtonRaisedLoginStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="0.5"
+                        android:text="Add to friends"
+                        android:layout_marginTop="@dimen/pad_8dp"
+                        android:layout_marginBottom="@dimen/pad_8dp"/>
+
+                    <Button
+                        android:id="@+id/send_message"
+                        style="@style/ButtonRaisedWhiteLoginStyle"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="36dp"
+                        android:text="Settings"
+                        android:layout_marginTop="@dimen/pad_8dp"
+                        android:layout_marginBottom="@dimen/pad_8dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

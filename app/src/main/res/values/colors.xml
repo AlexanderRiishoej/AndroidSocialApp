@@ -24,6 +24,12 @@
 
     <color name="divider">#E0E0E0</color>
 
+    <!-- Color for special blue -->
+    <color name="specialBlueColorPrimary">#4C7BB1</color>
+    <color name="specialBlueColorPrimaryDark">#3F648F</color>
+    <color name="backgroundWindowColor">#E0E0E0</color>
+    <!--<color name="disable_hint_text">#42FFFFFF</color>-->
+
     <!-- Material Design - Color Palette -->
     <!-- Date: 1/15/2015 -->
     <!-- http://www.google.com/design/spec/style/color.html#color-color-palette -->

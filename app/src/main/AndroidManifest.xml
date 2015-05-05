@@ -23,13 +23,13 @@
         android:required="false" />
 
     <application
-        android:name=".base.MainApp"
+        android:name=".base.ApplicationMain"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppThemeTeal" >
         <activity
-            android:name=".Login_act"
+            android:name=".activities.Login_act"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -41,37 +41,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Register_act"
+            android:name=".activities.Register_act"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".Login_act" >
+            android:parentActivityName=".activities.Login_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login_act" />
+                android:value=".activities.Login_act" />
         </activity>
         <activity
-            android:name=".User_act"
+            android:name=".activities.ProfilePrivate_act"
             android:label="@string/title_activity_user"
-            android:parentActivityName=".Login_act"
+            android:parentActivityName=".activities.Login_act"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login_act" />
+                android:value=".activities.Login_act" />
         </activity>
         <activity
-            android:name=".chat.UserList_act"
+            android:name=".chat.UserChatList_act"
             android:label="@string/title_activity_user_list"
-            android:parentActivityName=".User_act" >
+            android:parentActivityName=".activities.ProfilePrivate_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".User_act" />
+                android:value=".activities.ProfilePrivate_act" />
         </activity>
         <activity
-            android:name=".ResetPassword_act"
+            android:name=".activities.ResetPassword_act"
             android:label="@string/title_activity_reset_password"
-            android:parentActivityName=".Login_act" >
+            android:parentActivityName=".activities.Login_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login_act" />
+                android:value=".activities.Login_act" />
         </activity>
         <activity
             android:name=".chat.Chat_act"
@@ -81,6 +81,17 @@
         <activity
             android:name=".chat.NewUserChat_act"
             android:label="@string/title_activity_new_user_chat" >
+        </activity>
+        <activity
+            android:name=".activities.News_act"
+            android:label="@string/title_activity_user_edit_act" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ProfilePrivate_act" />
+        </activity>
+        <activity
+            android:name=".activities.ProfilePublic_act"
+            android:label="@string/title_activity_profile_act" >
         </activity>
     </application>
 

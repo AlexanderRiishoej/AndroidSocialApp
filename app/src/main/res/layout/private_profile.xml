@@ -1,0 +1,67 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="7dp"
+    android:fitsSystemWindows="true">
+
+    <!-- The main content view -->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbar_teal"
+            layout="@layout/toolbar_teal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/toolbar_height"
+            android:background="@color/teal_500"
+            android:orientation="vertical">
+            <!--<View-->
+                <!--android:id="@+id/fill_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="48dp"-->
+                <!--android:background="@color/teal_500" />-->
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/fragment_wall_post_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/profileRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left|start"
+                    android:background="@color/grey_300"
+                    android:scrollbars="vertical"
+                    />
+            </android.support.v4.widget.SwipeRefreshLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.mycompany.loginapp.views.ScrimInsetFrameLayout
+        android:id="@+id/scrimInsetsFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true">
+        <!-- To keep statusbar dark app:insetForeground="#4000"-->
+
+        <fragment
+            android:id="@+id/fragment_navigation_drawer"
+            android:name="com.mycompany.loginapp.fragments.NavigationDrawerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|start"
+            app:layout="@layout/fragment_navigation_drawer" />
+
+    </com.mycompany.loginapp.views.ScrimInsetFrameLayout>
+
+</android.support.v4.widget.DrawerLayout>

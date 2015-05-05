@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
@@ -14,10 +13,10 @@ import com.parse.ParseACL;
  * The Class ChattApp is the Main Application class of this app. The onCreate
  * method of this class initializes the Parse.
  */
-public final class MainApp extends Application {
+public final class ApplicationMain extends Application {
 
     private static SharedPreferences sharedPreferences;
-    private final static MainApp MAIN_APP_SINGLETON = new MainApp();
+    private final static ApplicationMain MAIN_APP_SINGLETON = new ApplicationMain();
     public static Context context;
 
     @Override
@@ -39,7 +38,7 @@ public final class MainApp extends Application {
         return sharedPreferences;
     }
 
-    public static MainApp getSingleton() {
+    public static ApplicationMain getSingleton() {
 
         return MAIN_APP_SINGLETON;
     }

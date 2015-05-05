@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.adapters;
+package com.mycompany.loginapp.clickListeners;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.mycompany.loginapp.NavigationDrawerFragment;
+import com.mycompany.loginapp.clickListeners.ClickListener;
 
 /**
  * Created by Alexander on 12-04-2015.

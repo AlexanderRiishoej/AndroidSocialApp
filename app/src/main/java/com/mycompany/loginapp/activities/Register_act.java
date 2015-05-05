@@ -1,6 +1,5 @@
-package com.mycompany.loginapp;
+package com.mycompany.loginapp.activities;
 
-import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,8 +17,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.androidquery.AQuery;
+import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
-import com.mycompany.loginapp.chat.UserList_act;
+import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.eventMessages.MessageEvent;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
@@ -119,7 +119,7 @@ public class Register_act extends BaseActivity {
                 dia.dismiss();
                 if (e == null) {
 //                    UserList.user = pu;
-                    startActivity(new Intent(Register_act.this, UserList_act.class));
+                    startActivity(new Intent(Register_act.this, UserChatList_act.class));
                     Log.d(LOG, "Current user is: " + ParseUser.getCurrentUser().getUsername());
                     setResult(RESULT_OK);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

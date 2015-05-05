@@ -1,4 +1,4 @@
-package com.mycompany.loginapp;
+package com.mycompany.loginapp.activities;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
@@ -18,10 +18,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.androidquery.AQuery;
+import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
-import com.mycompany.loginapp.base.MainApp;
-import com.mycompany.loginapp.base.MySingleton;
-import com.mycompany.loginapp.chat.UserList_act;
+import com.mycompany.loginapp.base.ApplicationMain;
+import com.mycompany.loginapp.singletons.MySingleton;
+import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.eventMessages.MessageEvent;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.LogInCallback;
@@ -40,7 +41,6 @@ import de.greenrobot.event.EventBus;
 public class Login_act extends BaseActivity {
 
     public static final String LOG = Login_act.class.getSimpleName();
-
     /**
      * The parseUser edittext.
      */
@@ -63,6 +63,7 @@ public class Login_act extends BaseActivity {
         //Used to store values from your app and accessing them later
         //user.setText(MainApp.getSingleton().getDefaultSharedPreferences().getString("parseUser", ""));
         //pwd.setText(MainApp.getSingleton().getDefaultSharedPreferences().getString("password", ""));
+        aq.id(R.id.toolbar_title).text(getString(R.string.login_form));
 
         user.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("parseUser", ""));
         pwd.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("password", ""));
@@ -123,13 +124,18 @@ public class Login_act extends BaseActivity {
                 if (pu != null) {
                     // Start the logged in activity with the name of the person who logged in
                     //User_act.parseUser = pu;
-                    UserList_act.user = pu;
-                    startActivity(new Intent(Login_act.this, User_act.class));
+                    UserChatList_act.user = pu;
+                    startActivity(new Intent(Login_act.this, ProfilePrivate_act.class));
 //                    startActivity(new Intent(Login.this, UserActivity.class), ActivityOptions.makeSceneTransitionAnimation(
 //                            Login.this).toBundle());
                     //getWindow().setExitTransition(makeExitTransition());
                     //ActivityOptions.makeSceneTransitionAnimation(Login.this).toBundle();
-                    Login_act.this.finishAfterTransition();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Login_act.this.finishAfterTransition();
+                    }
+                    else{
+                        finish();
+                    }
                 } else {
                     Utilities.showDialog(
                             Login_act.this,
@@ -160,10 +166,15 @@ public class Login_act extends BaseActivity {
     private void CurrentUserLoggedIn() {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            User_act.parseUser = currentUser;
-            UserList_act.user = currentUser;
-            startActivityForResult(new Intent(this, User_act.class), 9);
-            this.finishAfterTransition();
+            ProfilePrivate_act.parseUser = currentUser;
+            UserChatList_act.user = currentUser;
+            startActivityForResult(new Intent(this, ProfilePrivate_act.class), 9);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                this.finishAfterTransition();
+            }
+            else{
+                finish();
+            }
         } else {
             return;
             // show the signup or login screen
@@ -247,7 +258,7 @@ public class Login_act extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MainApp.getDefaultSharedPreferences()
+        ApplicationMain.getDefaultSharedPreferences()
                 .edit()
                 .putString("parseUser", user.getText().toString())
                 .putString("password", pwd.getText().toString())

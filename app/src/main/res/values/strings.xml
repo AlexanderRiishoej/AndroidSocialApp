@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Sign In</string>
+    <string name="app_name">Social chat app</string>
     <string name="action_settings">Settings</string>
     <string name="logon">Log on</string>
     <string name="username">Username</string>
@@ -67,4 +67,7 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="user_learned_drawer">UserLearnedDrawer</string>
+    <string name="profile">Profile</string>
+    <string name="title_activity_user_edit_act">UserEdit_act</string>
+    <string name="title_activity_profile_act">Profile_act</string>
 </resources>

@@ -1,0 +1,255 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/pad_8dp"
+        android:layout_marginStart="@dimen/pad_8dp"
+        android:layout_marginRight="@dimen/pad_8dp"
+        android:layout_marginEnd="@dimen/pad_8dp"
+        android:layout_marginBottom="@dimen/pad_8dp"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/card_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:clickable="false"
+                app:contentInsetLeft="@dimen/activity_horizontal_margin"
+                app:popupTheme="@style/CustomToolBarStyle">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad_16dp">
+
+                    <com.pkmmte.view.CircularImageView
+                        android:id="@+id/wall_post_profile_picture"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_centerVertical="true"
+                        app:border="true"
+                        app:border_color="@color/secondary_text_icons"
+                        app:border_width="1dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/pad_72dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <!-- android:layout_marginBottom="@dimen/pad_20dp"
+                        android:layout_marginTop="@dimen/pad_20dp" -->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/wall_post_username"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:text="Alexander Riishøj"
+                                android:textColor="@color/text_light_theme"
+                                android:textSize="@dimen/txt_16sp" />
+                            <!--<TextView-->
+                            <!--android:id="@+id/user_list_message_date"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal"-->
+                            <!--android:text="@string/message_date_time"-->
+                            <!--android:singleLine="true"-->
+                            <!--android:textColor="@color/secondary_text_icons_light_theme"-->
+                            <!--android:textSize="@dimen/txt_14sp"-->
+                            <!--android:gravity="end"/>-->
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/wall_post_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:singleLine="true"
+                            android:text="yesterday at 20:22"
+                            android:textColor="@color/secondary_text_icons_light_theme"
+                            android:textSize="@dimen/txt_14sp" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/wall_post_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad_16dp"
+                    android:layout_marginLeft="@dimen/pad_16dp"
+                    android:layout_marginRight="@dimen/pad_16dp"
+                    android:layout_marginTop="@dimen/pad_20dp"
+                    android:text="This is a status update. This is how it will look when somebody posts a message"
+                    android:textColor="@color/text_light_theme" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_8dp">
+
+                <TextView
+                    android:id="@+id/likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/pad_16dp"
+                    android:layout_marginStart="@dimen/pad_16dp"
+                    android:text="15 likes this"
+                    android:textSize="@dimen/txt_12sp" />
+
+                <TextView
+                    android:id="@+id/share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/pad_16dp"
+                    android:layout_marginStart="@dimen/pad_16dp"
+                    android:layout_toEndOf="@+id/likes"
+                    android:layout_toRightOf="@+id/likes"
+                    android:text="2 shared this"
+                    android:textSize="@dimen/txt_12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_48dp">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/pad_16dp"
+                        android:layout_centerVertical="true">
+
+
+                        <ImageView
+                            android:id="@+id/amount_of_shoutouts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/pad_16dp"
+                            android:layout_marginStart="@dimen/pad_16dp"
+                            android:src="@drawable/ic_thumb_up_grey600_24dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/pad_8dp"
+                            android:layout_toEndOf="@+id/amount_of_shoutouts"
+                            android:layout_toRightOf="@+id/amount_of_shoutouts"
+                            android:text="Like"
+                            android:textColor="@color/blue_grey_500"
+                            android:textSize="@dimen/txt_14sp" />
+                    </RelativeLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+                        <RelativeLayout
+                            android:id="@+id/comment_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="@dimen/pad_8dp"
+                            android:layout_marginLeft="@dimen/pad_16dp">
+
+                            <ImageView
+                                android:id="@+id/amount_of_comments"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_mode_comment_grey600_24dp" />
+
+                            <TextView
+                                android:id="@+id/textView_comment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/pad_8dp"
+                                android:layout_marginStart="@dimen/pad_8dp"
+                                android:layout_toEndOf="@+id/amount_of_comments"
+                                android:layout_toRightOf="@+id/amount_of_comments"
+                                android:text="Comment"
+                                android:textSize="@dimen/txt_14sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/pad_16dp"
+                            android:layout_marginEnd="@dimen/pad_16dp">
+
+
+                            <ImageView
+                                android:id="@+id/amount_of_likes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/pad_16dp"
+                                android:layout_marginStart="@dimen/pad_16dp"
+                                android:src="@drawable/ic_share_grey600_24dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/pad_8dp"
+                                android:layout_marginStart="@dimen/pad_8dp"
+                                android:layout_toEndOf="@+id/amount_of_likes"
+                                android:layout_toRightOf="@+id/amount_of_likes"
+                                android:text="Share"
+                                android:textSize="@dimen/txt_14sp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,6 +1,5 @@
-package com.mycompany.loginapp;
+package com.mycompany.loginapp.activities;
 
-import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.os.Build;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.androidquery.AQuery;
+import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
@@ -33,7 +33,7 @@ public class ResetPassword_act extends BaseActivity {
         this.makeWindowTransition();
         aQuery = new AQuery(this);
         email = (EditText)findViewById(R.id.Email);
-        aQuery.id(R.id.toolbar_title).text(null);
+        aQuery.id(R.id.toolbar_title).text("Reset");
         aQuery.id(R.id.sub_header_text_view).text(R.string.reset_password);
     }
 

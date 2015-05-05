@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.adapters;
+package com.mycompany.loginapp.clickListeners;
 
 import android.view.View;
 

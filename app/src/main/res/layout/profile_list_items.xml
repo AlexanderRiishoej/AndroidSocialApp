@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="8dp"
+    android:layout_height="@dimen/pad_72dp"
+    android:orientation="horizontal"
+    android:background="@drawable/recycler_ripple"
+    android:clickable="true">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rowIcon"
+        android:layout_marginLeft="@dimen/pad_16dp"
+        android:layout_marginRight="@dimen/pad_16dp"
+        android:src="@drawable/ic_launcher"
+        android:layout_centerVertical="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/pad_72dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
+        <!-- android:layout_marginBottom="@dimen/pad_20dp"
+        android:layout_marginTop="@dimen/pad_20dp" -->
+
+            <TextView
+                android:id="@+id/rowText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:text="@string/username"
+                android:textColor="@color/text_light_theme"
+                android:textSize="@dimen/txt_16sp" />
+        <TextView
+            android:id="@+id/descriptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:text="@string/recent_chat"
+            android:singleLine="true"
+            android:textColor="@color/secondary_text_icons_light_theme"
+            android:textSize="@dimen/txt_14sp" />
+
+    </LinearLayout>
+    <!--         android:drawableLeft="@drawable/ic_online"
+        android:drawableRight="@drawable/arrow"-->
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rowIconEdit"
+        android:layout_marginLeft="@dimen/pad_16dp"
+        android:layout_marginRight="@dimen/pad_16dp"
+        android:src="@drawable/ic_launcher"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="Edit field"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/list_divider"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

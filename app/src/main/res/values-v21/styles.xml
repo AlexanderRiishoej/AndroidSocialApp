@@ -4,14 +4,11 @@
 
     <!-- ButtonStyle -->
     <style name="ButtonRaisedLoginStyle" parent="android:Widget.Material.Light.Button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">36dp</item>
-        <item name="android:height">48dp</item>
         <item name="android:minWidth">88dp</item>
         <item name="android:minHeight">36dp</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:selectableItemBackground">?android:attr/selectableItemBackground</item>
+        <!--<item name="android:selectableItemBackground">?android:attr/selectableItemBackground</item>-->
         <!--<item name="android:selectableItemBackgroundBorderless">?android:attr/selectableItemBackgroundBorderless</item>-->
         <item name="android:background">@drawable/ripple_button_raised</item>
         <!-- To keep the borders rounded when clicked on the Button -->
@@ -28,9 +25,6 @@
     </style>
 
     <style name="ButtonRaisedWhiteLoginStyle" parent="android:Widget.Material.Light.Button">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">36dp</item>
-        <item name="android:height">36dp</item>
         <item name="android:minWidth">88dp</item>
         <item name="android:minHeight">36dp</item>
         <item name="android:textColor">@color/teal_500</item>
@@ -104,56 +98,4 @@
         <item name="android:paddingTop">16dp</item>
     </style>
 
-    <!-- Chat........................................................................................... -->
-    <style name="editext_graybg" parent="android:Widget.Material.EditText">
-        <item name="android:background">@color/grey_700</item>
-        <item name="android:drawablePadding">@dimen/pad_10dp</item>
-        <item name="android:ems">10</item>
-        <item name="android:inputType">text</item>
-        <item name="android:paddingLeft">@dimen/pad_10dp</item>
-        <item name="android:paddingRight">@dimen/pad_10dp</item>
-        <item name="android:textSize">@dimen/txt_16sp</item>
-    </style>
-
-    <style name="btn_white_large" parent="@style/btn">
-        <item name="android:background">@drawable/green_btn</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/txt_18sp</item>
-    </style>
-
-    <style name="btn" parent="android:Widget.Holo.Light.Button">
-        <item name="android:minHeight">1dp</item>
-        <item name="android:minWidth">1dp</item>
-    </style>
-
-    <style name="edittext_msg" parent="android:Widget.Material.EditText">
-        <!--<item name="android:background">@drawable/edittext_bg</item>-->
-        <item name="android:ems">10</item>
-        <item name="android:imeActionId">100</item>
-        <item name="android:imeOptions">actionSend</item>
-        <item name="android:inputType">text</item>
-        <item name="android:layout_marginLeft">@dimen/pad_5dp</item>
-        <item name="android:layout_marginRight">@dimen/pad_5dp</item>
-        <item name="android:paddingLeft">@dimen/pad_5dp</item>
-        <item name="android:paddingRight">@dimen/pad_5dp</item>
-        <item name="android:textColorHint">@color/secondary_text_icons_light_theme</item>
-        <item name="android:textSize">@dimen/txt_16sp</item>
-    </style>
-
-    <style name="editext_white" parent="android:Widget.Holo.Light.EditText">
-        <item name="android:background">@color/white</item>
-        <item name="android:inputType">textEmailAddress</item>
-        <item name="android:paddingBottom">@dimen/pad_10dp</item>
-        <item name="android:paddingTop">@dimen/pad_10dp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/txt_14sp</item>
-    </style>
-    <style name="btn_green_white_bg" parent="@style/btn">
-        <item name="android:background">@color/white</item>
-        <item name="android:paddingBottom">@dimen/pad_10dp</item>
-        <item name="android:paddingRight">@dimen/pad_15dp</item>
-        <item name="android:paddingTop">@dimen/pad_10dp</item>
-        <item name="android:textColor">@color/green_500</item>
-        <item name="android:textSize">@dimen/txt_16sp</item>
-    </style>
 </resources>

@@ -1,10 +1,9 @@
-package com.mycompany.loginapp.base;
+package com.mycompany.loginapp.singletons;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
+import com.mycompany.loginapp.base.ApplicationMain;
 
 /**
  * Created by Alexander on 28-03-2015.
@@ -12,7 +11,7 @@ import android.util.Log;
 public final class MySingleton {
 
     private final static MySingleton MY_SINGLETON = new MySingleton();
-    private static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.context);
+    private static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ApplicationMain.context);
 
     private MySingleton(){
     }

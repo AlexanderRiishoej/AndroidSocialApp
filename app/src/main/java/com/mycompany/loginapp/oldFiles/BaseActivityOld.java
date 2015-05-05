@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mycompany.loginapp.NavigationDrawerFragment;
+import com.mycompany.loginapp.fragments.NavigationDrawerFragment;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.adapters.NavigationRecyclerAdapter;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;

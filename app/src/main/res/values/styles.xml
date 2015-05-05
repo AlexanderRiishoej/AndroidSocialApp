@@ -53,6 +53,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginLeft">@dimen/pad_72dp</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:textColor">@color/teal_500</item>
     </style>
 
     <style name="TextViewSubHeaderStyle">
@@ -68,11 +69,8 @@
 
     <!-- ButtonStyle -->
     <style name="ButtonRaisedLoginStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:height">48dp</item>
         <item name="android:minWidth">88dp</item>
-        <item name="android:minHeight">48dp</item>
+        <item name="android:minHeight">36dp</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/selector</item>
@@ -83,8 +81,6 @@
     </style>
 
     <style name="ButtonFlatLoginStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:height">36dp</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
@@ -93,9 +89,31 @@
         <!--<item name="android:paddingTop">@dimen/button_vertical_padding</item>-->
         <!--<item name="android:paddingBottom">@dimen/button_vertical_padding</item>-->
         <item name="android:minWidth">88dp</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/secondary_text_icons_light_theme</item>
         <item name="android:borderlessButtonStyle">?android:attr/borderlessButtonStyle</item>
+        <!--<item name="android:selectableItemBackground">?android:selectableItemBackground</item>-->
+        <!--<item name="android:background">@drawable/selector_white_background</item>-->
+        <item name="android:background">@drawable/selector_borderless</item>
+
+    </style>
+
+    <style name="ButtonRaisedWhiteLoginStyle">
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:textColor">@color/teal_500</item>
+        <item name="android:textSize">14sp</item>
+        <!--<item name="android:selectableItemBackground">?android:attr/selectableItemBackground</item>-->
+        <!--<item name="android:selectableItemBackgroundBorderless">?android:attr/selectableItemBackgroundBorderless</item>-->
+        <!-- To keep the borders rounded when clicked on the Button -->
+        <!-- Shadow animation onClick -->
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
         <item name="android:selectableItemBackground">?android:attr/selectableItemBackground</item>
+        <item name="android:background">@drawable/selector_white_background</item>
+        <!--<item name="android:paddingLeft">@dimen/button_horizontal_padding</item>-->
+        <!--<item name="android:paddingRight">@dimen/button_horizontal_padding</item>-->
+        <!--<item name="android:paddingTop">@dimen/button_vertical_padding</item>-->
+        <!--<item name="android:paddingBottom">@dimen/button_vertical_padding</item>-->
     </style>
 
     <!-- DividerStyle -->
@@ -155,6 +173,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:layout_marginLeft">@dimen/pad_72dp</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:colorFocusedHighlight">@color/teal_500</item>
     </style>
 
     <!-- ImageView -->
@@ -174,6 +193,13 @@
     <!-- TextStyle used for the app -->
     <style name="customTextTitleViewStyle" parent="Base.Widget.AppCompat.Toolbar">
         <item name="android:fontFamily">sans-serif-regular</item>
+    </style>
+
+    <style name="CustomToolBarStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@color/white</item>
+        <!--<item name="android:textColor">@color/</item>-->
+        <item name="selectableItemBackgroundBorderless">@drawable/selector_white_background</item>
+        <item name="android:selectableItemBackground">@drawable/selector_white_background</item>
     </style>
 
     <!-- Chat........................................................................................... -->

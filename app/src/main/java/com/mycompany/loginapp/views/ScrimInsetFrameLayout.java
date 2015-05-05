@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.base;
+package com.mycompany.loginapp.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,6 +13,8 @@ import com.mycompany.loginapp.R;
 
 /**
  * Created by Alexander on 08-04-2015.
+ * This class is used to provide a transparent background to the statusbar while using a navigation drawer
+ * When opening the navigation drawer, it will slide under the statusbar as explained by the material guidelines
  */
 public class ScrimInsetFrameLayout extends FrameLayout {
     private Drawable mInsetForeground;

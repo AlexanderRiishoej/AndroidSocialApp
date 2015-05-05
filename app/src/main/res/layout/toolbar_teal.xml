@@ -3,24 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar_teal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:height="@dimen/toolbar_height"
+    android:layout_height="56dp"
     android:background="@color/teal_500"
-    android:elevation="4dp"
     android:minHeight="?attr/actionBarSize"
-    app:contentInsetLeft="0dp"
+    app:contentInsetLeft="@dimen/activity_horizontal_margin"
     app:contentInsetStart="72dp"
     app:contentInsetRight="@dimen/activity_horizontal_margin"
     app:navigationIcon="@drawable/ic_menu_white_24dp"
     app:popupTheme="@style/ToolbarPopupTealTheme"
     app:theme="@style/ToolbarTealTheme">
+ <!-- android:gravity="bottom"
+     android:elevation="4dp"
+-->
+    <TextView
+        android:id="@+id/toolbar_title_below"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:paddingBottom="16dp"/>
 
     <TextView
         android:id="@+id/toolbar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="start|top"
         android:textColor="@color/white"
-        android:textSize="20sp"
-        />
+        android:textSize="20sp"/>
+
+    <!--<ImageView-->
+        <!--android:id="@+id/toolbar_back_arrow"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/back_arrow"/>-->
 </android.support.v7.widget.Toolbar>

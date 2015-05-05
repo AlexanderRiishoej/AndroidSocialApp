@@ -65,7 +65,7 @@
     </LinearLayout>
     <!-- The navigation drawer -->
     <!-- http://www.android4devs.com/2014/12/how-to-make-material-design-navigation-drawer.html -->
-    <com.mycompany.loginapp.base.ScrimInsetFrameLayout
+    <com.mycompany.loginapp.views.ScrimInsetFrameLayout
         android:id="@+id/scrimInsetsFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -79,7 +79,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left|start"
             app:layout="@layout/fragment_navigation_drawer"
-            android:name="com.mycompany.loginapp.NavigationDrawerFragment"/>
+            android:name="com.mycompany.loginapp.fragments.NavigationDrawerFragment"/>
 
-    </com.mycompany.loginapp.base.ScrimInsetFrameLayout>
+    </com.mycompany.loginapp.views.ScrimInsetFrameLayout>
 </android.support.v4.widget.DrawerLayout>
