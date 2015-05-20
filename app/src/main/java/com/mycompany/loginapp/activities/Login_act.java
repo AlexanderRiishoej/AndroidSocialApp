@@ -21,6 +21,7 @@ import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.base.ApplicationMain;
+import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.singletons.MySingleton;
 import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.eventMessages.MessageEvent;
@@ -208,11 +209,6 @@ public class Login_act extends BaseActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
     public void finishAfterTransition() {
         Log.d("Finishing Login", "Login");
         super.finishAfterTransition();
@@ -230,11 +226,6 @@ public class Login_act extends BaseActivity {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     @Override

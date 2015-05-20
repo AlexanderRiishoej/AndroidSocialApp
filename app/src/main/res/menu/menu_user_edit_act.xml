@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.mycompany.loginapp.activities.News_act">
+    tools:context="com.mycompany.loginapp.news.NewsFeed_act">
     <item android:id="@+id/action_settings"
         android:title="save"
         android:icon="@drawable/ic_pencil_box_outline_white_24dp"

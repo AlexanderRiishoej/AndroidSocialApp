@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.activities;
+package com.mycompany.loginapp.profile;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
@@ -25,6 +25,8 @@ import android.view.View;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.activities.Login_act;
+import com.mycompany.loginapp.news.NewsFeed_act;
 import com.mycompany.loginapp.adapters.ProfileRecyclerAdapter;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.chat.UserChatList_act;
@@ -33,7 +35,6 @@ import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
-import com.mycompany.loginapp.parseHelperClasses.ProfileImageLoader;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -50,7 +51,9 @@ public class ProfilePrivate_act extends BaseActivity {
     public static final String LOG = ProfilePrivate_act.class.getSimpleName();
 
     private ProfileRecyclerAdapter profileRecyclerAdapter;
-    /** Recycler */
+    /**
+     * Recycler
+     */
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
     private RecyclerView.LayoutManager mLayoutManager;
     public static ParseUser parseUser;
@@ -67,9 +70,9 @@ public class ProfilePrivate_act extends BaseActivity {
         // Get the TexView and assign the parseUser to it
         //aQuery.id(R.id.signedInAs).text(parseUser.getUsername());
         aQuery.id(R.id.toolbar_title).text(getString(R.string.profile));
-        mRecyclerView = (RecyclerView)findViewById(R.id.profileRecyclerView);
-          profileRecyclerAdapter = new ProfileRecyclerAdapter(this);
-          profileImageLoader = new ProfileImageLoader(this, profileRecyclerAdapter);
+        mRecyclerView = (RecyclerView) findViewById(R.id.profileRecyclerView);
+        profileRecyclerAdapter = new ProfileRecyclerAdapter(this);
+        profileImageLoader = new ProfileImageLoader(this);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(profileRecyclerAdapter);
@@ -122,7 +125,7 @@ public class ProfilePrivate_act extends BaseActivity {
 //                this.finishAfterTransition();
 //                return true;
             case R.id.action_edit_profile:
-                startActivity(new Intent(this, News_act.class));
+                startActivity(new Intent(this, NewsFeed_act.class));
 
                 return true;
         }
@@ -136,8 +139,7 @@ public class ProfilePrivate_act extends BaseActivity {
         if (!EventBus.getDefault().isRegistered(this)) {
             try {
                 EventBus.getDefault().register(ProfilePrivate_act.this);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -150,13 +152,13 @@ public class ProfilePrivate_act extends BaseActivity {
         super.onDestroy();
     }
 
-    private void recyclerOnTouchListener(){
+    private void recyclerOnTouchListener() {
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if(position == 0) return;
+                if (position == 0) return;
 
-                if(position == 1){
+                if (position == 1) {
                     new MaterialDialog.Builder(ProfilePrivate_act.this)
                             .positiveText("OK")
                             .negativeText("Cancel")
@@ -217,6 +219,13 @@ public class ProfilePrivate_act extends BaseActivity {
         }
     }
 
+    /** Event received when a new profile picture has been chosen
+     *  User_act starts this event from the OnActivityResult() */
+    public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
+        //mRecyclerAdapter.profilePicturePath = newProfilePictureEvent.imageUri;
+        profileRecyclerAdapter.updateRecyclerItem(0);
+    }
+
 // http://developer.android.com/training/camera/photobasics.html - camera intent
 
     /**
@@ -228,9 +237,11 @@ public class ProfilePrivate_act extends BaseActivity {
 
             // If its a picture taken from the camera
             if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
-                Log.d(LOG + " onActivityResult", "Photo taken with path: " + profileImageLoader.imageFile.getAbsolutePath());
+                Log.d(LOG + " onActivityResult", "Photo taken with path: " + ProfileImageHolder.imageFile.getAbsolutePath());
+
                 profileImageLoader.saveImageToParse();
                 profileImageLoader.updateDirectoryPictures();
+                EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.imageFile.getAbsolutePath()));
             }
             // If is a picture taken from the gallery
             if (requestCode == Constants.REQUEST_CHOOSE_PICTURE) {
@@ -244,14 +255,15 @@ public class ProfilePrivate_act extends BaseActivity {
                     /** Populate image */
                     Log.d(LOG, "MediaImagePath: " + getMediaImagePath(imageUri));
                     profileRecyclerAdapter.updateProfileImage(getMediaImagePath(imageUri));
-                    profileImageLoader.imageFile = new File(getMediaImagePath(imageUri));
+                    //profileImageLoader.imageFile = new File(getMediaImagePath(imageUri));
+                    ProfileImageHolder.imageFile = new File(getMediaImagePath(imageUri));
                     profileImageLoader.saveImageToParse();
                     EventBus.getDefault().post(new MessageUpdateProfilePicture(getMediaImagePath(imageUri)));
                 }
             }
 
             if (requestCode == Constants.REQUEST_CHOOSE_VIDEO) {
-                Log.d(LOG + " onActivityResult", "Video chosen with path: " + profileImageLoader.imageFile.getAbsolutePath());
+                Log.d(LOG + " onActivityResult", "Video chosen with path: " + ProfileImageHolder.imageFile.getAbsolutePath());
                 if (data == null) {
                     Log.d(LOG, "Data is null");
                 } else {
@@ -292,11 +304,11 @@ public class ProfilePrivate_act extends BaseActivity {
         } else if (resultCode == RESULT_CANCELED) {
             if (requestCode == Constants.REQUEST_IMAGE_CAPTURE || requestCode == Constants.REQUEST_CHOOSE_PICTURE) {
 
-                if (profileImageLoader.imageFile != null && profileImageLoader.imageFile.exists()) {
-                    Log.d(LOG, "Camera request canceled and file exists: " + profileImageLoader.imageFile.exists());
-                    profileImageLoader.imageFile.delete();
+                if (ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()) {
+                    Log.d(LOG, "Camera request canceled and file exists: " + ProfileImageHolder.imageFile.exists());
+                    ProfileImageHolder.imageFile.delete();
 
-                    if (profileImageLoader.imageFile == null) {
+                    if (ProfileImageHolder.imageFile == null) {
                         Log.d(LOG, "Camera request canceled and file deleted: " + true);
                     } else {
                         Log.d(LOG, "Camera request canceled and file deleted: " + false);

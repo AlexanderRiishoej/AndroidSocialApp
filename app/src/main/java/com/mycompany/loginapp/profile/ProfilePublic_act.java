@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.activities;
+package com.mycompany.loginapp.profile;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

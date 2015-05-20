@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.activities;
+package com.mycompany.loginapp.news;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +15,7 @@ import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.fragments.WallPostFragment;
 
 
-public class News_act extends BaseActivity{
+public class NewsFeed_act extends BaseActivity{
     private ViewPager viewPager;
 
     private static final int FRAGMENT_0 = 0;
@@ -92,7 +92,6 @@ public class News_act extends BaseActivity{
                 case FRAGMENT_2:
                     tabFragment = WallPostFragment.newInstance("", "");
                     break;
-
             }
 
             return tabFragment;

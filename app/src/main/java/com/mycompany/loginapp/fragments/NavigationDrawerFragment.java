@@ -16,8 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.activities.News_act;
-import com.mycompany.loginapp.activities.ProfilePrivate_act;
+import com.mycompany.loginapp.news.NewsFeed_act;
+import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.adapters.NavigationRecyclerAdapter;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
@@ -159,11 +159,11 @@ public class NavigationDrawerFragment extends Fragment {
                 }
                 break;
             case 2: // item is profile not implemented yet
-                if(getActivity().getClass() == News_act.class) break;
+                if(getActivity().getClass() == NewsFeed_act.class) break;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), News_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    getActivity().startActivity(new Intent(getActivity(), NewsFeed_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 } else {
-                    startActivity(new Intent(getActivity(), News_act.class));
+                    startActivity(new Intent(getActivity(), NewsFeed_act.class));
                 }
                 break;
             case 3: // item is active chat user list
@@ -198,7 +198,7 @@ public class NavigationDrawerFragment extends Fragment {
     /** Event received when a new profile picture has been chosen
      *  User_act starts this event from the OnActivityResult() */
     public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
-        mRecyclerAdapter.profilePicturePath = newProfilePictureEvent.imageUri;
+        //mRecyclerAdapter.profilePicturePath = newProfilePictureEvent.imageUri;
         mRecyclerAdapter.updateRecyclerItem();
     }
 

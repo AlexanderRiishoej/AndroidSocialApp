@@ -150,11 +150,6 @@ public class Register_act extends BaseActivity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
@@ -164,11 +159,6 @@ public class Register_act extends BaseActivity {
     public void finishAfterTransition() {
         Log.d("finishAfterTransition()", "Ran");
         super.finishAfterTransition();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     /**

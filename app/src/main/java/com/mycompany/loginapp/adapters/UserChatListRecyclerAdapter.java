@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by Alexander on 11-04-2015.
  */
-public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatListRecyclerAdapter.MyViewHolder> {
+public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatListRecyclerAdapter.MyUserChatListViewHolder> {
     public static final String LOG = UserChatList_act.class.getSimpleName();
     private Context activityContext;
     private List<ParseObject> userChatList;
@@ -38,24 +38,32 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MyViewHolder myViewHolder;
+    public MyUserChatListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //Initialize the ViewHolder
+        MyUserChatListViewHolder myUserChatListViewHolder;
+        //Get the layout for this Recycler item
         View convertView = layoutInflater.inflate(R.layout.user_chat_list_item, parent, false);
-        myViewHolder = new MyViewHolder(convertView);
+        //Create a new ViewHolder with the Recycler item view
+        myUserChatListViewHolder = new MyUserChatListViewHolder(convertView);
 
-        return myViewHolder;
+        return myUserChatListViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder viewHolder, int position) {
+    public void onBindViewHolder(MyUserChatListViewHolder viewHolder, int position) {
+        //Get the current object from the list of chat users
         final ParseObject userChat = userChatList.get(position);
-        final MyViewHolder myViewHolder = viewHolder;
+        //Create a final ViewHolder in order to being able to use it in an inner class
+        final MyUserChatListViewHolder myUserChatListViewHolder = viewHolder;
 
-        myViewHolder.imageProgressBar.setVisibility(View.VISIBLE);
+        //Set the progressbar for the image to Visible since its going to get fetched soon
+        myUserChatListViewHolder.imageProgressBar.setVisibility(View.VISIBLE);
         Log.d(LOG, "Username: " + userChat.getParseUser("username").getUsername());
 
-        myViewHolder.username.setText(userChat.getParseUser("username").getUsername());
+        //Get the name of the chat user from the userChat object
+        myUserChatListViewHolder.username.setText(userChat.getParseUser("username").getUsername());
 
+        //Get the relation of this chat user object and perform a query that gets the chat represented by current user and another user
         userChat.getRelation(ParseConstants.CHAT_RELATION).getQuery().orderByDescending(ParseConstants.CREATED_AT).getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
@@ -64,15 +72,15 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
                     Log.d(LOG, "ChatRelation: " + parseObject.getString("receiver"));
                     /** if the user chatting to, has the last  message in the chat equal to the sender, then show that message */
                     if (userChat.getParseUser("username").getUsername().equals(parseObject.getString("sender"))) {
-                        myViewHolder.lastChatMessage.setText("Last message received: " + parseObject.getString("message"));
+                        myUserChatListViewHolder.lastChatMessage.setText("Last message received: " + parseObject.getString("message"));
                     }
                     /** else the last message is sent by me and should be showed as the last message seen in the conversation */
                     else if (userChat.getParseUser("username").getUsername().equals(parseObject.getString("receiver"))) {
-                        myViewHolder.lastChatMessage.setText("You: " + parseObject.getString("message"));
+                        myUserChatListViewHolder.lastChatMessage.setText("You: " + parseObject.getString("message"));
                     }
                     /** no messages has been sent */
                     else {
-                        myViewHolder.lastChatMessage.setText("");
+                        myUserChatListViewHolder.lastChatMessage.setText("");
                     }
                 } else {
                     e.printStackTrace();
@@ -80,7 +88,8 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
             }
         });
 
-        myViewHolder.dateOfLastChatMessage.setText(DateUtils.getRelativeDateTimeString(activityContext, userChat.getUpdatedAt().getTime(),
+        //Set the time to when the last message was sent/received
+        myUserChatListViewHolder.dateOfLastChatMessage.setText(DateUtils.getRelativeDateTimeString(activityContext, userChat.getUpdatedAt().getTime(),
                 DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
         //viewHolder.username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chat_list_bitmap, 0);
         Log.d(LOG, "Parsefile Uri: " + userChat.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl());
@@ -91,13 +100,13 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
                         @Override
                         public void onSuccess() {
                             //hide progressbar
-                            myViewHolder.imageProgressBar.setVisibility(View.GONE);
+                            myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onError() {
                             //hide progressbar
-                            myViewHolder.imageProgressBar.setVisibility(View.GONE);
+                            myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
                         }
                     });
         } catch (Exception e) {
@@ -110,7 +119,7 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
         return userChatList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyUserChatListViewHolder extends RecyclerView.ViewHolder{
         public TextView username;
         /**
          * Special circular imageView using a framework
@@ -125,7 +134,7 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
 
         public TextView dateOfLastChatMessage;
 
-        public MyViewHolder(View itemView) {
+        public MyUserChatListViewHolder(View itemView) {
             super(itemView);
             username = (TextView) itemView.findViewById(R.id.user_list_username);
             profilePicture = (CircularImageView) itemView.findViewById(R.id.user_list_username_profile_parse_image);

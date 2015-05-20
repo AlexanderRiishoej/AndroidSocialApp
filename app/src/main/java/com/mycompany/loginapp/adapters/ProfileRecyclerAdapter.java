@@ -13,6 +13,10 @@ import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.constants.Constants;
+import com.mycompany.loginapp.constants.ParseConstants;
+import com.mycompany.loginapp.profile.ProfileImageHolder;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.pkmmte.view.CircularImageView;
@@ -39,19 +43,19 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
     private int mIcons[] = {R.drawable.ic_local_phone_grey600_24dp, R.drawable.ic_person_grey600_24dp,
             R.drawable.ic_messenger_grey600_24dp, R.drawable.ic_chat_grey600_24dp, R.drawable.ic_action_email, R.drawable.ic_settings_applications_grey600_24dp};
 
-    public ProfileRecyclerAdapter(Context actContext){
+    public ProfileRecyclerAdapter(Context actContext) {
         this.activityContext = actContext;
         this.layoutInflater = LayoutInflater.from(actContext);
         this.aQuery = new AQuery(actContext);
         this.picasso = Picasso.with(actContext);
     }
 
-    public void updateProfileImage(String profilePicturePath){
+    public void updateProfileImage(String profilePicturePath) {
         this.profilePicturePath = profilePicturePath;
         this.notifyItemChanged(0);
     }
 
-    public void updateRecyclerItem(int position){
+    public void updateRecyclerItem(int position) {
         this.notifyItemRangeChanged(position, 1);
     }
 
@@ -75,8 +79,7 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
             myProfileViewHolder = new MyProfileViewHolder(convertView, Constants.TYPE_HEADER); //Creating ViewHolder and passing the object of type view
 
             return myProfileViewHolder; //returning the object created
-        }
-        else if (viewType == Constants.TYPE_SECOND_ITEM) {
+        } else if (viewType == Constants.TYPE_SECOND_ITEM) {
 
             /** View layout to be inflated onto the Recycler */
             View convertView = layoutInflater.inflate(R.layout.profile_follower_friends, parent, false); //Inflating the layout
@@ -90,18 +93,26 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
     @Override
     public void onBindViewHolder(ProfileRecyclerAdapter.MyProfileViewHolder myProfileViewHolder, int position) {
         if (myProfileViewHolder.holderId == 0) {                              // as the list view is going to be called after the navigation_header view so we decrement the
+            final MyProfileViewHolder viewHolderFinal = myProfileViewHolder;
+
             try {
-                if (profilePicturePath != null) {
-                    File testFile = new File(profilePicturePath);
-                    if (testFile.exists()) {
-                        // the noPlaceholder() did the trick... Now i am not receiving any null pointer exception regarding the gedWidth().
-                        picasso.load(testFile).fit().noPlaceholder().into(myProfileViewHolder.profilePicture);
-                    } else {
-                        Log.d(LOG, "File does not exist");
-                    }
+                if (ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()) {
+                    // the noPlaceholder() did the trick... Now i am not receiving any null pointer exception regarding the gedWidth().
+                    picasso.load(ProfileImageHolder.imageFile).fit().noPlaceholder().into(myProfileViewHolder.profilePicture);
+                } else {
+                    ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
+                        @Override
+                        public void done(ParseUser parseUser, ParseException e) {
+                            if (e == null) {
+                                picasso.load("file:" + parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH)).fit().noPlaceholder().
+                                        into(viewHolderFinal.profilePicture);
+                            } else {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
-            }
-            catch(Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
                 ex.getMessage();
             }
@@ -111,14 +122,13 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
             myProfileViewHolder.birthdate.setText("Maj 23, 1991");
             myProfileViewHolder.status.setText("online");
 
-        } else if(myProfileViewHolder.holderId == 1){
+        } else if (myProfileViewHolder.holderId == 1) {
             myProfileViewHolder.friends.setText("577");
             myProfileViewHolder.followers.setText("9");
             myProfileViewHolder.in_common.setText("488");
             myProfileViewHolder.videos.setText("216");
             myProfileViewHolder.photos.setText("288");
-        }
-        else {
+        } else {
 
         }
     }
@@ -130,18 +140,16 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0){
+        if (position == 0) {
             return Constants.TYPE_HEADER;
-        }
-        else if (position == 1){
+        } else if (position == 1) {
             return Constants.TYPE_SECOND_ITEM;
-        }
-        else {
+        } else {
             return Constants.TYPE_ITEM;
         }
     }
 
-    public static class MyProfileViewHolder extends RecyclerView.ViewHolder{
+    public static class MyProfileViewHolder extends RecyclerView.ViewHolder {
         public int holderId;
 
         // List items
@@ -166,24 +174,20 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
 
         public MyProfileViewHolder(View itemView, int ViewType) {
             super(itemView);
-            if(ViewType == Constants.TYPE_ITEM) {
+            if (ViewType == Constants.TYPE_ITEM) {
                 holderId = Constants.TYPE_ITEM;
                 description = (TextView) itemView.findViewById(R.id.descriptionText);
                 icon = (ImageView) itemView.findViewById(R.id.rowIcon);
                 information = (TextView) itemView.findViewById(R.id.rowText);
                 iconEditField = (ImageView) itemView.findViewById(R.id.rowIconEdit);
-            }
-            else if (ViewType == Constants.TYPE_HEADER)
-            {
+            } else if (ViewType == Constants.TYPE_HEADER) {
                 holderId = Constants.TYPE_HEADER;
                 profilePicture = (CircularImageView) itemView.findViewById(R.id.profile_picture);
                 city = (TextView) itemView.findViewById(R.id.city);
                 name = (TextView) itemView.findViewById(R.id.wall_post_username);
                 status = (TextView) itemView.findViewById(R.id.status);
-                birthdate = (TextView) itemView.findViewById(R.id.birth_date)       ;
-            }
-            else if (ViewType == Constants.TYPE_SECOND_ITEM)
-            {
+                birthdate = (TextView) itemView.findViewById(R.id.birth_date);
+            } else if (ViewType == Constants.TYPE_SECOND_ITEM) {
                 holderId = Constants.TYPE_SECOND_ITEM;
                 friends = (TextView) itemView.findViewById(R.id.friends);
                 followers = (TextView) itemView.findViewById(R.id.followers);

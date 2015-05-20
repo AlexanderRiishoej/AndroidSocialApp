@@ -49,7 +49,7 @@
                 android:value=".activities.Login_act" />
         </activity>
         <activity
-            android:name=".activities.ProfilePrivate_act"
+            android:name=".profile.ProfilePrivate_act"
             android:label="@string/title_activity_user"
             android:parentActivityName=".activities.Login_act"
             android:screenOrientation="portrait" >
@@ -60,10 +60,10 @@
         <activity
             android:name=".chat.UserChatList_act"
             android:label="@string/title_activity_user_list"
-            android:parentActivityName=".activities.ProfilePrivate_act" >
+            android:parentActivityName=".profile.ProfilePrivate_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ProfilePrivate_act" />
+                android:value=".profile.ProfilePrivate_act" />
         </activity>
         <activity
             android:name=".activities.ResetPassword_act"
@@ -83,14 +83,14 @@
             android:label="@string/title_activity_new_user_chat" >
         </activity>
         <activity
-            android:name=".activities.News_act"
+            android:name=".news.NewsFeed_act"
             android:label="@string/title_activity_user_edit_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ProfilePrivate_act" />
+                android:value=".profile.ProfilePrivate_act" />
         </activity>
         <activity
-            android:name=".activities.ProfilePublic_act"
+            android:name=".profile.ProfilePublic_act"
             android:label="@string/title_activity_profile_act" >
         </activity>
     </application>

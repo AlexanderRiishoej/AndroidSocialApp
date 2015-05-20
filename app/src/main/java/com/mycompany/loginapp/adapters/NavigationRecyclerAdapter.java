@@ -16,10 +16,13 @@ import android.widget.TextView;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
+import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * Created by hp1 on 28-12-2014.
@@ -118,8 +121,8 @@ public class NavigationRecyclerAdapter extends RecyclerView.Adapter<NavigationRe
 
             final MyViewHolder viewHolderFinal = viewHolder;
             /** If an event for a new profile picture has been received, this will not be null */
-            if(profilePicturePath != null){
-                picasso.load("file:" + profilePicturePath).fit().noPlaceholder().into(viewHolderFinal.profile);
+            if(ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()){
+                picasso.load(ProfileImageHolder.imageFile).fit().noPlaceholder().into(viewHolderFinal.profile);
             }
             else {
                 ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
