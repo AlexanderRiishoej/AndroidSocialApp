@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<com.astuetz.PagerSlidingTabStrip-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:android="http://schemas.android.com/tools"-->
+    <!--android:id="@id/materialviewpager_pagerTitleStrip"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/pad_48dp"-->
+    <!--android:background="?attr/colorPrimary"-->
+    <!--android:fontFamily="sans-serif-regular"-->
+    <!--android:textColorPrimary="@color/white"-->
+    <!--android:textSize="14sp"-->
+    <!--app:pstsTextSelectedStyle="normal"-->
+    <!--app:pstsTextStyle="normal"-->
+
+    <!--app:pstsPaddingMiddle="true"-->
+    <!--app:pstsDividerPadding="20dp"-->
+    <!--app:pstsIndicatorColor="#FFF"-->
+    <!--app:pstsIndicatorHeight="2dp"-->
+    <!--app:pstsShouldExpand="true"-->
+    <!--app:pstsTabPaddingLeftRight="10dp"-->
+    <!--app:pstsTextAllCaps="true"/>-->
+<com.astuetz.PagerSlidingTabStrip
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/materialviewpager_pagerTitleStrip"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="?attr/colorPrimary"
+    android:fontFamily="sans-serif-regular"
+    android:textColorPrimary="@color/white"
+    android:textSize="14sp"
+    app:pstsTextSelectedStyle="normal"
+    app:pstsTextStyle="normal"
+
+    app:pstsDividerPadding="20dp"
+    app:pstsIndicatorColor="#FFF"
+    app:pstsIndicatorHeight="2dp"
+    app:pstsShouldExpand="true"
+    app:pstsTabPaddingLeftRight="10dp"
+    app:pstsTextAllCaps="true"
+ />
+<!-- app:pstsPaddingMiddle="true" for tabs starting in middle -->

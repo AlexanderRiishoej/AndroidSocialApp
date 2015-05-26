@@ -1,5 +1,8 @@
-package com.mycompany.loginapp.chat;
+package com.mycompany.loginapp.observable;
 
+/**
+ * Created by Alexander on 22-05-2015.
+ */
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,8 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.transition.AutoTransition;
 import android.transition.Fade;
 import android.transition.Slide;
@@ -20,58 +21,39 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.adapters.UserChatListRecyclerAdapter;
+import com.mycompany.loginapp.chat.Chat_act;
+import com.mycompany.loginapp.chat.NewUserChat_act;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
-import com.mycompany.loginapp.adapters.UserChatListRecyclerAdapter;
-import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.constants.Constants;
-import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUserChat;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.pkmmte.view.CircularImageView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-//@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class UserChatList_act extends BaseActivity {
+public class ToolbarControlRecyclerViewActivity extends ToolbarControlBaseActivity<ObservableRecyclerView> {
 
-    public static final String LOG = UserChatList_act.class.getSimpleName();
-    /**
-     * The user.
-     */
-    public static ParseUser user;
-    private UserChatListRecyclerAdapter userChatListRecyclerAdapter;
-    private RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    private RecyclerView.LayoutManager mLayoutManager;
+    private static final String TAG = ToolbarControlRecyclerViewActivity.class.getSimpleName();
+
+    private UserChatListAdapter userChatListAdapter;
+    private ObservableRecyclerView mObservableRecyclerView;                           // Declaring RecyclerView
     private SwipeRefreshLayout swipeRefreshLayout;
-    private AQuery aQuery;
+    private static AQuery aQuery;
     private ArrayList<ParseObject> userList;
-    private ImageButton mFabButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +61,65 @@ public class UserChatList_act extends BaseActivity {
         makeWindowTransition();
         aQuery = new AQuery(this);
         aQuery.id(R.id.toolbar_title).text("Chat users");
-        mFabButton = (ImageButton) findViewById(R.id.fabButton);
-        initializeRecyclerView();
-        initializeSwipeRefreshLayout();
+        // Need to get swipe refresh to work with the scrollview
+        //setSwipeRefreshLayout();
         getActiveUserChats();
     }
 
-    private void initializeSwipeRefreshLayout() {
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.observable_toolbar;
+    }
+
+    public static ArrayList<String> getDummyData(int num) {
+        ArrayList<String> items = new ArrayList<String>();
+        for (int i = 1; i <= num; i++) {
+            items.add("Item " + i);
+        }
+        return items;
+    }
+
+    @Override
+    protected ObservableRecyclerView createScrollable() {
+        mObservableRecyclerView = (ObservableRecyclerView) findViewById(R.id.scrollableRecyclerView);
+        mObservableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mObservableRecyclerView.setHasFixedSize(false);
+        //mObservableRecyclerView.setAdapter(new SimpleRecyclerAdapter(this, getDummyData(100)));
+        //mObservableRecyclerView.setAdapter(new UserChatListRecyclerAdapter(this, null));
+        setObservableRecyclerViewOnTouchListener();
+
+        return mObservableRecyclerView;
+    }
+
+    private void setObservableRecyclerViewOnTouchListener(){
+        mObservableRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mObservableRecyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                if(position == Constants.TYPE_HEADER){
+                    return;
+                }
+
+                final int childViewPosition = position - 1; // minus position of header
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
+                    startActivity(new Intent(ToolbarControlRecyclerViewActivity.this, Chat_act.class).
+                                    putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
+                            ActivityOptions.makeSceneTransitionAnimation(ToolbarControlRecyclerViewActivity.this).toBundle());
+                } else {
+                    EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
+                    startActivity(new Intent(ToolbarControlRecyclerViewActivity.this, Chat_act.class));
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+    }
+
+    private void setSwipeRefreshLayout(){
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.teal_500);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -94,71 +128,6 @@ public class UserChatList_act extends BaseActivity {
                 refreshContent();
             }
         });
-        swipeRefreshLayout.setProgressViewOffset(false, 180, 300);
-    }
-
-    private void initializeRecyclerView(){
-        mRecyclerView = (RecyclerView)findViewById(R.id.userChatListRecyclerView);
-        mRecyclerView.setHasFixedSize(false);                            // Letting the system know that the list objects are of fixed size
-        //mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
-        // And passing the titles,icons,navigation_header view name, navigation_header view email,
-        // and navigation_header view profile picture
-        mLayoutManager = new LinearLayoutManager(this);         // Creating a layout Manager
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        //recyclerViewAddOnItemClickListener();
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mRecyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                if(position == Constants.TYPE_HEADER){
-                    return;
-                }
-                // only for testing purposes
-                if(position > 2){
-                    return;
-                }
-                final int childViewPosition = position - 1; // minus position of header
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class).
-                                        putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
-                                ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
-                    } else {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class));
-                    }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
-        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
-            @Override
-            public void onHide() {
-                hideViews();
-            }
-
-            @Override
-            public void onShow() {
-                showViews();
-            }
-        });
-    }
-
-    private void hideViews() {
-        getToolbar().animate().translationY(-getToolbar().getHeight()).setInterpolator(new AccelerateInterpolator(2));
-
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabButton.getLayoutParams();
-        int fabBottomMargin = lp.bottomMargin;
-        mFabButton.animate().translationY(mFabButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
-    }
-
-    private void showViews() {
-        getToolbar().animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
-        mFabButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
     /** Refreshes the content  */
@@ -166,23 +135,10 @@ public class UserChatList_act extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                ParseUser testUser = new ParseUser();
-//                testUser.setUsername("Torben");
-//                testUser.setEmail("test@email.com");
-//                userList.add(testUser);
-//                userAdapter.notifyDataSetChanged();
-                //loadUserList();
-                //refreshUserList();
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
     }
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.user_chat_list;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -197,11 +153,11 @@ public class UserChatList_act extends BaseActivity {
         switch (id){
             case R.id.action_new_chat:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    startActivity(new Intent(UserChatList_act.this, NewUserChat_act.class),
-                            ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
+                    startActivity(new Intent(ToolbarControlRecyclerViewActivity.this, NewUserChat_act.class),
+                            ActivityOptions.makeSceneTransitionAnimation(ToolbarControlRecyclerViewActivity.this).toBundle());
                 }
                 else {
-                    startActivity(new Intent(UserChatList_act.this, NewUserChat_act.class));
+                    startActivity(new Intent(ToolbarControlRecyclerViewActivity.this, NewUserChat_act.class));
                 }
         }
 
@@ -215,7 +171,7 @@ public class UserChatList_act extends BaseActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        updateUserStatus(false);
+        //updateUserStatus(false);
         super.onDestroy();
     }
 
@@ -253,46 +209,6 @@ public class UserChatList_act extends BaseActivity {
     }
 
     /**
-     * Update user status.
-     *
-     * @param online true if user is online
-     */
-    private void updateUserStatus(boolean online) {
-        user.put(ParseConstants.ONLINE, online);
-        user.saveEventually();
-    }
-
-    /** Gets all the active chats for the current logged in user */
-    private void refreshUserList() {
-        final ProgressDialog dia = ProgressDialog.show(this, null,
-                getString(R.string.alert_loading));
-
-        final List<ParseObject> userChatList = new ArrayList<ParseObject>();
-        ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
-        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
-        parseObjectQuery.include("username");
-        parseObjectQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
-                dia.dismiss();
-                if (e == null) {
-                    if (parseUserChatObjects.size() > 0) {
-                        userChatList.addAll(parseUserChatObjects);
-                        Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
-                        Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
-                        userList = new ArrayList<ParseObject>(userChatList);
-                        //userAdapter.notifyDataSetChanged();
-                    } else {
-                        Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
-                    }
-                } else {
-                    Utilities.showDialog(UserChatList_act.this, "Error: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    /**
      * Gets the active chat associated with the current logged in user
      */
     private void getActiveUserChats() {
@@ -314,10 +230,10 @@ public class UserChatList_act extends BaseActivity {
                         Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
                         loadUserList(userChatList);
                     } else {
-                        Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
+                        Utilities.showDialog(ToolbarControlRecyclerViewActivity.this, "No users for chat were found. Try reloading the page.");
                     }
                 } else {
-                    Utilities.showDialog(UserChatList_act.this, "Error: " + e.getMessage());
+                    Utilities.showDialog(ToolbarControlRecyclerViewActivity.this, "Error: " + e.getMessage());
                 }
             }
         });
@@ -330,8 +246,8 @@ public class UserChatList_act extends BaseActivity {
      */
     private void loadUserList(List<ParseObject> userChats) {
         userList = new ArrayList<ParseObject>(userChats);
-        userChatListRecyclerAdapter = new UserChatListRecyclerAdapter(this, userList);
-        mRecyclerView.setAdapter(userChatListRecyclerAdapter);
+        userChatListAdapter = new UserChatListAdapter(this, userList);
+        mObservableRecyclerView.setAdapter(userChatListAdapter);
     }
 
     /**

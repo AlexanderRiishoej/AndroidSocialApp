@@ -22,7 +22,7 @@ public final class Constants {
     public static final int CHAT_ITEM_RECEIVE = 1;
 
     /** Constants for NavigationAdapter */
-    public final static String USER_ACT_NAME = "User_act";
+    public final static String PROFILE_PRIVATE = "ProfilePrivate_act";
     public final static String USER_LIST_ACT_NAME = "UserChatList_act";
     public final static String NEW_USER_CHAT_ACT_NAME = "NewUserChat_act";
     public final static String NEWS = "News_act";

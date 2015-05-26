@@ -7,65 +7,62 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@color/white"-->
+    <!--android:orientation="vertical">-->
+
+<!-- We need to put them in a FrameLayout because Toolbar needs to be overlayed on
+RecyclerView. If we don’t do this, there will be an empty space visible above the list when we hide the Toolbar.
+-->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/toolbar_teal"
-            layout="@layout/toolbar_teal" />
-
-        <RelativeLayout
-            android:id="@+id/view_group"
-            style="@style/RelativeLayoutSubHeaderDesignStyle"
-            android:background="@color/white">
-
-            <TextView
-                style="@style/TextViewSubHeaderStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="@string/recent_chat" />
-        </RelativeLayout>
+        android:background="@color/white">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/activity_main_swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--<ListView-->
-                <!--android:id="@+id/list"-->
-                <!--android:fitsSystemWindows="true"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:divider="@drawable/list_divider"-->
-                <!--android:dividerHeight="1dp"-->
-                <!--android:paddingBottom="8dp"-->
-                <!--tools:listitem="@layout/user_chat_list_item"/>-->
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/userChatListRecyclerView"
-                android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="left|start"
-                android:paddingBottom="8dp"
                 android:divider="@drawable/list_divider"
                 android:dividerHeight="1dp"
+                android:paddingBottom="8dp"
                 android:scrollbars="vertical"
+                android:paddingTop="?attr/actionBarSize"
+                android:clipToPadding="false"
                 tools:listitem="@layout/user_chat_list_item">
 
             </android.support.v7.widget.RecyclerView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-    </LinearLayout>
+        <include
+            android:id="@+id/toolbar_teal"
+            layout="@layout/toolbar_teal" />
+
+        <ImageButton
+            android:id="@+id/fabButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/fab_background"
+            android:contentDescription="fabButton"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+    </FrameLayout>
+    <!--</LinearLayout>-->
     <!-- The navigation drawer -->
     <!-- http://www.android4devs.com/2014/12/how-to-make-material-design-navigation-drawer.html -->
-    <com.mycompany.loginapp.views.ScrimInsetFrameLayout
+    <com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout
         android:id="@+id/scrimInsetsFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -75,11 +72,11 @@
 
         <fragment
             android:id="@+id/fragment_navigation_drawer"
+            android:name="com.mycompany.loginapp.fragments.NavigationDrawerFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="left|start"
-            app:layout="@layout/fragment_navigation_drawer"
-            android:name="com.mycompany.loginapp.fragments.NavigationDrawerFragment"/>
+            app:layout="@layout/fragment_navigation_drawer" />
 
-    </com.mycompany.loginapp.views.ScrimInsetFrameLayout>
+    </com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout>
 </android.support.v4.widget.DrawerLayout>

@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.tabs;
+package com.mycompany.loginapp.views.tabs;
 
 /**
  * Created by Alexander on 19-04-2015.

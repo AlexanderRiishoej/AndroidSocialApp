@@ -27,7 +27,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppThemeTeal" >
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".activities.Login_act"
             android:icon="@drawable/ic_launcher"
@@ -91,6 +91,14 @@
         </activity>
         <activity
             android:name=".profile.ProfilePublic_act"
+            android:label="@string/title_activity_profile_act" >
+        </activity>
+        <activity
+            android:name=".observable.ToolbarControlRecyclerViewActivity"
+            android:label="@string/title_activity_profile_act" >
+        </activity>
+        <activity
+            android:name=".MaterialTabs.MainTab_act"
             android:label="@string/title_activity_profile_act" >
         </activity>
     </application>

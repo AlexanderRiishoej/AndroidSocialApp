@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.views;
+package com.mycompany.loginapp.views.transparentStatusbar;
 
 import android.content.Context;
 import android.content.res.TypedArray;

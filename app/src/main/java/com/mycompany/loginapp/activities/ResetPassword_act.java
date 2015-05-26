@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
@@ -96,39 +97,36 @@ public class ResetPassword_act extends BaseActivity {
     }
     private Transition makeEnterTransition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
             TransitionSet enterTransition = new TransitionSet();
 
-            Transition t = new Slide(Gravity.LEFT).setDuration(600);
+            Transition groupTransition = new Slide(Gravity.LEFT);
+
+            LinearLayout resetPswLayoutMain = (LinearLayout) findViewById(R.id.main_reset_password);
+            groupTransition.addTarget(resetPswLayoutMain);
+            resetPswLayoutMain.setTransitionGroup(true);
             enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
             enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
             enterTransition.excludeTarget(R.id.toolbar_teal, true);
-            enterTransition.addTransition(t);
+            //enterTransition.addTransition(fadeIn);
+            enterTransition.addTransition(groupTransition).setDuration(300);
 
-            Transition tt = new Fade();
-            enterTransition.addTransition(tt).setDuration(1000);
             return enterTransition;
-        }
-        else return null;
+        } else return null;
     }
 
     private Transition makeReturnTransition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            TransitionSet returnTransition = new TransitionSet();
+            TransitionSet enterTransition = new TransitionSet();
 
             Transition upperPartSlide = new Slide(Gravity.LEFT);
-            returnTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            returnTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            returnTransition.excludeTarget(R.id.toolbar_teal, true);
-            returnTransition.addTransition(upperPartSlide);
+            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+            enterTransition.excludeTarget(R.id.toolbar_teal, true);
+            enterTransition.addTransition(upperPartSlide);
 
-            Transition fade = new Fade();
-            returnTransition.addTransition(fade);
-
-            returnTransition.setDuration(500);
-            return returnTransition;
-        }
-        else return null;
+            enterTransition.setDuration(300);
+            return enterTransition;
+        } else return null;
     }
 }

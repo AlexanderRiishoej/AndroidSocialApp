@@ -38,9 +38,6 @@ import java.io.File;
  * create an instance of this fragment.
  */
 public class WallPostFragment extends Fragment {
-    /** Recycler */
-    private ImageView imageView;
-    private Toolbar cardToolbar;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -91,16 +88,6 @@ public class WallPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wall_post, container, false);
-//         imageView = (ImageView)view.findViewById(R.id.news_profile_picture);
-//        cardToolbar = (Toolbar)view.findViewById(R.id.card_toolbar);
-//        cardToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                return false;
-//            }
-//        });
-//        cardToolbar.inflateMenu(R.menu.menu_main);
-        //loadProfilePicture();
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_recycler_wall_post);
         mRecyclerWallPostAdapter = new WallPostRecyclerAdapter(getActivity());

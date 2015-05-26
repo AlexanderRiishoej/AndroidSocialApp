@@ -142,7 +142,7 @@ public class NavigationDrawerFragment extends Fragment {
         if(!mUserLearnedDrawer && !mFromSavedInstanceState){
             mDrawerLayout.openDrawer(this.fragmentView);
         }
-        mDrawerLayout.setFitsSystemWindows(true);
+        //mDrawerLayout.setFitsSystemWindows(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerToggle.syncState();

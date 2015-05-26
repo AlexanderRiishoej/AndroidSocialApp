@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_group"
+    android:layout_height="@dimen/subheader_layout_height"
+    android:layout_width="match_parent"
+    android:background="@color/white">
+
+    <TextView
+        style="@style/TextViewSubHeaderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textColor="@color/secondary_text_icons_light_theme"
+        android:text="@string/recent_chat" />
+</RelativeLayout>

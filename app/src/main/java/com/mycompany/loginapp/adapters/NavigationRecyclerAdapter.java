@@ -22,8 +22,6 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-
 /**
  * Created by hp1 on 28-12-2014.
  * Takes a ViewHolder as parameter which is the ViewHolder i create to hold the static references to the child views inflated
@@ -31,7 +29,6 @@ import java.io.File;
 public class NavigationRecyclerAdapter extends RecyclerView.Adapter<NavigationRecyclerAdapter.MyViewHolder> {
 
     private LayoutInflater layoutInflater;
-    public String profilePicturePath;
     private Context context;
     private Picasso picasso;
     //First We Declare Titles And Icons For Our Navigation Drawer List View
@@ -52,7 +49,7 @@ public class NavigationRecyclerAdapter extends RecyclerView.Adapter<NavigationRe
     /* Number of the active activity equal to the position of the row clicked in ItemClick() */
     private int itemRowColor() {
         switch (context.getClass().getSimpleName()) {
-            case Constants.USER_ACT_NAME:
+            case Constants.PROFILE_PRIVATE:
                 return 1;
             case Constants.NEWS:
                 return 2;

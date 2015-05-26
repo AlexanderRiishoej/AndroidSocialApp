@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.AutoTransition;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -171,7 +172,8 @@ public class Login_act extends BaseActivity {
             UserChatList_act.user = currentUser;
             startActivityForResult(new Intent(this, ProfilePrivate_act.class), 9);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                this.finishAfterTransition();
+                //this.finishAfterTransition();
+                this.finish();
             }
             else{
                 finish();
@@ -264,30 +266,43 @@ public class Login_act extends BaseActivity {
     private void makeWindowTransition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.getWindow().setReenterTransition(makeReenterTransition());
-            this.getWindow().setEnterTransition(makeReenterTransition());
+            this.getWindow().setEnterTransition(makeEnterTransition());
             ActivityOptions.makeSceneTransitionAnimation(Login_act.this).toBundle();
         }
     }
 
-    private Transition makeReenterTransition() {
+    private Transition makeEnterTransition() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             TransitionSet enterTransition = new TransitionSet();
+            //Find main view group of the view
             LinearLayout mainLinearLayout = (LinearLayout) findViewById(R.id.main_linear_layout);
-            Transition t = new Slide(Gravity.BOTTOM).setDuration(300);
-            t.addTarget(mainLinearLayout);
+            // Create a slide transition
+            Transition slide = new Slide(Gravity.BOTTOM).setDuration(300);
+            // Add the main view group to the slide transition
+            slide.addTarget(mainLinearLayout);
+            // Remember to set the transitiongroup to true
             mainLinearLayout.setTransitionGroup(true);
-//        enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-//        enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-//        enterTransition.excludeTarget(R.id.toolbar_teal, true);
-
-            Transition slide = new Slide(Gravity.BOTTOM).setDuration(200);
-            Transition fade = new Fade().setDuration(500);
-//        enterTransition.addTransition(fade);
-            enterTransition.addTransition(t);
+            // Finally add the transition to the TransitionSet
+            enterTransition.addTransition(slide);
 
             return enterTransition;
+
         }
         else return null;
     }
+private Transition makeReenterTransition() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        TransitionSet reenterTransition = new TransitionSet();
+        reenterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+        reenterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+        reenterTransition.excludeTarget(R.id.toolbar_teal, true);
+
+        Transition slideInFromLeft = new Slide(Gravity.LEFT);
+
+        reenterTransition.addTransition(slideInFromLeft).setDuration(300);
+        return reenterTransition;
+
+    } else return null;
+}
 }

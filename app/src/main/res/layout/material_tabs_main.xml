@@ -6,43 +6,30 @@
     android:layout_height="match_parent"
     android:elevation="7dp"
     android:fitsSystemWindows="true">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical"-->
+            <!--android:background="@color/grey_300">-->
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            android:id="@+id/toolbar_teal"
-            layout="@layout/toolbar_teal" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/toolbar_height"
-            android:orientation="vertical">
-
-            <com.astuetz.PagerSlidingTabStrip
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/pad_48dp"
-                android:background="?attr/colorPrimary"
-                android:fontFamily="sans-serif-regular"
-                android:textColorPrimary="@color/white"
-                android:textSize="14sp"
-                app:pstsIndicatorColor="@color/white"
-                app:pstsShouldExpand="true"
-                app:pstsTextSelectedStyle="normal"
-                app:pstsTextStyle="normal" />
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager2"
+            <com.github.florent37.materialviewpager.MaterialViewPager
+                android:id="@+id/materialViewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/tabs" />
-            <!-- android:layout_height="0dp"
-                 android:layout_weight="1"-->
-        </LinearLayout>
+                app:viewpager_logo="@layout/material_tabs_header_logo"
+                app:viewpager_logoMarginTop="90dp"
+                app:viewpager_color="@color/teal_500"
+                app:viewpager_headerHeight="200dp"
+                app:viewpager_headerAlpha="1.0"
+                app:viewpager_hideLogoWithFade="false"
+                app:viewpager_hideToolbarAndTitle="false"
+                app:viewpager_enableToolbarElevation="true"
+                app:viewpager_parallaxHeaderFactor="1.5"
+                app:viewpager_pagerTitleStrip="@layout/tabs"
+                app:viewpager_headerAdditionalHeight="20dp"
+                />
+
+        <!--</LinearLayout>-->
 
         <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->
@@ -77,7 +64,7 @@
         <!--</android.support.v7.widget.CardView>-->
         <!--</LinearLayout>-->
         <!-- for Text Tabs -->
-    </RelativeLayout>
+
 
     <com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout
         android:id="@+id/scrimInsetsFrameLayout"

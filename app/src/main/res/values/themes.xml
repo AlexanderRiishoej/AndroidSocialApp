@@ -3,11 +3,11 @@
 
     --------------------------------------------------------------------------------------------------------------------------------
     <!-- Base themes -->
-    <style name="AppTheme" parent="AppTheme.Base" />
+    <!--<style name="AppTheme" parent="AppTheme.Base" />-->
 
     <style name="AppThemeIndigo" parent="AppTheme.Indigo" />
 
-    <style name="AppThemeTeal" parent="AppTheme.Teal" />
+    <style name="AppTheme" parent="AppTheme.Teal" />
 
     <style name="ToolbarTealTheme" parent="Base.Widget.AppCompat.Toolbar.Teal" />
 

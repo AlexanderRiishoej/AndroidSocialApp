@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar_teal"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="wrap_content"
     android:background="@color/teal_500"
     android:minHeight="?attr/actionBarSize"
     app:contentInsetLeft="@dimen/activity_horizontal_margin"

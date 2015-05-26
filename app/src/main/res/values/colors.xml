@@ -23,6 +23,7 @@
     <color name="textViewWhite">#FFFFFF</color>
 
     <color name="divider">#E0E0E0</color>
+    <color name="color_shadow">#44000000</color>
 
     <!-- Color for special blue -->
     <color name="specialBlueColorPrimary">#4C7BB1</color>

@@ -24,6 +24,7 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidquery.AQuery;
+import com.mycompany.loginapp.MaterialTabs.MainTab_act;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.activities.Login_act;
 import com.mycompany.loginapp.news.NewsFeed_act;
@@ -35,6 +36,8 @@ import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.observable.ToolbarControlBaseActivity;
+import com.mycompany.loginapp.observable.ToolbarControlRecyclerViewActivity;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -125,8 +128,9 @@ public class ProfilePrivate_act extends BaseActivity {
 //                this.finishAfterTransition();
 //                return true;
             case R.id.action_edit_profile:
-                startActivity(new Intent(this, NewsFeed_act.class));
-
+                //startActivity(new Intent(this, NewsFeed_act.class));
+                //startActivity(new Intent(this, ToolbarControlRecyclerViewActivity.class));
+                startActivity(new Intent(this, MainTab_act.class));
                 return true;
         }
 
@@ -138,7 +142,7 @@ public class ProfilePrivate_act extends BaseActivity {
         super.onStart();
         if (!EventBus.getDefault().isRegistered(this)) {
             try {
-                EventBus.getDefault().register(ProfilePrivate_act.this);
+                EventBus.getDefault().register(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -502,21 +506,15 @@ public class ProfilePrivate_act extends BaseActivity {
 
     private Transition makeReenterTransition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionSet enterTransition = new TransitionSet();
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
-
-            Transition autoTransition = new AutoTransition().setDuration(700);
-            Transition fade = new Fade().setDuration(800);
+            TransitionSet reenterTransition = new TransitionSet();
+            reenterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+            reenterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+            reenterTransition.excludeTarget(R.id.toolbar_teal, true);
 
             Transition slideInFromLeft = new Slide(Gravity.LEFT);
 
-            //enterTransition.addTransition(fade);
-            //enterTransition.addTransition(autoTransition);
-
-            enterTransition.addTransition(slideInFromLeft).setDuration(300);
-            return enterTransition;
+            reenterTransition.addTransition(slideInFromLeft).setDuration(300);
+            return reenterTransition;
 
         } else return null;
     }

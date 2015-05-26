@@ -5,29 +5,20 @@ package com.mycompany.loginapp.base;
  */
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.mycompany.loginapp.MaterialTabs.MainTab_act;
 import com.mycompany.loginapp.fragments.NavigationDrawerFragment;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
-import com.mycompany.loginapp.tabs.SlidingTabLayout;
 
 import de.greenrobot.event.EventBus;
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     public static final String LOG = BaseActivity.class.getSimpleName();
 
     private NavigationDrawerFragment navigationDrawerFragment;
@@ -41,20 +32,21 @@ public abstract class BaseActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            setTitle(null);
-            if (mDrawerLayout != null) {
-                toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-            } else {
-                toolbar.setNavigationIcon(null);
+            toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                setTitle(null);
+
+                if (mDrawerLayout != null) {
+                    toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+                } else {
+                    toolbar.setNavigationIcon(null);
+                }
+                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
-            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         if (mDrawerLayout != null) {
-            mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.teal_700));
+            //mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.teal_700));
 
             navigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().
                     findFragmentById(R.id.fragment_navigation_drawer);
@@ -65,6 +57,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     protected abstract int getLayoutResource();
+
+    protected Toolbar getToolbar(){
+        return this.toolbar;
+    }
 
     protected void setActionBarIcon(int iconRes) {
         toolbar.setNavigationIcon(iconRes);

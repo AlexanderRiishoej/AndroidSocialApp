@@ -5,17 +5,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
+import com.github.ksoichiro.android.observablescrollview.ObservableListView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.fragments.WallPostFragment;
 
 
-public class NewsFeed_act extends BaseActivity{
+public class NewsFeed_act extends BaseActivity {
     private ViewPager viewPager;
 
     private static final int FRAGMENT_0 = 0;
@@ -33,7 +38,9 @@ public class NewsFeed_act extends BaseActivity{
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
-
+        // Set the amount of pages to be stored in memory on either side of the current active page
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setCurrentItem(1);
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(viewPager);
