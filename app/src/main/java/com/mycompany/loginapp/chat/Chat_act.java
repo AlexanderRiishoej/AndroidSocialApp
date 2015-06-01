@@ -1,10 +1,14 @@
 package com.mycompany.loginapp.chat;
 
 import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.transition.AutoTransition;
 import android.transition.Fade;
@@ -15,16 +19,24 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.adapters.ChatRecyclerAdapter;
 import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.clickListeners.ClickListener;
+import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
@@ -56,12 +68,7 @@ public class Chat_act extends BaseActivity {
     /**
      * The Conversation list.
      */
-    private ArrayList<Conversation> conversationList;
-
-    /**
-     * The chat adapter.
-     */
-    private ChatAdapter chatAdapter;
+    private List<Conversation> conversationList;
 
     /**
      * The Editext to compose the message.
@@ -93,6 +100,9 @@ public class Chat_act extends BaseActivity {
     private static AQuery aQuery;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView mRecyclerView;                           // Declaring RecyclerView
+    private LinearLayoutManager mLayoutManager;
+    private ChatRecyclerAdapter chatRecyclerAdapter;
 
     /* (non-Javadoc)
      * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
@@ -104,17 +114,22 @@ public class Chat_act extends BaseActivity {
         aQuery = new AQuery(this);
         /** EventBus sticky event getting from UserList_act when pressing a user from chatlist */
         userChatObject = EventBus.getDefault().getStickyEvent(MessageUserChat.class).userChatObject;
-        Log.d(LOG, "ParseUsername from Chat_act: " + userChatObject.getParseUser("username").getUsername());
+        String[] splitChatUserArray = userChatObject.getString("chatUserId").split(ParseUser.getCurrentUser().getUsername());
+        String chatParticipantHolder = "";
+        for(String match : splitChatUserArray){
+            if(!match.equals("")){
+                chatParticipantHolder = match;
+            }
+        }
 
         conversationList = new ArrayList<Conversation>();
-        ListView list = (ListView) findViewById(R.id.list);
-        chatAdapter = new ChatAdapter();
-        list.setAdapter(chatAdapter);
-        list.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        list.setStackFromBottom(true);
+        initializeRecyclerView();
+        chatRecyclerAdapter = new ChatRecyclerAdapter(this, conversationList);
+        mRecyclerView.setAdapter(chatRecyclerAdapter);
+
         txt = (EditText) findViewById(R.id.txt);
         //receiver = getIntent().getStringExtra(Constants.EXTRA_DATA);
-        receiver = userChatObject.getParseUser("username").getUsername();
+        receiver = chatParticipantHolder;
         aQuery.id(R.id.toolbar_title).text(receiver);
         handler = new Handler();
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
@@ -131,6 +146,57 @@ public class Chat_act extends BaseActivity {
     @Override
     protected int getLayoutResource() {
         return R.layout.chat;
+    }
+
+    private void initializeRecyclerView(){
+        mRecyclerView = (RecyclerView)findViewById(R.id.chat_list);
+        mRecyclerView.setHasFixedSize(false);                            // Letting the system know that the list objects are of fixed size
+        //mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+        // And passing the titles,icons,navigation_header view name, navigation_header view email,
+        // and navigation_header view profile picture
+        mLayoutManager = new LinearLayoutManager(this);         // Creating a layout Manager
+        mLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        //mRecyclerView.smoothScrollToPosition(conversationList.size());
+        //recyclerViewAddOnItemClickListener();
+        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mRecyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                final int childViewPosition = position - 1; // minus position of header
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
+        mRecyclerView.addOnScrollListener(new ReverseHidingScrollListener() {
+            @Override
+            public void onHide() {
+                hideViews();
+            }
+
+            @Override
+            public void onShow() {
+                showViews();
+            }
+        });
+    }
+
+    private void hideViews() {
+        getToolbar().animate().translationY(-getToolbar().getHeight()).setInterpolator(new AccelerateInterpolator(2));
+    }
+
+    private void showViews() {
+        getToolbar().animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
     }
 
     public void sendMessage(View view) {
@@ -177,11 +243,6 @@ public class Chat_act extends BaseActivity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
@@ -209,14 +270,17 @@ public class Chat_act extends BaseActivity {
         if (txt.length() == 0)
             return;
 
-//        InputMethodManager imm = (InputMethodManager) getSystemService(Chat.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(txt.getWindowToken(), 0);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Chat_act.INPUT_METHOD_SERVICE);
+       imm.hideSoftInputFromWindow(txt.getWindowToken(), 0);
+        mRecyclerView.scrollToPosition(conversationList.size());
 
         String message = txt.getText().toString();
         final Conversation conversation = new Conversation(message, Calendar.getInstance().getTime(), ParseUser.getCurrentUser().getUsername());
         conversation.setStatus(Conversation.STATUS_SENDING);
         conversationList.add(conversation);
-        chatAdapter.notifyDataSetChanged();
+        //chatAdapter.notifyDataSetChanged();
+        chatRecyclerAdapter.setChatList(conversationList);
+        chatRecyclerAdapter.notifyDataSetChanged();
         Log.d("Notify: ", "NotifyDataSetChanged called");
         txt.setText(null);
 
@@ -238,7 +302,9 @@ public class Chat_act extends BaseActivity {
                 }
                 userChatObject.getRelation("ChatRelation").add(chatObject);
                 userChatObject.saveInBackground();
-                chatAdapter.notifyDataSetChanged();
+                //chatAdapter.notifyDataSetChanged();
+                chatRecyclerAdapter.setChatList(conversationList);
+                chatRecyclerAdapter.notifyDataSetChanged();
                 Log.d("Notify: ", "NotifyDataSetChanged called");
             }
         });
@@ -256,7 +322,7 @@ public class Chat_act extends BaseActivity {
             // load all messages...
             ArrayList<String> al = new ArrayList<String>();
             al.add(receiver);
-            al.add(UserChatList_act.user.getUsername());
+            al.add(ParseUser.getCurrentUser().getUsername());
             chatQuery.whereContainedIn(ParseConstants.CHAT_SENDER, al);
             chatQuery.whereContainedIn(ParseConstants.CHAT_RECEIVER, al);
         } else {
@@ -285,140 +351,29 @@ public class Chat_act extends BaseActivity {
                             //LastMessageReceived lastMessageReceived = new LastMessageReceived(conversation.getDate(), conversation.getMsg());
                             //lastMessageSent(lastMessageReceived);
                         }
-
-                        chatAdapter.notifyDataSetChanged();
-                        Log.d("Notify: ", "NotifyDataSetChanged called");
                     }
                 }
                 aQuery.id(R.id.progress).visibility(View.GONE);
+                chatRecyclerAdapter.setChatList(conversationList);
+                chatRecyclerAdapter.notifyDataSetChanged();
                 //progressBar.setVisibility(View.GONE);
                 handler.postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (isRunning)
+                        if (isRunning) {
                             loadConversationList();
+                        }
+//                        chatRecyclerAdapter = new ChatRecyclerAdapter(this, conversationList);
+//                        mRecyclerView.setAdapter(chatRecyclerAdapter);
                         //Log.d("PostDelayed: ", "loadConversationList called");
                     }
                 }, 1000);
             }
         });
-
+//        chatRecyclerAdapter = new ChatRecyclerAdapter(this, conversationList);
+//        mRecyclerView.setAdapter(chatRecyclerAdapter);
     }
-
-    /**
-     * The Class ChatAdapter is the adapter class for Chat ListView. This
-     * adapter shows the Sent or Received Chat message in each list item.
-     */
-    private class ChatAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return conversationList.size();
-        }
-
-        @Override
-        public Conversation getItem(int arg0) {
-            return conversationList.get(arg0);
-        }
-
-        @Override
-        public long getItemId(int arg0) {
-            return arg0;
-        }
-
-        /**
-         * Amount of different layouts to inflate
-         * In this case 2 layouts, chat_item_sent and chat_item_receive
-         *
-         * @return - returns the number of types of Views that will be created by getView
-         */
-        @Override
-        public int getViewTypeCount() {
-            return 2;
-        }
-
-        /**
-         * @param position - the item contained in the list of Conversations
-         * @return - if isSent() = true, then return chat_item_sent else return chat_item_receive
-         */
-        @Override
-        public int getItemViewType(int position) {
-            return getItem(position).isSent() ? Constants.CHAT_ITEM_SENT : Constants.CHAT_ITEM_RECEIVE;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup arg2) {
-            ViewHolder viewHolder;
-            Conversation conversationItem = getItem(position);
-
-            // If the layout to inflate is the chat item send.
-            if (getItemViewType(position) == Constants.CHAT_ITEM_SENT) {
-                if (convertView == null) {
-                    Log.d("ConvertView: ", "is null for chat_item_send");
-                    convertView = getLayoutInflater().inflate(R.layout.chat_item_sent, null);
-                    viewHolder = new ViewHolder();
-                    viewHolder.timeTextView = (TextView) convertView.findViewById(R.id.lbl1);
-                    viewHolder.messageTextView = (TextView) convertView.findViewById(R.id.lbl2);
-                    viewHolder.statusTextView = (TextView) convertView.findViewById(R.id.lbl3);
-                    convertView.setTag(viewHolder);
-                } else {
-                    viewHolder = (ViewHolder) convertView.getTag();
-                    Log.d("Recycling...", "ViewHolder recycling chat_item_send");
-                }
-
-                viewHolder.timeTextView.setText(DateUtils.getRelativeDateTimeString(Chat_act.this, conversationItem
-                        .getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
-
-                viewHolder.messageTextView.setText(conversationItem.getMsg());
-
-
-                if (conversationItem.getStatus() == Conversation.STATUS_SENT)
-                    viewHolder.statusTextView.setText("Delivered");
-                else if (conversationItem.getStatus() == Conversation.STATUS_SENDING)
-                    viewHolder.statusTextView.setText("Sending...");
-                else
-                    viewHolder.statusTextView.setText("Failed");
-
-                return convertView;
-
-            }
-            // If the layout to inflate is the chat item receive.
-            else if (getItemViewType(position) == Constants.CHAT_ITEM_RECEIVE) {
-                if (convertView == null) {
-                    Log.d("ConvertView: ", "is null for chat_item_receive");
-                    convertView = getLayoutInflater().inflate(R.layout.chat_item_receive, null);
-                    viewHolder = new ViewHolder();
-                    viewHolder.timeTextView = (TextView) convertView.findViewById(R.id.lbl1);
-                    viewHolder.messageTextView = (TextView) convertView.findViewById(R.id.lbl2);
-                    viewHolder.statusTextView = (TextView) convertView.findViewById(R.id.lbl3);
-                    convertView.setTag(viewHolder);
-                } else {
-                    viewHolder = (ViewHolder) convertView.getTag();
-                    Log.d("Recycling...", "ViewHolder recycling chat_item_receive");
-                }
-                viewHolder.timeTextView.setText(DateUtils.getRelativeDateTimeString(Chat_act.this, conversationItem
-                        .getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
-
-                viewHolder.messageTextView.setText(conversationItem.getMsg());
-
-                viewHolder.statusTextView.setText("");
-
-                return convertView;
-            }
-
-            return null;
-        }
-
-    }
-
-    // ViewHolder to hold the id's of the views
-    public static class ViewHolder {
-        public TextView timeTextView;
-        public TextView messageTextView;
-        public TextView statusTextView;
-    }
-
     /**
      * -------------------------------------------------------------------------------------------------------------------------------------------------
      * Window Transitions
@@ -440,7 +395,10 @@ public class Chat_act extends BaseActivity {
             Transition fadeIn = new Fade().setDuration(1000);
 
 
-            LinearLayout chatLayoutMain = (LinearLayout) findViewById(R.id.chat_layout_main);
+            RelativeLayout chatLayoutMain = (RelativeLayout) findViewById(R.id.chat_layout_main);
+//            FrameLayout chatLayoutMain = (FrameLayout) findViewById(R.id.chat_layout_main);
+//            LinearLayout chatLayoutMain = (LinearLayout) findViewById(R.id.chat_layout_main);
+
             chatLayoutMain.setTransitionGroup(true);
             groupTransition.addTarget(chatLayoutMain);
 

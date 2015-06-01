@@ -18,7 +18,6 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -180,7 +179,7 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
                 iconEditField = (ImageView) itemView.findViewById(R.id.rowIconEdit);
             } else if (ViewType == Constants.TYPE_HEADER) {
                 holderId = Constants.TYPE_HEADER;
-                profilePicture = (CircularImageView) itemView.findViewById(R.id.profile_picture);
+                profilePicture = (ImageView) itemView.findViewById(R.id.profile_picture);
                 city = (TextView) itemView.findViewById(R.id.city);
                 name = (TextView) itemView.findViewById(R.id.wall_post_username);
                 status = (TextView) itemView.findViewById(R.id.status);

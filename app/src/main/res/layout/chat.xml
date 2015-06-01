@@ -8,34 +8,45 @@
     android:fitsSystemWindows="true">
     <!-- The main content view -->
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/chat_layout_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include
-                android:id="@+id/toolbar_teal"
-                layout="@layout/toolbar_teal" />
+            android:layout_height="match_parent">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/activity_main_swipe_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <ListView
-                    android:id="@+id/list"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/chat_board">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/chat_list"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:divider="@color/white"
-                    android:dividerHeight="@dimen/pad_5dp"
-                    android:fastScrollEnabled="false"
-                    android:paddingBottom="@dimen/pad_10dp"
-                    android:paddingTop="@dimen/pad_10dp"
-                    tools:listitem="@layout/chat_item_receive" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|start"
+                    android:divider="@drawable/list_divider"
+                    android:dividerHeight="1dp"
+                    android:paddingBottom="8dp"
+                    android:scrollbars="vertical"
+                    android:paddingTop="?attr/actionBarSize"
+                    android:clipToPadding="false"
+                    />
+
+                <!--<ListView-->
+                    <!--android:id="@+id/list"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:divider="@color/white"-->
+                    <!--android:dividerHeight="@dimen/pad_5dp"-->
+                    <!--android:fastScrollEnabled="false"-->
+                    <!--android:paddingBottom="@dimen/pad_10dp"-->
+                    <!--android:paddingTop="@dimen/pad_10dp"-->
+                    <!--tools:listitem="@layout/chat_item_receive" />-->
             </android.support.v4.widget.SwipeRefreshLayout>
+
+            <include
+                android:id="@+id/toolbar_teal"
+                layout="@layout/toolbar_teal" />
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -50,10 +61,14 @@
             <View style="@style/divider_margin_bot" />
 
             <LinearLayout
+                android:id="@+id/chat_board"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:orientation="vertical">
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true"
+                android:background="@color/grey_100">
 
                 <EditText
                     android:id="@+id/txt"
@@ -84,7 +99,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
     <!-- The navigation drawer -->
     <com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout
         android:id="@+id/scrimInsetsFrameLayout"

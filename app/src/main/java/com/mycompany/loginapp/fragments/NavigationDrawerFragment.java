@@ -145,7 +145,7 @@ public class NavigationDrawerFragment extends Fragment {
         //mDrawerLayout.setFitsSystemWindows(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerToggle.syncState();
+        //mDrawerToggle.syncState();
     }
 
     private void selectDrawerItem(int item){
@@ -205,7 +205,6 @@ public class NavigationDrawerFragment extends Fragment {
     public ActionBarDrawerToggle getNavigationDrawerToggle(){
         return mDrawerToggle;
     }
-
 //    public static interface ClickListener{
 //
 //        public void onClick(View view, int position);

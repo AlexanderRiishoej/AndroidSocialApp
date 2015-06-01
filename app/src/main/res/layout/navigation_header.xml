@@ -40,13 +40,12 @@
             />
     </LinearLayout>
 
-    <com.pkmmte.view.CircularImageView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="74dp"
+        android:layout_height="74dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="37dp"
         android:id="@+id/circleView"
-        app:border="true"
         app:border_color="@color/secondary_text_icons"
-        app:border_width="1dp"/>
+        app:border_width="0dp"/>
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,7 +21,6 @@ import com.mycompany.loginapp.constants.ParseConstants;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -212,7 +212,7 @@ public class UserChatListAdapter extends RecyclerView.Adapter<UserChatListAdapte
         // For RecyclerItems
         public TextView username;
         // Special circular imageView using a framework
-        public CircularImageView profilePicture;
+        public ImageView profilePicture;
         // ProgressBar for the small profile pictures in the list loading
         public ProgressBar imageProgressBar;
         public TextView lastChatMessage;
@@ -224,7 +224,7 @@ public class UserChatListAdapter extends RecyclerView.Adapter<UserChatListAdapte
             }
             else {
                 username = (TextView) itemView.findViewById(R.id.user_list_username);
-                profilePicture = (CircularImageView) itemView.findViewById(R.id.user_list_username_profile_parse_image);
+                profilePicture = (ImageView) itemView.findViewById(R.id.user_list_username_profile_parse_image);
                 imageProgressBar = (ProgressBar) itemView.findViewById(R.id.user_list_image_progress_bar);
                 lastChatMessage = (TextView) itemView.findViewById(R.id.user_list_recent_chat);
                 dateOfLastChatMessage = (TextView) itemView.findViewById(R.id.user_list_message_date);

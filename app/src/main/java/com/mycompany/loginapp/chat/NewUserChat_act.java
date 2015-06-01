@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,7 +40,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -283,7 +283,7 @@ public class NewUserChat_act extends BaseActivity {
                 convertView = getLayoutInflater().inflate(R.layout.user_new_chat_list_item, null);
                 viewHolder = new NewUserChatViewHolder();
                 viewHolder.username = (TextView) convertView.findViewById(R.id.user_list_username);
-                viewHolder.profilePicture = (CircularImageView) convertView.findViewById(R.id.user_list_username_profile_parse_image);
+                viewHolder.profilePicture = (ImageView) convertView.findViewById(R.id.user_list_username_profile_parse_image);
                 viewHolder.userImageProgressBar = (ProgressBar) convertView.findViewById(R.id.new_user_list_image_progress_bar);
                 convertView.setTag(viewHolder);
             } else {
@@ -329,7 +329,7 @@ public class NewUserChat_act extends BaseActivity {
         /**
          * Special circular imageView using a framework
          */
-        public CircularImageView profilePicture;
+        public ImageView profilePicture;
         /**
          * ProgressBar for the small profile pictures in the list loading
          */

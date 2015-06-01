@@ -7,9 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.transition.AutoTransition;
 import android.transition.Fade;
 import android.transition.Slide;
@@ -20,39 +20,30 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.clickListeners.ClickListener;
-import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.adapters.UserChatListRecyclerAdapter;
 import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.clickListeners.ClickListener;
+import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUserChat;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.pkmmte.view.CircularImageView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -72,6 +63,7 @@ public class UserChatList_act extends BaseActivity {
     private AQuery aQuery;
     private ArrayList<ParseObject> userList;
     private ImageButton mFabButton;
+    private boolean isRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +73,10 @@ public class UserChatList_act extends BaseActivity {
         aQuery.id(R.id.toolbar_title).text("Chat users");
         mFabButton = (ImageButton) findViewById(R.id.fabButton);
         initializeRecyclerView();
+        userList = new ArrayList<>();
+        userChatListRecyclerAdapter = new UserChatListRecyclerAdapter(this, userList);
+        mRecyclerView.setAdapter(userChatListRecyclerAdapter);
         initializeSwipeRefreshLayout();
-        getActiveUserChats();
     }
 
     private void initializeSwipeRefreshLayout() {
@@ -105,28 +99,28 @@ public class UserChatList_act extends BaseActivity {
         // and navigation_header view profile picture
         mLayoutManager = new LinearLayoutManager(this);         // Creating a layout Manager
         mRecyclerView.setLayoutManager(mLayoutManager);
-        //recyclerViewAddOnItemClickListener();
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if(position == Constants.TYPE_HEADER){
+                if (position == Constants.TYPE_HEADER) {
                     return;
                 }
                 // only for testing purposes
-                if(position > 2){
+                if (position > 2) {
                     return;
                 }
                 final int childViewPosition = position - 1; // minus position of header
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class).
-                                        putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
-                                ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
-                    } else {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class));
-                    }
+                    EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
+                    startActivity(new Intent(UserChatList_act.this, Chat_act.class).
+                                    putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
+                            ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
+                } else {
+                    EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
+                    startActivity(new Intent(UserChatList_act.this, Chat_act.class));
+                }
             }
 
             @Override
@@ -166,13 +160,7 @@ public class UserChatList_act extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                ParseUser testUser = new ParseUser();
-//                testUser.setUsername("Torben");
-//                testUser.setEmail("test@email.com");
-//                userList.add(testUser);
-//                userAdapter.notifyDataSetChanged();
-                //loadUserList();
-                //refreshUserList();
+                refreshUserList();
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
@@ -227,8 +215,17 @@ public class UserChatList_act extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        isRunning = true;
+        this.getActiveUserChats();
+        //refreshUserList();
         //refreshUserList();
         //loadUserList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isRunning = false;
     }
 
     @Override
@@ -264,24 +261,20 @@ public class UserChatList_act extends BaseActivity {
 
     /** Gets all the active chats for the current logged in user */
     private void refreshUserList() {
-        final ProgressDialog dia = ProgressDialog.show(this, null,
-                getString(R.string.alert_loading));
-
+//        final ProgressDialog dia = ProgressDialog.show(this, null,
+//                getString(R.string.alert_loading));
         final List<ParseObject> userChatList = new ArrayList<ParseObject>();
-        ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
-        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
-        parseObjectQuery.include("username");
-        parseObjectQuery.findInBackground(new FindCallback<ParseObject>() {
+        getUserChatListQuery().orderByDescending(ParseConstants.UPDATED_AT).findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
-                dia.dismiss();
+//                dia.dismiss();
                 if (e == null) {
                     if (parseUserChatObjects.size() > 0) {
                         userChatList.addAll(parseUserChatObjects);
-                        Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
-                        Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
                         userList = new ArrayList<ParseObject>(userChatList);
-                        //userAdapter.notifyDataSetChanged();
+                        userChatListRecyclerAdapter.setUserChatList(userList);
+                        //userChatListRecyclerAdapter.notifyItemRangeChanged(1, userList.size());
+                        userChatListRecyclerAdapter.notifyDataSetChanged();
                     } else {
                         Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
                     }
@@ -296,23 +289,20 @@ public class UserChatList_act extends BaseActivity {
      * Gets the active chat associated with the current logged in user
      */
     private void getActiveUserChats() {
-        final ProgressDialog dia = ProgressDialog.show(this, null,
-                getString(R.string.alert_loading));
+//        final ProgressDialog dia = ProgressDialog.show(this, null,
+//                getString(R.string.alert_loading));
 
         final List<ParseObject> userChatList = new ArrayList<ParseObject>();
-        ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
-        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
-        parseObjectQuery.include("username");
-        parseObjectQuery.findInBackground(new FindCallback<ParseObject>() {
+        getUserChatListQuery().orderByDescending(ParseConstants.UPDATED_AT).findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
-                dia.dismiss();
+//                dia.dismiss();
                 if (e == null) {
                     if (parseUserChatObjects.size() > 0) {
-                        userChatList.addAll(parseUserChatObjects);
+                        //userChatList.addAll(parseUserChatObjects);
                         Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
                         Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
-                        loadUserList(userChatList);
+                        loadUserList(parseUserChatObjects);
                     } else {
                         Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
                     }
@@ -325,13 +315,51 @@ public class UserChatList_act extends BaseActivity {
 
     /**
      * Loads the users into the list of chat users
-     * Sets the adapter
-     * Sets the ItemOnClickListener
      */
     private void loadUserList(List<ParseObject> userChats) {
-        userList = new ArrayList<ParseObject>(userChats);
-        userChatListRecyclerAdapter = new UserChatListRecyclerAdapter(this, userList);
-        mRecyclerView.setAdapter(userChatListRecyclerAdapter);
+        // If the size of the two data sets are different it means that x-number of users has requested a new chat hence
+        // the whole data set has to be notified, since i do not know how many is actively requesting to start a new chat
+        if(userChats.size() != this.userList.size()) {
+            userList = new ArrayList<ParseObject>(userChats);
+            userChatListRecyclerAdapter.setUserChatList(userList);
+            userChatListRecyclerAdapter.notifyDataSetChanged();
+        }
+        // Check if any of the chats has been updated recently typically by messaging. If any updates has been made
+        // notify the item at the given position of the iterator, and move the item to the top of the chat list
+        // Next, update the adapters list of chats, so it can
+        else {
+            for(int i = 0; i < userChats.size(); i++){
+                Date chatUpdatedDate = userChats.get(i).getUpdatedAt(); //The updated date of the chat
+//                Log.d("userChatTime: " , d.toString());
+//                Log.d("userListTime: ", userList.get(i).getUpdatedAt().toString());
+                if(chatUpdatedDate.before(userList.get(i).getUpdatedAt())){ // If the updated date is newer than the previous date, notify the adapter
+                    userChatListRecyclerAdapter.notifyItemChanged(i + 1);
+                    userChatListRecyclerAdapter.notifyItemMoved(i + 1, 1);
+                }
+            }
+            // Update the adapters list to its current status. If this is not done, the list of the adapter is left unchanged.
+            userList = new ArrayList<ParseObject>(userChats);
+            userChatListRecyclerAdapter.setUserChatList(userList);
+        }
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                if (isRunning) {
+                    getActiveUserChats();
+                }
+            }
+        }, 1000);
+    }
+
+    /** The query for the list of chats */
+    private ParseQuery<ParseObject> getUserChatListQuery(){
+        ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
+        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
+        parseObjectQuery.include("username");
+        parseObjectQuery.include("createdBy");
+
+        return parseObjectQuery;
     }
 
     /**

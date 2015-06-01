@@ -213,6 +213,7 @@ public class ProfilePrivate_act extends BaseActivity {
     public void onEvent(MessageFinishActivities event) {
         Log.d(LOG, "FINISHING USER_ACTIVITY");
         ParseUser.logOut();
+        ProfileImageHolder.imageFile = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             startActivity(new Intent(ProfilePrivate_act.this, Login_act.class),
                     ActivityOptions.makeSceneTransitionAnimation(this).toBundle());

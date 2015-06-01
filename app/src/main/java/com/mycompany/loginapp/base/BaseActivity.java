@@ -98,4 +98,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.d(LOG, "BaseActivity is destroyed. Belonging to context: " + this);
         super.onDestroy();
     }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if(navigationDrawerFragment!= null) {
+            navigationDrawerFragment.getNavigationDrawerToggle().syncState();
+        }
+    }
 }

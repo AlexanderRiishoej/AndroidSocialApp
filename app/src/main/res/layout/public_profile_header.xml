@@ -43,14 +43,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/pad_16dp">
 
-                        <com.pkmmte.view.CircularImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profile_picture"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:layout_centerVertical="true"
-                            app:border="true"
                             app:border_color="@color/secondary_text_icons"
-                            app:border_width="1dp" />
+                            app:border_width="0dp" />
 
                             <!-- android:layout_marginBottom="@dimen/pad_20dp"
                             android:layout_marginTop="@dimen/pad_20dp" -->
