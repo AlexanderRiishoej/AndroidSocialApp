@@ -1,17 +1,13 @@
 package com.mycompany.loginapp.profile;
 
 import android.app.ActivityOptions;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
-import android.transition.AutoTransition;
+import android.support.design.widget.Snackbar;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -22,26 +18,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidquery.AQuery;
-import com.mycompany.loginapp.MaterialTabs.MainTab_act;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.activities.Login_act;
-import com.mycompany.loginapp.news.NewsFeed_act;
-import com.mycompany.loginapp.adapters.ProfileRecyclerAdapter;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.chat.UserChatList_act;
-import com.mycompany.loginapp.clickListeners.ClickListener;
-import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
+import com.mycompany.loginapp.eventMessages.MessageUpdateCoverPhoto;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
-import com.mycompany.loginapp.observable.ToolbarControlBaseActivity;
-import com.mycompany.loginapp.observable.ToolbarControlRecyclerViewActivity;
 import com.mycompany.loginapp.utilities.Utilities;
-import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,35 +39,28 @@ import de.greenrobot.event.EventBus;
 //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ProfilePrivate_act extends BaseActivity {
     public static final String LOG = ProfilePrivate_act.class.getSimpleName();
-
-    private ProfileRecyclerAdapter profileRecyclerAdapter;
-    /**
-     * Recycler
-     */
-    private RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    private RecyclerView.LayoutManager mLayoutManager;
-    public static ParseUser parseUser;
     private AQuery aQuery;
     private ProfileImageLoader profileImageLoader;
+    private ProfileCoverPhotoLoader mProfileCoverPhotoLoader;
+    private PrivateProfileFragment mPrivateProfileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeWindowTransition();
-        parseUser = ParseUser.getCurrentUser();
+        EventBus.getDefault().register(this);
+        mPrivateProfileFragment = PrivateProfileFragment.newInstance();
         aQuery = new AQuery(this);
         //setActionBarIcon(R.drawable.ic_arrow_back_white_24dp);
-        // Get the TexView and assign the parseUser to it
-        //aQuery.id(R.id.signedInAs).text(parseUser.getUsername());
-        aQuery.id(R.id.toolbar_title).text(getString(R.string.profile));
-        mRecyclerView = (RecyclerView) findViewById(R.id.profileRecyclerView);
-        profileRecyclerAdapter = new ProfileRecyclerAdapter(this);
+        aQuery.id(R.id.toolbar_title).text(ParseUser.getCurrentUser().getUsername());
+        if(savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, mPrivateProfileFragment)
+                    .commit();
+        }
         profileImageLoader = new ProfileImageLoader(this);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(profileRecyclerAdapter);
-        recyclerOnTouchListener();
-
+        mProfileCoverPhotoLoader = new ProfileCoverPhotoLoader(this);
+        mProfileCoverPhotoLoader.loadCoverPhoto();
         profileImageLoader.loadProfilePicture();
     }
 
@@ -128,25 +108,24 @@ public class ProfilePrivate_act extends BaseActivity {
 //                this.finishAfterTransition();
 //                return true;
             case R.id.action_edit_profile:
+                startActivity(new Intent(this, ProfilePublic_act.class));
+
                 //startActivity(new Intent(this, NewsFeed_act.class));
                 //startActivity(new Intent(this, ToolbarControlRecyclerViewActivity.class));
-                startActivity(new Intent(this, MainTab_act.class));
+//                getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.content_frame, PrivateProfileFragment.newInstance()).addToBackStack(null)
+//                        .commit();
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                DialogFragment newFragment = EditProfileFragment.newInstance();
+////                newFragment.setStyle( DialogFragment.STYLE_NORMAL, android.R.style.Theme );
+//                newFragment.show(getSupportFragmentManager(), "");
+
                 return true;
+            case R.id.action_cover_photo:
+                chooseCoverFromGallery();
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            try {
-                EventBus.getDefault().register(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -156,59 +135,23 @@ public class ProfilePrivate_act extends BaseActivity {
         super.onDestroy();
     }
 
-    private void recyclerOnTouchListener() {
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mRecyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                if (position == 0) return;
+    public void showSnackBar(View view){
+        Snackbar.make(view, "This ia an example!", Snackbar.LENGTH_LONG)
+                .setAction("Do something useful!", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                if (position == 1) {
-                    new MaterialDialog.Builder(ProfilePrivate_act.this)
-                            .positiveText("OK")
-                            .negativeText("Cancel")
-                            .title("Input")
-                            .content("Content")
-                            .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                            .widgetColorRes(R.color.amber_500)
-                            .iconRes(R.drawable.icon)
-                            .positiveColorRes(R.color.teal_500)
-                            .btnSelector(R.drawable.ripple_button_flat)
-                            .input("Phone number", "Test", new MaterialDialog.InputCallback() {
-                                @Override
-                                public void onInput(MaterialDialog dialog, CharSequence input) {
-                                    Log.d(LOG, input.toString());
-                                    String phoneNumber = input.toString();
-                                    final ParseUser currentUser = ParseUser.getCurrentUser();
-                                    currentUser.put("phoneNumber", phoneNumber);
-                                    final ProgressDialog progressDialog = ProgressDialog.show(ProfilePrivate_act.this, null, getString(R.string.alert_wait));
-                                    currentUser.saveInBackground(new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            progressDialog.dismiss();
-                                            if (e == null) {
-                                                profileRecyclerAdapter.notifyItemChanged(1);
-                                            } else {
-                                                Utilities.showDialog(ProfilePrivate_act.this, "Error saving information... " + e.getMessage());
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                }
-                            }).show();
-                }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
+                    }
+                })
+                .show(); // Dont forget to show!
     }
 
     /**
      * Finishes this activity
      *
      * @param event - received by all active activities to call finish()
+     *              http://developer.android.com/guide/components/tasks-and-back-stack.html
+     *              gets called twice - fix it
      */
     public void onEvent(MessageFinishActivities event) {
         Log.d(LOG, "FINISHING USER_ACTIVITY");
@@ -225,10 +168,10 @@ public class ProfilePrivate_act extends BaseActivity {
     }
 
     /** Event received when a new profile picture has been chosen
-     *  User_act starts this event from the OnActivityResult() */
+     *  ProfilePrivate starts this event from the OnActivityResult() */
     public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
-        //mRecyclerAdapter.profilePicturePath = newProfilePictureEvent.imageUri;
-        profileRecyclerAdapter.updateRecyclerItem(0);
+        //profileRecyclerAdapter.updateRecyclerItem(0);
+        mPrivateProfileFragment.updateProfilePicture();
     }
 
 // http://developer.android.com/training/camera/photobasics.html - camera intent
@@ -251,20 +194,23 @@ public class ProfilePrivate_act extends BaseActivity {
             // If is a picture taken from the gallery
             if (requestCode == Constants.REQUEST_CHOOSE_PICTURE) {
                 Log.d(LOG + " onActivityResult", "Photo chosen with path: " + data.getData());
-                if (data == null) {
-                    Log.d(LOG, "Data is null");
-                } else {
-                    /** Get the Uri for the image chosen */
-                    Uri imageUri = data.getData();
-                    Log.d(LOG, "MediaUri: " + imageUri);
-                    /** Populate image */
-                    Log.d(LOG, "MediaImagePath: " + getMediaImagePath(imageUri));
-                    profileRecyclerAdapter.updateProfileImage(getMediaImagePath(imageUri));
-                    //profileImageLoader.imageFile = new File(getMediaImagePath(imageUri));
-                    ProfileImageHolder.imageFile = new File(getMediaImagePath(imageUri));
-                    profileImageLoader.saveImageToParse();
-                    EventBus.getDefault().post(new MessageUpdateProfilePicture(getMediaImagePath(imageUri)));
-                }
+                /** Get the Uri for the image chosen */
+                Uri imageUri = data.getData();
+                Log.d(LOG, "MediaUri: " + imageUri);
+                /** Populate image */
+                Log.d(LOG, "MediaImagePath: " + getMediaImagePath(imageUri));
+
+                ProfileImageHolder.imageFile = new File(getMediaImagePath(imageUri));
+                profileImageLoader.saveImageToParse();
+                EventBus.getDefault().post(new MessageUpdateProfilePicture(getMediaImagePath(imageUri)));
+            }
+            //cover photo
+            if(requestCode == Constants.REQUEST_CHOOSE_COVER_PHOTO){
+                Uri coverUri = data.getData();
+
+                ProfileImageHolder.profileCoverPhotoFile = new File(getMediaImagePath(coverUri));
+                mProfileCoverPhotoLoader.saveCoverPhotoToParse();
+                EventBus.getDefault().post(new MessageUpdateCoverPhoto(getMediaImagePath(coverUri)));
             }
 
             if (requestCode == Constants.REQUEST_CHOOSE_VIDEO) {
@@ -302,7 +248,7 @@ public class ProfilePrivate_act extends BaseActivity {
                     //picasso.load(mediaUri).fit().memoryPolicy(MemoryPolicy.NO_CACHE).into(aQuery.id(R.id.profile_picture).getImageView());
                     //Copy Uri contents into temp imageFile.
                     File videoFile = new File(getMediaImagePath(mediaUri));
-                    //saveImageToParse();
+                    //saveCoverPhotoToParse();
                 }
             }
 
@@ -452,6 +398,12 @@ public class ProfilePrivate_act extends BaseActivity {
         startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_PICTURE);
     }
 
+    private void chooseCoverFromGallery() {
+        Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        choosePictureIntent.setType("image/*");
+        //The data that is returned by the result is the path to the image file
+        startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_COVER_PHOTO);
+    }
     private void chooseVideoFromGallery() {
         Intent chooseVideoIntent = new Intent(Intent.ACTION_GET_CONTENT);
         chooseVideoIntent.setType("video/*");
@@ -500,7 +452,7 @@ public class ProfilePrivate_act extends BaseActivity {
             Transition fade = new Fade();
             exitTransition.addTransition(fade);
 
-            exitTransition.setDuration(500);
+            exitTransition.setDuration(200);
             return exitTransition;
         } else return null;
     }
@@ -510,7 +462,7 @@ public class ProfilePrivate_act extends BaseActivity {
             TransitionSet reenterTransition = new TransitionSet();
             reenterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
             reenterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            reenterTransition.excludeTarget(R.id.toolbar_teal, true);
+            reenterTransition.excludeTarget(R.id.appbar, true);
 
             Transition slideInFromLeft = new Slide(Gravity.LEFT);
 

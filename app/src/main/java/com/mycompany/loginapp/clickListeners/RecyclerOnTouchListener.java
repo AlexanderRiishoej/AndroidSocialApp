@@ -29,7 +29,7 @@ public class RecyclerOnTouchListener implements RecyclerView.OnItemTouchListener
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
 
                 if(child != null && clickListener != null){
-                    clickListener.onLongClick(child, recyclerView.getChildPosition(child));
+                    clickListener.onLongClick(child, recyclerView.getChildLayoutPosition(child));
                 }
 
                 Log.d("RecyclerOnTouchListener", "onLongPress: " + e);
@@ -40,7 +40,7 @@ public class RecyclerOnTouchListener implements RecyclerView.OnItemTouchListener
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if(child != null && clickListener != null){
                     child.onTouchEvent(e); // called to alert the RecyclerView that a touch has happened and the ripple should be drawn
-                    clickListener.onClick(child, recyclerView.getChildPosition(child));
+                    clickListener.onClick(child, recyclerView.getChildLayoutPosition(child));
                 }
                 Log.d("RecyclerOnTouchListener", "onSingleTapUp: " + e);
                 return super.onSingleTapUp(e);
@@ -55,7 +55,7 @@ public class RecyclerOnTouchListener implements RecyclerView.OnItemTouchListener
          * handled the event correctly by returning true then we have to handle the click indicating that the user pressed
          * on the RecyclerView at a given position, then process the click event */
         if(child != null && this.clickListener != null && gestureDetector.onTouchEvent(e)){
-            clickListener.onClick(child, recyclerView.getChildPosition(child));
+            clickListener.onClick(child, recyclerView.getChildLayoutPosition(child));
         }
 
         // returns false if the touch event is of the type onSingleTapUp or onLongPress in this cases, and the event is forwarded to the gestureDetector
@@ -64,6 +64,11 @@ public class RecyclerOnTouchListener implements RecyclerView.OnItemTouchListener
 
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
 }

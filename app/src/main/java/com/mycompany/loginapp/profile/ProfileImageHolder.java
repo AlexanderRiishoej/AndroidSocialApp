@@ -10,6 +10,9 @@ public class ProfileImageHolder {
     public static String profileImagePath;
     public static File imageFile;
 
+    public static String profileCoverPath;
+    public static File profileCoverPhotoFile;
+
     public ProfileImageHolder(){
 
     }

@@ -5,14 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.AutoTransition;
-import android.transition.Fade;
+import android.support.design.widget.TextInputLayout;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -23,10 +21,12 @@ import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
+import com.mycompany.loginapp.registration.Register_act;
 import com.mycompany.loginapp.singletons.MySingleton;
 import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.eventMessages.MessageEvent;
 import com.mycompany.loginapp.utilities.Utilities;
+import com.mycompany.loginapp.views.CharacterCountErrorWatcher;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -47,6 +47,8 @@ public class Login_act extends BaseActivity {
      * The parseUser edittext.
      */
     private EditText user;
+    private TextInputLayout mTextInputUsernameLayout;
+    private TextInputLayout mTextInputPasswordLayout;
 
     /**
      * The password edittext.
@@ -60,13 +62,16 @@ public class Login_act extends BaseActivity {
         super.onCreate(savedInstanceState);
         this.makeWindowTransition();
         aq = new AQuery(this);
-        user = (EditText) findViewById(R.id.Username);
-        pwd = (EditText) findViewById(R.id.Password);
-        //Used to store values from your app and accessing them later
-        //user.setText(MainApp.getSingleton().getDefaultSharedPreferences().getString("parseUser", ""));
-        //pwd.setText(MainApp.getSingleton().getDefaultSharedPreferences().getString("password", ""));
         aq.id(R.id.toolbar_title).text(getString(R.string.login_form));
 
+        mTextInputUsernameLayout = (TextInputLayout)findViewById(R.id.username_textinput);
+        mTextInputPasswordLayout = (TextInputLayout)findViewById(R.id.password_textinput);
+
+        user = mTextInputUsernameLayout.getEditText();
+        pwd = mTextInputPasswordLayout.getEditText();
+        user.addTextChangedListener(new CharacterCountErrorWatcher(mTextInputUsernameLayout, 5, 20));
+        pwd.addTextChangedListener(new CharacterCountErrorWatcher(mTextInputPasswordLayout, 4, 20));
+        //mTextInputUsernameLayout.setError("Bob");
         user.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("parseUser", ""));
         pwd.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("password", ""));
     }
@@ -79,12 +84,12 @@ public class Login_act extends BaseActivity {
         return R.layout.login_form;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -128,16 +133,7 @@ public class Login_act extends BaseActivity {
                     //User_act.parseUser = pu;
                     UserChatList_act.user = pu;
                     startActivity(new Intent(Login_act.this, ProfilePrivate_act.class));
-//                    startActivity(new Intent(Login.this, UserActivity.class), ActivityOptions.makeSceneTransitionAnimation(
-//                            Login.this).toBundle());
-                    //getWindow().setExitTransition(makeExitTransition());
-                    //ActivityOptions.makeSceneTransitionAnimation(Login.this).toBundle();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Login_act.this.finishAfterTransition();
-                    }
-                    else{
-                        finish();
-                    }
+                    finish();
                 } else {
                     Utilities.showDialog(
                             Login_act.this,
@@ -168,7 +164,7 @@ public class Login_act extends BaseActivity {
     private void CurrentUserLoggedIn() {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            ProfilePrivate_act.parseUser = currentUser;
+            //ProfilePrivate_act.parseUser = currentUser;
             UserChatList_act.user = currentUser;
             startActivityForResult(new Intent(this, ProfilePrivate_act.class), 9);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

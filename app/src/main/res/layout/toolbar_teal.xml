@@ -15,14 +15,14 @@
  <!-- android:gravity="bottom"
      android:elevation="4dp"
 -->
-    <TextView
-        android:id="@+id/toolbar_title_below"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:paddingBottom="16dp"/>
+    <!--<TextView-->
+        <!--android:id="@+id/toolbar_title_below"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|start"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="20sp"-->
+        <!--android:paddingBottom="16dp"/>-->
 
     <TextView
         android:id="@+id/toolbar_title"

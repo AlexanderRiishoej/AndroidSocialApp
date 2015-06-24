@@ -10,6 +10,7 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -36,6 +37,10 @@ public class ResetPassword_act extends BaseActivity {
         email = (EditText)findViewById(R.id.Email);
         aQuery.id(R.id.toolbar_title).text("Reset");
         aQuery.id(R.id.sub_header_text_view).text(R.string.reset_password);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
     }
 
     @Override
@@ -73,15 +78,19 @@ public class ResetPassword_act extends BaseActivity {
     }
 
     @Override
-    public void finishAfterTransition() {
-        Log.d("finishAfterTransition()", "ResetPassword");
-        //getWindow().setReturnTransition(makeReturnTransition());
-        super.finishAfterTransition();
-    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+        //noinspection SimplifiableIfStatement
+        switch (id){
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

@@ -48,22 +48,11 @@
         </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
     <!-- The navigation drawer -->
-    <!-- http://www.android4devs.com/2014/12/how-to-make-material-design-navigation-drawer.html -->
-    <com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout
-        android:id="@+id/scrimInsetsFrameLayout"
-        android:layout_width="match_parent"
+    <fragment
+        android:id="@+id/fragment_navigation_view"
+        android:layout_width="@dimen/navigation_width"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true">
-        <!-- To keep statusbar dark app:insetForeground="#4000"-->
-
-        <fragment
-            android:id="@+id/fragment_navigation_drawer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="left|start"
-            app:layout="@layout/fragment_navigation_drawer"
-            android:name="com.mycompany.loginapp.fragments.NavigationDrawerFragment"/>
-
-    </com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout>
+        android:layout_gravity="left|start"
+        app:layout="@layout/fragment_navigation_view"
+        android:name="com.mycompany.loginapp.base.NavigationDrawerFragment"/>
 </android.support.v4.widget.DrawerLayout>

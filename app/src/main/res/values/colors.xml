@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/material_blue_grey_800</color>
-    <!--<color name="colorPrimaryDark">@color/material_blue_grey_900</color>-->
-    <color name="colorPrimaryDark">@color/black_translucent</color>
+    <!-- Project theme -->
+    <color name="colorPrimary">@color/teal_500</color>
+    <color name="colorPrimaryDark">@color/teal_700</color>
+    <color name="colorAccent">@color/blue_grey_500</color>
+    <color name="windowBackground">@color/white</color>
+    <color name="textColorPrimary">@color/text_light_theme</color>
+
+    <!-- DatePicker dialog theme -->
+    <color name="mdtp_accent_color">@color/teal_500</color>
+    <color name="mdtp_accent_color_dark">@color/teal_700</color>
+
+    <color name="colorControlActivated">@color/teal_500</color>
+    <color name="colorControlHighlight">@color/teal_700</color>
+    <color name="colorButtonNormal">@color/teal_500</color>
+
+
     <color name="material_dark">@color/background_material_dark</color>
     <color name="colorSecondary">@color/material_deep_teal_200</color>
     <color name="colorSecondaryDark">@color/material_deep_teal_500</color>

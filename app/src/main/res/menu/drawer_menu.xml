@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_subheader"
+        android:title="Social">
+        <menu>
+            <group android:checkableBehavior="single" android:id="@+id/social_group">
+                <item
+                    android:id="@+id/navigation_sub_item_1"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_person_grey600_24dp"
+                    android:orderInCategory="1"
+                    android:title="Profile" />
+                <item
+                    android:id="@+id/navigation_sub_item_2"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_home_grey600_24dp"
+                    android:orderInCategory="2"
+                    android:title="News" />
+                <item
+                    android:id="@+id/navigation_sub_item_3"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_messenger_grey600_24dp"
+                    android:orderInCategory="3"
+                    android:title="Chat" />
+                <item
+                    android:id="@+id/navigation_sub_item_4"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_chat_grey600_24dp"
+                    android:orderInCategory="4"
+                    android:title="New Chat" />
+            </group>
+        </menu>
+    </item>
+</menu>

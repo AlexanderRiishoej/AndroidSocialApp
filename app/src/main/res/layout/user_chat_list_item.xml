@@ -75,11 +75,16 @@
             android:textColor="@color/secondary_text_icons_light_theme"
             android:textSize="@dimen/txt_14sp" />
 
-            <ImageView
-                android:id="@+id/sent_and_seen_image"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/seen_image"
                 android:layout_width="@dimen/pad_16dp"
                 android:layout_height="@dimen/pad_16dp"
-                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_alignParentRight="true"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/sent_image"
+                android:layout_width="@dimen/pad_10dp"
+                android:layout_height="@dimen/pad_10dp"
                 android:gravity="end"
                 android:src="@drawable/ic_checkbox_marked_circle_grey600_24dp"
                 android:layout_alignParentRight="true"/>

@@ -16,8 +16,10 @@ public final class ParseConstants {
     public static final String CREATED_AT = "createdAt";
     public static final String UPDATED_AT = "updatedAt";
     public static final String MESSAGE = "message";
-    public static final String LAST_MESSAGE_RECEIVED = "lastMsgReceived";
-    public static final String LAST_MESSAGE_RECEIVED_AT = "lastMsgReceivedAt";
+
+    public static final String SEEN = "seen";
+    public static final String COVER_PHOTO = "coverPhoto";
+    public static final String COVER_PHOTO_PATH = "coverPhotoPath";
 
     /** Relations */
     public static final String FRIENDS = "friendsRelation";
@@ -27,5 +29,4 @@ public final class ParseConstants {
     /** Class specific queries */
     public static final String CHAT = "Chat";
     public static final String CHAT_USERS = "ChatUsers";
-
 }

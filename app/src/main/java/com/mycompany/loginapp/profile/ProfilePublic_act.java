@@ -2,23 +2,32 @@ package com.mycompany.loginapp.profile;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
+
+import de.greenrobot.event.EventBus;
 
 public class ProfilePublic_act extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.deletethis);
+        EventBus.getDefault().register(this);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.content_frame, PublicProfileFragment.newInstance())
+                .commit();
     }
+        //setContentView(R.layout.deletethis);
 
     @Override
     protected int getLayoutResource() {
-        return 0;
+        return R.layout.public_profile;
     }
 
 
@@ -42,5 +51,16 @@ public class ProfilePublic_act extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Finishes this activity
+     *
+     * @param event - received when user presses Log Out
+     */
+    public void onEvent(MessageFinishActivities event) {
+        //Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        Log.d("CLOSE EVENT RECEIVED: ", "FINISHING CHAT");
+        this.finish();
     }
 }

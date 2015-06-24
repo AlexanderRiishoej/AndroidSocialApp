@@ -1,11 +1,13 @@
 package com.mycompany.loginapp.chat;
 
 import android.app.ActivityOptions;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,8 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
@@ -62,21 +62,32 @@ public class UserChatList_act extends BaseActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private AQuery aQuery;
     private ArrayList<ParseObject> userList;
-    private ImageButton mFabButton;
+    private FloatingActionButton mFabButton;
     private boolean isRunning;
+    // A list of DateHolders that represents the updated dates of the chats
+    private ArrayList<DateHolder<Date>> dateHolderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeWindowTransition();
+        EventBus.getDefault().register(this);
         aQuery = new AQuery(this);
         aQuery.id(R.id.toolbar_title).text("Chat users");
-        mFabButton = (ImageButton) findViewById(R.id.fabButton);
+        //mFabButton = (ImageButton) findViewById(R.id.fabButton);
         initializeRecyclerView();
         userList = new ArrayList<>();
         userChatListRecyclerAdapter = new UserChatListRecyclerAdapter(this, userList);
         mRecyclerView.setAdapter(userChatListRecyclerAdapter);
         initializeSwipeRefreshLayout();
+        mFabButton = (FloatingActionButton) findViewById(R.id.fab);
+        mFabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     private void initializeSwipeRefreshLayout() {
@@ -88,11 +99,11 @@ public class UserChatList_act extends BaseActivity {
                 refreshContent();
             }
         });
-        swipeRefreshLayout.setProgressViewOffset(false, 180, 300);
+//        swipeRefreshLayout.setProgressViewOffset(false, 180, 300);
     }
 
-    private void initializeRecyclerView(){
-        mRecyclerView = (RecyclerView)findViewById(R.id.userChatListRecyclerView);
+    private void initializeRecyclerView() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.userChatListRecyclerView);
         mRecyclerView.setHasFixedSize(false);                            // Letting the system know that the list objects are of fixed size
         //mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,navigation_header view name, navigation_header view email,
@@ -107,19 +118,21 @@ public class UserChatList_act extends BaseActivity {
                     return;
                 }
                 // only for testing purposes
-                if (position > 2) {
-                    return;
-                }
+//                if (position > 2) {
+//                    return;
+//                }
                 final int childViewPosition = position - 1; // minus position of header
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                    startActivity(new Intent(UserChatList_act.this, Chat_act.class).
-                                    putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
-                            ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
-                } else {
-                    EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                    startActivity(new Intent(UserChatList_act.this, Chat_act.class));
+                if(userList.size() > 0) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
+                        startActivity(new Intent(UserChatList_act.this, Chat_act.class).
+                                        putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
+                                ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
+                    } else {
+                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
+                        startActivity(new Intent(UserChatList_act.this, Chat_act.class));
+                    }
                 }
             }
 
@@ -129,25 +142,25 @@ public class UserChatList_act extends BaseActivity {
             }
         }));
 
-        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
-            @Override
-            public void onHide() {
-                hideViews();
-            }
-
-            @Override
-            public void onShow() {
-                showViews();
-            }
-        });
+//        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
+//            @Override
+//            public void onHide() {
+//                hideViews();
+//            }
+//
+//            @Override
+//            public void onShow() {
+//                showViews();
+//            }
+//        });
     }
 
     private void hideViews() {
         getToolbar().animate().translationY(-getToolbar().getHeight()).setInterpolator(new AccelerateInterpolator(2));
 
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabButton.getLayoutParams();
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mFabButton.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
-        mFabButton.animate().translationY(mFabButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+        mFabButton.animate().translationY(mFabButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 
     private void showViews() {
@@ -155,7 +168,9 @@ public class UserChatList_act extends BaseActivity {
         mFabButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
-    /** Refreshes the content  */
+    /**
+     * Refreshes the content
+     */
     private void refreshContent() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -182,13 +197,12 @@ public class UserChatList_act extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.action_new_chat:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     startActivity(new Intent(UserChatList_act.this, NewUserChat_act.class),
                             ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
-                }
-                else {
+                } else {
                     startActivity(new Intent(UserChatList_act.this, NewUserChat_act.class));
                 }
         }
@@ -225,15 +239,7 @@ public class UserChatList_act extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        isRunning = false;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+        this.isRunning = false;
     }
 
     /**
@@ -259,7 +265,9 @@ public class UserChatList_act extends BaseActivity {
         user.saveEventually();
     }
 
-    /** Gets all the active chats for the current logged in user */
+    /**
+     * Gets all the active chats for the current logged in user
+     */
     private void refreshUserList() {
 //        final ProgressDialog dia = ProgressDialog.show(this, null,
 //                getString(R.string.alert_loading));
@@ -289,10 +297,6 @@ public class UserChatList_act extends BaseActivity {
      * Gets the active chat associated with the current logged in user
      */
     private void getActiveUserChats() {
-//        final ProgressDialog dia = ProgressDialog.show(this, null,
-//                getString(R.string.alert_loading));
-
-        final List<ParseObject> userChatList = new ArrayList<ParseObject>();
         getUserChatListQuery().orderByDescending(ParseConstants.UPDATED_AT).findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
@@ -302,6 +306,10 @@ public class UserChatList_act extends BaseActivity {
                         //userChatList.addAll(parseUserChatObjects);
                         Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
                         Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
+                        if (userList.size() >= 2) {
+                            Log.d(LOG, userList.get(0).getUpdatedAt().toString());
+                            Log.d(LOG, userList.get(1).getUpdatedAt().toString());
+                        }
                         loadUserList(parseUserChatObjects);
                     } else {
                         Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
@@ -319,28 +327,18 @@ public class UserChatList_act extends BaseActivity {
     private void loadUserList(List<ParseObject> userChats) {
         // If the size of the two data sets are different it means that x-number of users has requested a new chat hence
         // the whole data set has to be notified, since i do not know how many is actively requesting to start a new chat
-        if(userChats.size() != this.userList.size()) {
+        if (userChats.size() != this.userList.size()) {
             userList = new ArrayList<ParseObject>(userChats);
             userChatListRecyclerAdapter.setUserChatList(userList);
             userChatListRecyclerAdapter.notifyDataSetChanged();
-        }
-        // Check if any of the chats has been updated recently typically by messaging. If any updates has been made
-        // notify the item at the given position of the iterator, and move the item to the top of the chat list
-        // Next, update the adapters list of chats, so it can
-        else {
-            for(int i = 0; i < userChats.size(); i++){
-                Date chatUpdatedDate = userChats.get(i).getUpdatedAt(); //The updated date of the chat
-//                Log.d("userChatTime: " , d.toString());
-//                Log.d("userListTime: ", userList.get(i).getUpdatedAt().toString());
-                if(chatUpdatedDate.before(userList.get(i).getUpdatedAt())){ // If the updated date is newer than the previous date, notify the adapter
-                    userChatListRecyclerAdapter.notifyItemChanged(i + 1);
-                    userChatListRecyclerAdapter.notifyItemMoved(i + 1, 1);
-                }
+            dateHolderList = new ArrayList<DateHolder<Date>>();
+            for (ParseObject p : userChats) {
+                dateHolderList.add(new DateHolder<Date>(p.getUpdatedAt()));
             }
-            // Update the adapters list to its current status. If this is not done, the list of the adapter is left unchanged.
-            userList = new ArrayList<ParseObject>(userChats);
-            userChatListRecyclerAdapter.setUserChatList(userList);
         }
+        // check and update the
+        checkUpdatedChats(userChats);
+        // update the list of chats every one second
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -352,14 +350,68 @@ public class UserChatList_act extends BaseActivity {
         }, 1000);
     }
 
-    /** The query for the list of chats */
-    private ParseQuery<ParseObject> getUserChatListQuery(){
+    /**
+     * The query for the list of chats
+     */
+    private ParseQuery<ParseObject> getUserChatListQuery() {
         ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
-        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
+//        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
+        parseObjectQuery.whereMatches("chatId", ParseUser.getCurrentUser().getObjectId());
         parseObjectQuery.include("username");
         parseObjectQuery.include("createdBy");
 
         return parseObjectQuery;
+    }
+
+    /**
+     * Checks whether or not, the current list of chats needs to be updated due to new messages, new chat requests etc.
+     * Iterates through the newly updated list of chats received by Parse and then checks for each old item in
+     * the current list of chats, if anything has changed and needs to be updated.
+     * Hence the items position and id relative to the old list, has to be checked
+     */
+    private void checkUpdatedChats(List<ParseObject> userChats) {
+
+        // iterate through each element in the list of updated userchats
+        for (int i = 0; i < userChats.size(); i++) {
+            // save the object id of the item of the newly updated list from Parse
+            String newListObjectId = userChats.get(i).getObjectId();
+            // now iterate through the old user chatlist in order to check for every item in the old list
+            for (int j = 0; j < userList.size(); j++) {
+                // save the object id of the item of the old list in order to compare it with the object id of the new
+                String oldListObjectId = userList.get(j).getObjectId();
+                // check if any of the old object ids matches the object id of the updated list
+                // if they match, and their positions, relative to the lists, are different, then it means that
+                // the position of the element in the old list has been updated to the one of the new list.
+                if (oldListObjectId.equals(newListObjectId) && i != j) {
+                    // notify that item has changed and should be moved in the adapter to the top
+                    userChatListRecyclerAdapter.notifyItemChanged(j + 1); // j+1 due to header
+                    userChatListRecyclerAdapter.notifyItemMoved(j + 1, 1); // j+1 due to header
+                    // remove the item from its old position in the list and current dateHolder corresponding to the current chat list
+                    userList.remove(j);
+                    dateHolderList.remove(j);
+                    // insert item at its new position which is at the top of the list
+                    userList.add(0, userChats.get(i));
+                    dateHolderList.add(0, new DateHolder<Date>(userChats.get(i).getUpdatedAt()));
+                    // update the user chatlist of the adapter in order to keep the adapters list up-to-date
+                    userChatListRecyclerAdapter.setUserChatList(userList);
+                }
+                // if the position is 0 and the object ids match and the updated date is after the one in the old list
+                // then make sure to update this item in the list
+                if (oldListObjectId.equals(newListObjectId) && i == 0 && j == 0 &&
+                        userChats.get(0).getUpdatedAt().after(dateHolderList.get(0).getLastUpdated())) {
+                    {
+                        userList.set(0, userChats.get(0));
+                        dateHolderList.add(0, new DateHolder(userChats.get(0).getUpdatedAt()));
+                        userChatListRecyclerAdapter.notifyItemChanged(1);
+                    }
+                }
+                // if the two object ids are the same and the are placed on the same position in the list, it means that they have not changed hence
+                // no further actions should be taken
+                else if (oldListObjectId.equals(newListObjectId) && i == j) {
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -370,7 +422,7 @@ public class UserChatList_act extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setEnterTransition(makeEnterTransition());
             getWindow().setExitTransition(makeExitTransition());
-            getWindow().setReenterTransition(makeReenterTransition());
+//            getWindow().setReenterTransition(makeReenterTransition());
             getWindow().setReturnTransition(makeReturnTransition());
             ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
         }
@@ -384,7 +436,7 @@ public class UserChatList_act extends BaseActivity {
             Transition t = new Slide(Gravity.TOP).setDuration(600);
             enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
             enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
+            enterTransition.excludeTarget(R.id.appbar, true);
             enterTransition.addTransition(t);
 
             Transition tt = new Fade();
@@ -397,14 +449,12 @@ public class UserChatList_act extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             TransitionSet exitTransition = new TransitionSet();
-
             exitTransition.excludeTarget(android.R.id.navigationBarBackground, true);
             exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            exitTransition.excludeTarget(R.id.toolbar_teal, true);
-            Transition fade = new Fade();
-            exitTransition.addTransition(fade);
+            exitTransition.excludeTarget(R.id.appbar, true);
+            Transition slideInFromLeft = new Slide(Gravity.LEFT);
 
-            exitTransition.setDuration(500);
+            exitTransition.addTransition(slideInFromLeft).setDuration(400);
             return exitTransition;
         } else return null;
     }
@@ -417,14 +467,9 @@ public class UserChatList_act extends BaseActivity {
             enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
             enterTransition.excludeTarget(R.id.toolbar_teal, true);
 
-            Transition autoTransition = new AutoTransition().setDuration(400);
-            Transition fade = new Fade().setDuration(400);
-
             Transition slideInFromLeft = new Slide(Gravity.LEFT);
 
-            //enterTransition.addTransition(fade);
-            //enterTransition.addTransition(autoTransition);
-            enterTransition.addTransition(slideInFromLeft);
+            enterTransition.addTransition(slideInFromLeft).setDuration(200);
             return enterTransition;
         } else return null;
     }
@@ -434,11 +479,11 @@ public class UserChatList_act extends BaseActivity {
 
             TransitionSet enterTransition = new TransitionSet();
 
-            Transition upperPartSlide = new Slide(Gravity.LEFT);
+            Transition leftPartSlide = new Slide(Gravity.LEFT);
             enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
             enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
-            enterTransition.addTransition(upperPartSlide);
+            enterTransition.excludeTarget(R.id.appbar, true);
+            enterTransition.addTransition(leftPartSlide);
 
             Transition fade = new Fade();
             //enterTransition.addTransition(fade);

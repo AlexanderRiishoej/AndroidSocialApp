@@ -160,9 +160,6 @@ public class ProfileImageLoader {
 
                         /** Check if path exists since the user might have deleted this picture */
                         if (tempImageFile.exists()) {
-                            //Log.d(LOG, "Loading image from file...");
-                            //picasso.load("file:" + currentMediaFilePath).fit().into(aQuery.id(R.id.profile_picture).getImageView());
-                            //profileRecyclerAdapter.updateProfileImage(currentImageFilePath);
                             ProfileImageHolder.imageFile = tempImageFile;
                             EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.imageFile.getAbsolutePath()));
                         } else {

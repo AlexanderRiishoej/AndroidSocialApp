@@ -1,53 +1,50 @@
-package com.mycompany.loginapp.fragments;
+package com.mycompany.loginapp.base;
 
 
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.news.NewsFeed_act;
-import com.mycompany.loginapp.profile.ProfilePrivate_act;
-import com.mycompany.loginapp.clickListeners.ClickListener;
-import com.mycompany.loginapp.adapters.NavigationRecyclerAdapter;
-import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
-import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
-import com.mycompany.loginapp.singletons.MySingleton;
 import com.mycompany.loginapp.chat.NewUserChat_act;
 import com.mycompany.loginapp.chat.UserChatList_act;
+import com.mycompany.loginapp.constants.Constants;
+import com.mycompany.loginapp.constants.ParseConstants;
+import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.news.NewsFeed_act;
+import com.mycompany.loginapp.profile.ProfileImageHolder;
+import com.mycompany.loginapp.profile.ProfilePrivate_act;
+import com.mycompany.loginapp.singletons.MySingleton;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import de.greenrobot.event.EventBus;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NavigationDrawerFragment extends Fragment {
-    public static final String LOG = NavigationDrawerFragment.class.getSimpleName();
-
-    /** Recycler */
-    private RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    private NavigationRecyclerAdapter mRecyclerAdapter;                        // Declaring Adapter For Recycler View
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private NavigationRecyclerAdapter navigationAdapter;
-    private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private Runnable mRunnable;
-    private static Handler mHandler;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private NavigationView mNavigationView;
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
-    private View fragmentView;
+
+    public ImageView profile;
+    public TextView name;
+    public TextView email;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -56,10 +53,8 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        EventBus.getDefault().register(this);
         mUserLearnedDrawer = MySingleton.getMySingleton().getDefaultSharedPreferences().getBoolean(getString(R.string.user_learned_drawer), false);
-        mHandler = new Handler();
-
         if (savedInstanceState != null) {
             mFromSavedInstanceState = true;
         }
@@ -68,56 +63,44 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment view
-        View drawerLayout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-
-        /** The RecyclerView for this NavigationDrawer */
-        mRecyclerView = (RecyclerView)drawerLayout.findViewById(R.id.recyclerDrawerView);
-        mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
-        mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
-        // And passing the titles,icons,navigation_header view name, navigation_header view email,
-        // and navigation_header view profile picture
-        mRecyclerView.setAdapter(mRecyclerAdapter);                              // Setting the adapter to RecyclerView
-        mLayoutManager = new LinearLayoutManager(getActivity());         // Creating a layout Manager
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        /** OnItemTouchListener for the RecyclerView */
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), mRecyclerView, new ClickListener() {
+        View navigationView = inflater.inflate(R.layout.fragment_navigation_view, container, false);
+        mNavigationView = (NavigationView) navigationView.findViewById(R.id.navigation_view);
+        MenuItem drawerItem = mNavigationView.getMenu().findItem(getDrawerItemId());
+        drawerItem.setChecked(true);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view, int position) {
-                if(position == 0) return;
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                int id = menuItem.getOrder();
+                selectDrawerItem(id);
                 mDrawerLayout.closeDrawers();
-                //Toast.makeText(getActivity(), "The Item Clicked is: " + position, Toast.LENGTH_SHORT).show();
 
-                final int childViewPosition = position;
-                mRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        selectDrawerItem(childViewPosition); //Implement your switch case logic in this func
-                    }
-                };
+                return false;
             }
+        });
 
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
-        return drawerLayout;
+        name = (TextView) navigationView.findViewById(R.id.name);         // Creating Text View object from navigation_header.xml_header.xml for name
+        email = (TextView) navigationView.findViewById(R.id.email);       // Creating Text View object from navigation_header.xml_header.xml for email
+        name.setText("Alexander Riishoej");
+        email.setText("alexander_blazer@hotmail.com");
+        profile = (ImageView) navigationView.findViewById(R.id.circleView);
+        this.loadNavigationHeaderViewImage();
+        // Inflate the layout for this fragment
+        return navigationView;
     }
 
-    public void setUpDrawer(int fragmentId, DrawerLayout drawerLayout) {
-        this.mDrawerLayout = drawerLayout;
-        this.fragmentView = getActivity().findViewById(fragmentId);
+    public void setUpDrawer(DrawerLayout mDrawerLayout) {
+        this.mDrawerLayout = mDrawerLayout;
+        setupDrawerToggle();
+    }
 
+    // The drawer toggle that binds the toolbar together with the navigation drawer
+    private void setupDrawerToggle(){
         this.mDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
 
-            /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-
-                if(!mUserLearnedDrawer){
+                if (!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
                     MySingleton.getMySingleton().getDefaultSharedPreferences().edit()
                             .putBoolean(getString(R.string.user_learned_drawer), mUserLearnedDrawer)
@@ -131,25 +114,20 @@ public class NavigationDrawerFragment extends Fragment {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                if (mRunnable != null) {
-                    mHandler.post(mRunnable);
-                    mRunnable = null;
-                }
                 //getSupportActionBar().setTitle(mActivityTitle);
                 getActivity().invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
-        if(!mUserLearnedDrawer && !mFromSavedInstanceState){
-            mDrawerLayout.openDrawer(this.fragmentView);
+        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
+            mDrawerLayout.openDrawer(this.mNavigationView);
         }
-        //mDrawerLayout.setFitsSystemWindows(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        //mDrawerToggle.syncState();
     }
 
-    private void selectDrawerItem(int item){
-        switch (item){
+    // Starts an activity based on the draweritem clicked
+    private void selectDrawerItem(int item) {
+        switch (item) {
             case 1: // item is Home/User activity
                 if(getActivity().getClass() == ProfilePrivate_act.class) break;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -161,7 +139,7 @@ public class NavigationDrawerFragment extends Fragment {
             case 2: // item is profile not implemented yet
                 if(getActivity().getClass() == NewsFeed_act.class) break;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), NewsFeed_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    getActivity().startActivity(new Intent(getActivity(), NewsFeed_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 } else {
                     startActivity(new Intent(getActivity(), NewsFeed_act.class));
                 }
@@ -182,33 +160,56 @@ public class NavigationDrawerFragment extends Fragment {
                     getActivity().startActivity(new Intent(getActivity(), NewUserChat_act.class));
                 }
                 break;
-            case 5: // item is settings - not implemented yet
+            default:
                 break;
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
+    /* Gets the drawer item id of the current active drawer item */
+    private int getDrawerItemId() {
+        switch (getActivity().getClass().getSimpleName()) {
+            case Constants.PROFILE_PRIVATE:
+                return R.id.navigation_sub_item_1;
+            case Constants.NEWS:
+                return R.id.navigation_sub_item_2;
+            case Constants.USER_LIST_ACT_NAME:
+                return R.id.navigation_sub_item_3;
+            case Constants.NEW_USER_CHAT_ACT_NAME:
+                return R.id.navigation_sub_item_4;
+            default:
+                return R.id.navigation_sub_item_1;
         }
-    }
-
-    /** Event received when a new profile picture has been chosen
-     *  User_act starts this event from the OnActivityResult() */
-    public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
-        //mRecyclerAdapter.profilePicturePath = newProfilePictureEvent.imageUri;
-        mRecyclerAdapter.updateRecyclerItem();
     }
 
     public ActionBarDrawerToggle getNavigationDrawerToggle(){
         return mDrawerToggle;
     }
-//    public static interface ClickListener{
-//
-//        public void onClick(View view, int position);
-//
-//        public void onLongClick(View view, int position);
-//    }
+
+    public NavigationView getNavigationView(){
+        return mNavigationView;
+    }
+
+    /** Event received when a new profile picture has been chosen */
+    public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
+        loadNavigationHeaderViewImage();
+    }
+
+    private void loadNavigationHeaderViewImage(){
+        if(ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()){
+            MySingleton.getMySingleton().getPicasso().load(ProfileImageHolder.imageFile).centerCrop().fit().noPlaceholder().into(profile);
+        }
+        else {
+            ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
+                @Override
+                public void done(ParseUser parseUser, ParseException e) {
+                    if (e == null) {
+                        MySingleton.getMySingleton().getPicasso().load("file:" + parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH)).centerCrop().fit().noPlaceholder().
+                                into(profile);
+                    } else {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
 }

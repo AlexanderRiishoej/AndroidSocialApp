@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.Register_act"
+            android:name=".registration.Register_act"
             android:label="@string/title_activity_register"
             android:parentActivityName=".activities.Login_act" >
             <meta-data

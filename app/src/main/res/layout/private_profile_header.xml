@@ -7,16 +7,16 @@
     <!-- To match the height of the news.xml, which contains a ViewPager with height 48dp + the height of the wallpost_header
      which is 79dp it adds up to 127dp -->
     <!-- 79dp - 23dp = 56dp = toolbar height -->
-    <View
-        android:id="@+id/fill_view"
-        android:layout_width="match_parent"
-        android:layout_height="127dp"
-        android:background="@color/teal_500" />
+    <!--<View-->
+        <!--android:id="@+id/fill_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="127dp"-->
+        <!--android:background="@color/teal_500" />-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical">-->
         <!--         android:layout_marginTop="23dp"
         -->
         <android.support.v7.widget.CardView
@@ -25,6 +25,7 @@
             android:layout_marginBottom="@dimen/pad_8dp"
             android:layout_marginLeft="@dimen/pad_8dp"
             android:layout_marginRight="@dimen/pad_8dp"
+            android:layout_marginTop="@dimen/pad_8dp"
             card_view:cardBackgroundColor="@color/white"
             card_view:cardElevation="2dp"
             card_view:cardCornerRadius="2dp">
@@ -201,9 +202,10 @@
                         android:layout_width="0dp"
                         android:layout_height="36dp"
                         android:layout_weight="0.5"
-                        android:text="Add to friends"
+                        android:text="Edit profile"
                         android:layout_marginTop="@dimen/pad_8dp"
-                        android:layout_marginBottom="@dimen/pad_8dp"/>
+                        android:layout_marginBottom="@dimen/pad_8dp"
+                        android:onClick="showSnackBar"/>
 
                     <Button
                         android:id="@+id/send_message"
@@ -221,7 +223,7 @@
 
         </android.support.v7.widget.CardView>
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 
 </RelativeLayout>

@@ -70,4 +70,12 @@
     <string name="profile">Profile</string>
     <string name="title_activity_user_edit_act">UserEdit_act</string>
     <string name="title_activity_profile_act">Profile_act</string>
+    <string name="title_activity_navigation_drawer_test">NavigationDrawerTest</string>
+    <string name="drawer_sub_header">Subheader</string>
+    <string name="firstname">Firstname</string>
+    <string name="lastname">Lastname</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="birthday">Birthday</string>
+    <string name="gender">Gender</string>
+    <string name="mobile_phone_number">Mobile phone number</string>
 </resources>

@@ -1,10 +1,12 @@
 package com.mycompany.loginapp.adapters;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,7 +55,7 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
     }
 
     public void updateRecyclerItem(int position) {
-        this.notifyItemRangeChanged(position, 1);
+        this.notifyItemChanged(position);
     }
 
     @Override
@@ -95,13 +97,15 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
             try {
                 if (ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()) {
                     // the noPlaceholder() did the trick... Now i am not receiving any null pointer exception regarding the gedWidth().
-                    picasso.load(ProfileImageHolder.imageFile).fit().noPlaceholder().into(myProfileViewHolder.profilePicture);
+                    // the order has to be centerCrop().fit(). centerCrop() crops the image to fit its width/height and fit() fits the image into the imageView
+                    picasso.load(ProfileImageHolder.imageFile).centerCrop().fit().noPlaceholder().into(myProfileViewHolder.profilePicture);
+
                 } else {
                     ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
                         @Override
                         public void done(ParseUser parseUser, ParseException e) {
                             if (e == null) {
-                                picasso.load("file:" + parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH)).fit().noPlaceholder().
+                                picasso.load("file:" + parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH)).centerCrop().fit().noPlaceholder().
                                         into(viewHolderFinal.profilePicture);
                             } else {
                                 e.printStackTrace();
@@ -161,6 +165,7 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
         public TextView name;
         public TextView status;
         public TextView birthdate;
+        private Button mEditProfileButton;
 
         // Second list item
         public TextView friends;
@@ -177,6 +182,7 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
                 icon = (ImageView) itemView.findViewById(R.id.rowIcon);
                 information = (TextView) itemView.findViewById(R.id.rowText);
                 iconEditField = (ImageView) itemView.findViewById(R.id.rowIconEdit);
+
             } else if (ViewType == Constants.TYPE_HEADER) {
                 holderId = Constants.TYPE_HEADER;
                 profilePicture = (ImageView) itemView.findViewById(R.id.profile_picture);
@@ -184,6 +190,9 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
                 name = (TextView) itemView.findViewById(R.id.wall_post_username);
                 status = (TextView) itemView.findViewById(R.id.status);
                 birthdate = (TextView) itemView.findViewById(R.id.birth_date);
+                mEditProfileButton = (Button) itemView.findViewById(R.id.edit_profile);
+                setButtonClickListeners();
+
             } else if (ViewType == Constants.TYPE_SECOND_ITEM) {
                 holderId = Constants.TYPE_SECOND_ITEM;
                 friends = (TextView) itemView.findViewById(R.id.friends);
@@ -192,6 +201,16 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
                 videos = (TextView) itemView.findViewById(R.id.videos);
                 photos = (TextView) itemView.findViewById(R.id.photos);
             }
+        }
+
+        private void setButtonClickListeners(){
+            mEditProfileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Snackbar.make(v.getRootView(), "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
         }
     }
 }

@@ -81,6 +81,7 @@ public class NewUserChat_act extends BaseActivity {
             }
         });
         getFriends();
+        //getAllUsers();
     }
 
     @Override
@@ -119,6 +120,18 @@ public class NewUserChat_act extends BaseActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
+    }
+
+    private void getAllUsers(){
+        ParseUser.getQuery().whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername()).findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> list, ParseException e) {
+                for (ParseUser p : list) {
+                    friendsRelation.add(p);
+                }
+                ParseUser.getCurrentUser().saveInBackground();
+            }
+        });
     }
 
     /** Gets all the friends related to this current user */
@@ -192,16 +205,18 @@ public class NewUserChat_act extends BaseActivity {
         final ParseUser receiverUser = rcvUser;
 
         ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
-        parseObjectQuery.whereMatches("chatUserId", addUniqueId(currentUser.getUsername(), receiverUser.getUsername()));
+//        parseObjectQuery.whereMatches("chatUserId", addUniqueId(currentUser.getUsername(), receiverUser.getUsername()));
+        parseObjectQuery.whereMatches("chatId", addUniqueId(currentUser.getObjectId(), receiverUser.getObjectId()));
         parseObjectQuery.include("username");
         parseObjectQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject chatUserObject, ParseException e) {
                 dia.dismiss();
-                if (e == null) {
+                if (e == null || chatUserObject == null) {
                     if (chatUserObject != null) {
                         Log.d(LOG, "Username: " + chatUserObject.getParseUser("username").getUsername());
-
+//                        chatUserObject.put("chatId", addUniqueId(currentUser.getObjectId(), receiverUser.getObjectId()));
+//                        chatUserObject.saveInBackground();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             EventBus.getDefault().postSticky(new MessageUserChat(chatUserObject));
                             startActivity(new Intent(NewUserChat_act.this, Chat_act.class),
@@ -217,20 +232,41 @@ public class NewUserChat_act extends BaseActivity {
                             @Override
                             public void done(ParseException e) {
                                 if(e == null){
-                                    ParseObject newChatUserPair = new ParseObject(ParseConstants.CHAT_USERS);
+                                    final ParseObject newChatUserPair = new ParseObject(ParseConstants.CHAT_USERS);
+                                    final ParseRelation<ParseObject> chatRelation = newChatUserPair.getRelation(ParseConstants.CHAT_RELATION);
                                     newChatUserPair.put("createdBy", currentUser);
                                     newChatUserPair.put("username", receiverUser);
-                                    newChatUserPair.put(ParseConstants.CHAT_RELATION, newChat);
-                                    newChatUserPair.saveInBackground();
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        EventBus.getDefault().postSticky(new MessageUserChat(newChatUserPair));
-                                        startActivity(new Intent(NewUserChat_act.this, Chat_act.class),
-                                                ActivityOptions.makeSceneTransitionAnimation(NewUserChat_act.this).toBundle());
-                                    } else {
-                                        EventBus.getDefault().postSticky(new MessageUserChat(newChatUserPair));
-                                        startActivity(new Intent(NewUserChat_act.this, Chat_act.class));
-                                    }
+                                    newChatUserPair.put("chatUserId", addUniqueId(currentUser.getUsername(), receiverUser.getUsername()));
+                                    newChatUserPair.put("chatId", addUniqueId(currentUser.getObjectId(), receiverUser.getObjectId()));
+                                    //newChatUserPair.put(ParseConstants.CHAT_RELATION, newChat);
+                                    chatRelation.add(newChat);
+                                    newChatUserPair.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if(e == null){
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                    EventBus.getDefault().postSticky(new MessageUserChat(newChatUserPair));
+                                                    startActivity(new Intent(NewUserChat_act.this, Chat_act.class),
+                                                            ActivityOptions.makeSceneTransitionAnimation(NewUserChat_act.this).toBundle());
+                                                } else {
+                                                    EventBus.getDefault().postSticky(new MessageUserChat(newChatUserPair));
+                                                    startActivity(new Intent(NewUserChat_act.this, Chat_act.class));
+                                                }
+                                            }
+                                            else{
+                                                Utilities.showDialog(NewUserChat_act.this, e.getMessage());
+                                            }
+                                        }
+                                    });
+//
+//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                                        EventBus.getDefault().postSticky(new MessageUserChat(newChatUserPair));
+//                                        startActivity(new Intent(NewUserChat_act.this, Chat_act.class),
+//                                                ActivityOptions.makeSceneTransitionAnimation(NewUserChat_act.this).toBundle());
+//                                    } else {
+//                                        EventBus.getDefault().postSticky(new MessageUserChat(newChatUserPair));
+//                                        startActivity(new Intent(NewUserChat_act.this, Chat_act.class));
+//                                    }
                                 }
                                 else {
                                     e.printStackTrace();

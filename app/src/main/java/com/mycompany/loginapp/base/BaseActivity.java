@@ -11,8 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.mycompany.loginapp.MaterialTabs.MainTab_act;
-import com.mycompany.loginapp.fragments.NavigationDrawerFragment;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 
@@ -21,57 +19,57 @@ import de.greenrobot.event.EventBus;
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String LOG = BaseActivity.class.getSimpleName();
 
-    private NavigationDrawerFragment navigationDrawerFragment;
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
+    private NavigationDrawerFragment navigationDrawerFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
-
+        this.getToolbar();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-            toolbar = (Toolbar) findViewById(R.id.toolbar_teal);
-            if (toolbar != null) {
-                setSupportActionBar(toolbar);
-                setTitle(null);
+        //mToolbar = (Toolbar) findViewById(R.id.toolbar_teal);
+        if (mToolbar != null) {
+            //setSupportActionBar(mToolbar);
+            setTitle(null); //mToolbar.setTitle(null);
 
-                if (mDrawerLayout != null) {
-                    toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-                } else {
-                    toolbar.setNavigationIcon(null);
-                }
-                //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (mDrawerLayout != null) {
+                mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+            } else {
+                mToolbar.setNavigationIcon(null);
             }
+        }
 
         if (mDrawerLayout != null) {
-            //mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.teal_700));
-
+            //setup the navigation drawer fragment
             navigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().
-                    findFragmentById(R.id.fragment_navigation_drawer);
+                    findFragmentById(R.id.fragment_navigation_view);
             if (navigationDrawerFragment != null && mDrawerLayout != null) {
-                navigationDrawerFragment.setUpDrawer(R.id.scrimInsetsFrameLayout, mDrawerLayout);
+                navigationDrawerFragment.setUpDrawer(mDrawerLayout);
             }
         }
     }
 
     protected abstract int getLayoutResource();
 
-    protected Toolbar getToolbar(){
-        return this.toolbar;
-    }
-
-    protected void setActionBarIcon(int iconRes) {
-        toolbar.setNavigationIcon(iconRes);
-    }
-
     protected void setActionBarTitle(int titleId) {
-        toolbar.setTitle(titleId);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(titleId);
+        }
     }
 
-    protected void setDisplayHomeAsUpEnabled(boolean isEnabled) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(isEnabled);
+    // Setting and getting the toolbar
+    protected Toolbar getToolbar() {
+        if (mToolbar == null) {
+            mToolbar = (Toolbar) findViewById(R.id.toolbar_teal);
+            if (mToolbar != null) {
+                setSupportActionBar(mToolbar);
+            }
+        }
+        return this.mToolbar;
     }
 
     @Override
@@ -84,11 +82,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (navigationDrawerFragment.getNavigationDrawerToggle().onOptionsItemSelected(item)) {
             return true;
         }
-
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
         switch (id) {
             case R.id.action_logout:
                 EventBus.getDefault().post(new MessageFinishActivities());
                 return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -102,8 +104,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if(navigationDrawerFragment!= null) {
+        if (navigationDrawerFragment != null) {
             navigationDrawerFragment.getNavigationDrawerToggle().syncState();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(navigationDrawerFragment.getNavigationView())) {
+            mDrawerLayout.closeDrawer(navigationDrawerFragment.getNavigationView());
+        } else {
+            super.onBackPressed();
         }
     }
 }

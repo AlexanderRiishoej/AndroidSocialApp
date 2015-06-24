@@ -93,7 +93,7 @@ public class WallPostRecyclerAdapter extends RecyclerView.Adapter<WallPostRecycl
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (e == null) {
-                    Picasso.with(activityContext).load("file:" + parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH)).fit().into(finalViewHolder.profilePicture);
+                    Picasso.with(activityContext).load("file:" + parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH)).centerCrop().fit().into(finalViewHolder.profilePicture);
 
                 } else {
                     e.printStackTrace();

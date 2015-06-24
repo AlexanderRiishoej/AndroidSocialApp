@@ -7,94 +7,75 @@
     android:elevation="7dp"
     android:fitsSystemWindows="true">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/toolbar_teal"
-            layout="@layout/toolbar_teal" />
-
-        <LinearLayout
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/toolbar_height"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <com.astuetz.PagerSlidingTabStrip
+            <!--<include-->
+                <!--android:id="@+id/toolbar_teal"-->
+                <!--layout="@layout/toolbar_teal" />-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_teal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/teal_500"
+                android:minHeight="?attr/actionBarSize"
+                android:titleTextAppearance="@style/customTextTitleViewStyle"
+                app:contentInsetLeft="@dimen/activity_horizontal_margin"
+                app:contentInsetStart="@dimen/pad_72dp"
+                app:contentInsetRight="@dimen/activity_horizontal_margin"
+                app:navigationIcon="@drawable/ic_menu_white_24dp"
+                app:popupTheme="@style/ToolbarPopupTealTheme"
+                app:theme="@style/ToolbarTealTheme"
+                app:layout_scrollFlags="scroll|enterAlways">
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"/>
+                </android.support.v7.widget.Toolbar>
+
+            <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/pad_48dp"
-                android:background="?attr/colorPrimary"
-                android:fontFamily="sans-serif-regular"
-                android:textColorPrimary="@color/white"
-                android:textSize="14sp"
-                app:pstsIndicatorColor="@color/white"
-                app:pstsShouldExpand="true"
-                app:pstsTextSelectedStyle="normal"
-                app:pstsTextStyle="normal" />
+                android:layout_height="wrap_content"
+                app:tabIndicatorColor="@color/white"/>
+        </android.support.design.widget.AppBarLayout>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/tabs" />
-            <!-- android:layout_height="0dp"
-                 android:layout_weight="1"-->
-        </LinearLayout>
 
-        <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-        <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
-        <!--android:layout_marginTop="112dp"-->
-        <!--android:orientation="vertical" >-->
-
-        <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content" >-->
-
-        <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:orientation="vertical" >-->
-
-        <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/card_toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/toolbar_height"-->
-        <!--android:background="@android:color/white" />-->
-
-        <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="10dp"-->
-        <!--android:text="@string/app_name"-->
-        <!--android:textSize="24sp" />-->
-        <!--</LinearLayout>-->
-        <!--</android.support.v7.widget.CardView>-->
-        <!--</LinearLayout>-->
-        <!-- for Text Tabs -->
-    </RelativeLayout>
-
-    <com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout
-        android:id="@+id/scrimInsetsFrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true">
-        <!-- To keep statusbar dark app:insetForeground="#4000"-->
-
-        <fragment
-            android:id="@+id/fragment_navigation_drawer"
-            android:name="com.mycompany.loginapp.fragments.NavigationDrawerFragment"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="left|start"
-            app:layout="@layout/fragment_navigation_drawer" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    </com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/pad_16dp"
+            android:clickable="true"
+            android:src="@drawable/ic_pencil_box_outline_white_24dp"
+            android:layout_gravity="end|bottom"
+            app:layout_anchorGravity="bottom|right|end" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <fragment
+        android:id="@+id/fragment_navigation_view"
+        android:name="com.mycompany.loginapp.base.NavigationDrawerFragment"
+        android:layout_width="@dimen/navigation_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        app:layout="@layout/fragment_navigation_view" />
 
 </android.support.v4.widget.DrawerLayout>

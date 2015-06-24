@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!-- http://www.google.com/design/spec/components/lists.html#lists-specs --><!-- http://www.google.com/design/spec/layout/metrics-keylines.html#metrics-keylines-keylines-spacing -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://www.google.com/design/spec/components/lists.html#lists-specs -->
+<!-- http://www.google.com/design/spec/layout/metrics-keylines.html#metrics-keylines-keylines-spacing -->
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,17 +9,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="@color/white"-->
-    <!--android:orientation="vertical">-->
-
-<!-- We need to put them in a FrameLayout because Toolbar needs to be overlayed on
-RecyclerView. If we don’t do this, there will be an empty space visible above the list when we hide the Toolbar.
--->
-    <FrameLayout
+    <!-- Link: http://android-developers.blogspot.dk/2015/05/android-design-support-library.html-->
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -25,7 +19,8 @@ RecyclerView. If we don’t do this, there will be an empty space visible above 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/activity_main_swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/userChatListRecyclerView"
@@ -36,47 +31,80 @@ RecyclerView. If we don’t do this, there will be an empty space visible above 
                 android:dividerHeight="1dp"
                 android:paddingBottom="8dp"
                 android:scrollbars="vertical"
-                android:paddingTop="?attr/actionBarSize"
-                android:clipToPadding="false"
                 tools:listitem="@layout/user_chat_list_item">
 
             </android.support.v7.widget.RecyclerView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
-
-        <include
-            android:id="@+id/toolbar_teal"
-            layout="@layout/toolbar_teal" />
-
-        <ImageButton
-            android:id="@+id/fabButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/fab_background"
-            android:contentDescription="fabButton"
-            android:src="@drawable/ic_arrow_back_white_24dp" />
-    </FrameLayout>
-    <!--</LinearLayout>-->
-    <!-- The navigation drawer -->
-    <!-- http://www.android4devs.com/2014/12/how-to-make-material-design-navigation-drawer.html -->
-    <com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout
-        android:id="@+id/scrimInsetsFrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true">
-        <!-- To keep statusbar dark app:insetForeground="#4000"-->
-
-        <fragment
-            android:id="@+id/fragment_navigation_drawer"
-            android:name="com.mycompany.loginapp.fragments.NavigationDrawerFragment"
+        <!-- using an AppBarLayout allows your Toolbar and other views (such as tabs provided
+        by TabLayout) to react to scroll events in a sibling view marked with a ScrollingViewBehavior
+        - scroll: this flag should be set for all views that want to scroll off the screen - for views that do not use this flag, they’ll remain pinned to the top of the screen
+        - enterAlways: this flag ensures that any downward scroll will cause this view to become visible, enabling the ‘quick return’ pattern
+        - enterAlwaysCollapsed: When your view has declared a minHeight and you use this flag, your View will only enter at its minimum height (i.e., ‘collapsed’), only re-expanding to its full height when the scrolling view has reached it’s top.
+        - exitUntilCollapsed: this flag causes the view to scroll off until it is ‘collapsed’ (its minHeight) before exiting
+        One note: all views using the scroll flag must be declared before views that do not use the flag. This ensures that all views exit from the top, leaving the fixed elements behind.
+        Link: http://android-developers.blogspot.dk/2015/05/android-design-support-library.html-->
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="left|start"
-            app:layout="@layout/fragment_navigation_drawer" />
+            android:layout_height="wrap_content"
+            >
 
-    </com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout>
+            <!--<android.support.design.widget.CollapsingToolbarLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:fitsSystemWindows="true"-->
+                <!--app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
+
+                <!--<include-->
+                    <!--android:id="@+id/toolbar_teal"-->
+                    <!--layout="@layout/toolbar_teal"-->
+                    <!--app:layout_scrollFlags="scroll|enterAlways" />-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_teal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/teal_500"
+                android:minHeight="?attr/actionBarSize"
+                android:titleTextAppearance="@style/customTextTitleViewStyle"
+                app:contentInsetLeft="@dimen/activity_horizontal_margin"
+                app:contentInsetStart="@dimen/pad_72dp"
+                app:contentInsetRight="@dimen/activity_horizontal_margin"
+                app:navigationIcon="@drawable/ic_menu_white_24dp"
+                app:popupTheme="@style/ToolbarPopupTealTheme"
+                app:theme="@style/ToolbarTealTheme"
+                app:layout_scrollFlags="scroll|enterAlways">
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"/>
+                </android.support.v7.widget.Toolbar>
+            <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_pencil_box_outline_white_24dp"
+            android:layout_margin="@dimen/pad_16dp"
+            android:layout_gravity="end|bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            app:borderWidth="0dp"
+
+            app:layout_behavior="com.mycompany.loginapp.views.ScrollAwareFABBehavior"/>
+        <!-- app:layout_anchor="@id/app_bar" -->
+    </android.support.design.widget.CoordinatorLayout>
+
+    <fragment
+        android:id="@+id/fragment_navigation_view"
+        android:name="com.mycompany.loginapp.base.NavigationDrawerFragment"
+        android:layout_width="@dimen/navigation_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        app:layout="@layout/fragment_navigation_view" />
 </android.support.v4.widget.DrawerLayout>

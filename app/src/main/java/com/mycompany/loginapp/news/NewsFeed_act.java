@@ -1,23 +1,21 @@
 package com.mycompany.loginapp.news;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.androidquery.AQuery;
-import com.astuetz.PagerSlidingTabStrip;
-import com.github.ksoichiro.android.observablescrollview.ObservableListView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
-import com.mycompany.loginapp.fragments.WallPostFragment;
+import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
+
+import de.greenrobot.event.EventBus;
 
 
 public class NewsFeed_act extends BaseActivity {
@@ -33,18 +31,20 @@ public class NewsFeed_act extends BaseActivity {
         super.onCreate(savedInstanceState);
         aQuery = new AQuery(this);
         aQuery.id(R.id.toolbar_title).text("News");
-       // materialTabHost = (MaterialTabHost)findViewById(R.id.materialTabHost);
+        EventBus.getDefault().register(this);
+
         viewPager = (ViewPager)findViewById(R.id.viewPager2);
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         // Set the amount of pages to be stored in memory on either side of the current active page
         viewPager.setOffscreenPageLimit(3);
-        viewPager.setCurrentItem(1);
+
         // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(viewPager);
-        tabs.setShouldExpand(true);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(0);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class NewsFeed_act extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_user_edit_act, menu);
+        //getMenuInflater().inflate(R.menu.menu_user_edit_act, menu);
         return true;
     }
 
@@ -73,6 +73,16 @@ public class NewsFeed_act extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Finishes this activity
+     *
+     * @param event - received when user presses Log Out
+     */
+    public void onEvent(MessageFinishActivities event) {
+        Log.d(LOG, "FINISHED");
+        this.finish();
     }
 
     /** Fragment pager adapter maintaining the fragments

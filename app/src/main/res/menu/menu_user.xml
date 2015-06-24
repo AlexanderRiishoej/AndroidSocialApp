@@ -10,24 +10,30 @@
     <item
         android:id="@+id/action_logout"
         android:title="@string/logout"
-        android:orderInCategory="5"
+        android:orderInCategory="6"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_camera"
         android:icon="@drawable/ic_photo_camera_white_24dp"
         android:title="Take picture"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:orderInCategory="1"/>
     <item
         android:id="@+id/action_pictures"
         android:icon="@drawable/ic_view_module_white_24dp"
-        android:title="Pictures"
+        android:title="Profile picture"
         app:showAsAction="never"
         android:orderInCategory="3"/>
+    <item
+        android:id="@+id/action_cover_photo"
+        android:icon="@drawable/ic_view_module_white_24dp"
+        android:title="Cover Photo"
+        app:showAsAction="never"
+        android:orderInCategory="5"/>
     <item
         android:id="@+id/action_edit_profile"
         android:icon="@drawable/ic_pencil_box_outline_white_24dp"
         android:title="Edit profile"
-        app:showAsAction="always"
+        app:showAsAction="never"
         android:orderInCategory="2"/>
 </menu>

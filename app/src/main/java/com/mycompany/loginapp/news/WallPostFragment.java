@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.fragments;
+package com.mycompany.loginapp.news;
 
 
 import android.app.ProgressDialog;
@@ -8,29 +8,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.adapters.WallPostRecyclerAdapter;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
-import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.utilities.Utilities;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,7 +83,7 @@ public class WallPostFragment extends Fragment {
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_recycler_wall_post);
         mRecyclerWallPostAdapter = new WallPostRecyclerAdapter(getActivity());
-        //loadProfilePicture();
+        //loadCoverPhoto();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyclerWallPostAdapter);
