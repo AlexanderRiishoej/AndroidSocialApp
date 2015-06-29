@@ -247,7 +247,7 @@ public class ProfileCoverPhotoLoader {
             File imageFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_" + timeStamp + ".jpg");
             ProfileImageHolder.profileCoverPhotoFile = imageFile;
-            ProfileImageHolder.profileCoverPath = imageFile.getAbsolutePath();
+            //ProfileImageHolder.profileCoverPath = imageFile.getAbsolutePath();
         } else {
             return null;
         }

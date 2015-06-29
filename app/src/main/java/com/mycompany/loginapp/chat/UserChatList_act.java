@@ -281,8 +281,9 @@ public class UserChatList_act extends BaseActivity {
                         userChatList.addAll(parseUserChatObjects);
                         userList = new ArrayList<ParseObject>(userChatList);
                         userChatListRecyclerAdapter.setUserChatList(userList);
-                        //userChatListRecyclerAdapter.notifyItemRangeChanged(1, userList.size());
-                        userChatListRecyclerAdapter.notifyDataSetChanged();
+                        userChatListRecyclerAdapter.notifyItemRangeChanged(1, userList.size());
+                        //userChatListRecyclerAdapter.notifyDataSetChanged();
+
                     } else {
                         Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
                     }
@@ -401,7 +402,7 @@ public class UserChatList_act extends BaseActivity {
                         userChats.get(0).getUpdatedAt().after(dateHolderList.get(0).getLastUpdated())) {
                     {
                         userList.set(0, userChats.get(0));
-                        dateHolderList.add(0, new DateHolder(userChats.get(0).getUpdatedAt()));
+                        dateHolderList.add(0, new DateHolder<Date>(userChats.get(0).getUpdatedAt()));
                         userChatListRecyclerAdapter.notifyItemChanged(1);
                     }
                 }

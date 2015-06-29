@@ -249,7 +249,7 @@ public class ProfileImageLoader {
             File imageFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_" + timeStamp + ".jpg");
             ProfileImageHolder.imageFile = imageFile;
-            ProfileImageHolder.profileImagePath = imageFile.getAbsolutePath();
+            //ProfileImageHolder.profileImagePath = imageFile.getAbsolutePath();
 
         } else if (type == Constants.MEDIA_TYPE_VIDEO) {
             File mediaFile = new File(mediaStorageDir.getPath() + File.separator +

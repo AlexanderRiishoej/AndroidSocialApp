@@ -83,10 +83,9 @@
                 android:layout_alignParentRight="true"/>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/sent_image"
-                android:layout_width="@dimen/pad_10dp"
-                android:layout_height="@dimen/pad_10dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:gravity="end"
-                android:src="@drawable/ic_checkbox_marked_circle_grey600_24dp"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
 

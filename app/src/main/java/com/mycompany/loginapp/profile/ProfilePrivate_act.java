@@ -47,7 +47,7 @@ public class ProfilePrivate_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        makeWindowTransition();
+        //makeWindowTransition();
         EventBus.getDefault().register(this);
         mPrivateProfileFragment = PrivateProfileFragment.newInstance();
         aQuery = new AQuery(this);
@@ -155,16 +155,7 @@ public class ProfilePrivate_act extends BaseActivity {
      */
     public void onEvent(MessageFinishActivities event) {
         Log.d(LOG, "FINISHING USER_ACTIVITY");
-        ParseUser.logOut();
-        ProfileImageHolder.imageFile = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivity(new Intent(ProfilePrivate_act.this, Login_act.class),
-                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-            this.finishAfterTransition();
-        } else {
-            startActivity(new Intent(ProfilePrivate_act.this, Login_act.class));
-            this.finish();
-        }
+        this.finish();
     }
 
     /** Event received when a new profile picture has been chosen
