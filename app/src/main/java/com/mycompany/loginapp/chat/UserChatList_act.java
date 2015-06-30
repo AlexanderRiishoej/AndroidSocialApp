@@ -217,7 +217,7 @@ public class UserChatList_act extends BaseActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        updateUserStatus(false);
+        //updateUserStatus(false);
         super.onDestroy();
     }
 
@@ -305,11 +305,11 @@ public class UserChatList_act extends BaseActivity {
                 if (e == null) {
                     if (parseUserChatObjects.size() > 0) {
                         //userChatList.addAll(parseUserChatObjects);
-                        Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
-                        Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
+                        //Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
+                        //Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
                         if (userList.size() >= 2) {
-                            Log.d(LOG, userList.get(0).getUpdatedAt().toString());
-                            Log.d(LOG, userList.get(1).getUpdatedAt().toString());
+                            //Log.d(LOG, userList.get(0).getUpdatedAt().toString());
+                            //Log.d(LOG, userList.get(1).getUpdatedAt().toString());
                         }
                         loadUserList(parseUserChatObjects);
                     } else {

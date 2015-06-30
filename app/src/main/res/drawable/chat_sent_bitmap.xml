@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bitmap
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/chat_bubble_green"
+    android:src="@drawable/chat_bubble_outgoing"
     android:tint="@color/teal_500"/>

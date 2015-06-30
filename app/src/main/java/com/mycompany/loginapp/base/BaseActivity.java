@@ -86,13 +86,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 //        if (mDrawerToggle.onOptionsItemSelected(item)) {
 //            return true;
 //        }
-        if (navigationDrawerFragment.getNavigationDrawerToggle().onOptionsItemSelected(item)) {
+        if (id == android.R.id.home && mDrawerLayout == null) {
+            this.onBackPressed();
             return true;
         }
-        if (id == android.R.id.home) {
-            onBackPressed();
+
+        if (navigationDrawerFragment.getNavigationDrawerToggle().onOptionsItemSelected(item) && mDrawerLayout != null) {
             return true;
         }
+
         switch (id) {
             case R.id.action_logout:
                 ParseUser.logOut();

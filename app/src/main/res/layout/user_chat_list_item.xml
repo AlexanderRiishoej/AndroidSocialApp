@@ -57,7 +57,7 @@
                 android:orientation="horizontal"
                 android:text="@string/message_date_time"
                 android:singleLine="true"
-                android:textColor="@color/secondary_text_icons_light_theme"
+                android:textColor="@color/disable_hint_text_light_theme"
                 android:textSize="@dimen/txt_14sp"
                 android:gravity="end"/>
         </RelativeLayout>
@@ -77,8 +77,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/seen_image"
-                android:layout_width="@dimen/pad_16dp"
-                android:layout_height="@dimen/pad_16dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:gravity="end"
                 android:layout_alignParentRight="true"/>
             <de.hdodenhof.circleimageview.CircleImageView

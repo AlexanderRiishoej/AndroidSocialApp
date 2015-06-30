@@ -3,6 +3,7 @@ package com.mycompany.loginapp.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.Image;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycompany.loginapp.R;
@@ -200,23 +202,18 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
                 myUserChatListViewHolder.dateOfLastChatMessage.setText(null);
                 myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
                 myUserChatListViewHolder.profilePicture.setImageBitmap(null);
-
                 myUserChatListViewHolder.seenPicture.setImageBitmap(null);
                 myUserChatListViewHolder.seenPicture.setImageDrawable(null);
-
-                    myUserChatListViewHolder.sentPicture.setImageDrawable(null);
-                    myUserChatListViewHolder.sentPicture.setImageBitmap(null);
-
-//                myUserChatListViewHolder.seenPicture = (ImageView) myUserChatListViewHolder.itemView.findViewById(R.id.seen_image);
-//                myUserChatListViewHolder.sentPicture = (ImageView) myUserChatListViewHolder.itemView.findViewById(R.id.sent_image);
+                myUserChatListViewHolder.sentPicture.setImageDrawable(null);
+                myUserChatListViewHolder.sentPicture.setImageBitmap(null);
 
                 //Get the current object from the list of chat users
                 final ParseObject userChat = userChatList.get(position - 1); // Minus 1 due to Header being position 0
                 //Set the progressbar for the image to Visible since its going to get fetched soon
                 myUserChatListViewHolder.imageProgressBar.setVisibility(View.VISIBLE);
                 Log.d(LOG, "Username: " + userChat.getParseUser("username").getUsername());
-                final String chatParticipant = getChatParticipant(userChat);
                 //Get the name of the chat user from the userChat object
+                final String chatParticipant = getChatParticipant(userChat);
                 myUserChatListViewHolder.username.setText(chatParticipant);
                 //Get the most recent chat object of this userChat relation
                 userChat.getRelation(ParseConstants.CHAT_RELATION).getQuery().orderByDescending(ParseConstants.CREATED_AT).getFirstInBackground(new GetCallback<ParseObject>() {
@@ -228,8 +225,8 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
                             //if the user chatting to, has the last  message in the chat equal to the sender, then show that message as the last message sent
                             if (chatParticipant.equals(chatParseObject.getString(ParseConstants.CHAT_SENDER))) {
 //                                myUserChatListViewHolder.lastChatMessage.setText(chatParticipant + ": " + chatParseObject.getString("message"));
-                                myUserChatListViewHolder.lastChatMessage.setText(chatParseObject.getString("message"));
-                                // myUserChatListViewHolder.sentPicture.setImageDrawable(null);
+                                final String chatMessage = chatParseObject.getString(ParseConstants.MESSAGE);
+                                myUserChatListViewHolder.lastChatMessage.setText(chatMessage);
                                 // if the current user has not yet seen the message sent, highlight the userChatObject on screen
                                 if (!chatParseObject.getBoolean(ParseConstants.SEEN)) {
                                     myUserChatListViewHolder.lastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.black));
@@ -240,23 +237,42 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
                             }
                             // else if the last message is sent by me it should be shown as the last message seen in the conversation
                             else if (chatParticipant.equals(chatParseObject.getString(ParseConstants.CHAT_RECEIVER))) {
-                                myUserChatListViewHolder.lastChatMessage.setText("You: " + chatParseObject.getString("message"));
+                                final String chatMessage = "You: " + chatParseObject.getString(ParseConstants.MESSAGE);
+                                myUserChatListViewHolder.lastChatMessage.setText(chatMessage);
                                 myUserChatListViewHolder.lastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.secondary_text_icons_light_theme));
                                 myUserChatListViewHolder.username.setTextColor(activityContext.getResources().getColor(R.color.black));
                                 myUserChatListViewHolder.username.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
-                                myUserChatListViewHolder.dateOfLastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.secondary_text_icons_light_theme));
+                                myUserChatListViewHolder.dateOfLastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.disable_hint_text_light_theme));
                                 //if the chatParticipant equals to the receiver of the last message in the chat and the receiver has seen the message, then show that chatParticipants picture
                                 if (chatParseObject.getBoolean(ParseConstants.SEEN)) {
-                                    //myUserChatListViewHolder.setIsRecyclable(false);
+//                                    ViewGroup.LayoutParams layoutParams = myUserChatListViewHolder.seenPicture.getLayoutParams();
+//                                    layoutParams.width = myUserChatListViewHolder.seenPicture.getWidth();
+//                                    layoutParams.height = myUserChatListViewHolder.seenPicture.getHeight();
+//                                    myUserChatListViewHolder.seenPicture.setLayoutParams(layoutParams);
+                                    //myUserChatListViewHolder.seenPicture.requestLayout();
 
-                                    picasso.load(userChat.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).
+                                    picasso.load(userChat.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE).
                                             getUrl()).noPlaceholder().centerCrop().fit().
                                             into(myUserChatListViewHolder.seenPicture);
+                                    if (chatParticipant.equals("Ib")) {
+                                        Log.d(LOG, "IB SEEN == TRUE");
+                                    }
                                 }
                                 // else it has not yet been seen and an image indicating that i have send the message should be shown instead
                                 else if (!chatParseObject.getBoolean(ParseConstants.SEEN)) {
+//                                    ViewGroup.LayoutParams layoutParams = myUserChatListViewHolder.seenPicture.getLayoutParams();
+//                                    layoutParams.width = myUserChatListViewHolder.sentPicture.getWidth();
+//                                    layoutParams.height = myUserChatListViewHolder.sentPicture.getHeight();
+//                                    myUserChatListViewHolder.seenPicture.setLayoutParams(layoutParams);
+                                    //myUserChatListViewHolder.seenPicture.requestLayout();
+
                                     picasso.load(R.drawable.ic_checkbox_marked_circle_grey600_24dp).noPlaceholder().centerCrop().fit().
-                                            into(myUserChatListViewHolder.sentPicture);
+                                            into(myUserChatListViewHolder.seenPicture);
+                                    if (chatParticipant.equals("Ib")) {
+                                        Log.d(LOG, "IB SEEN == FALSE");
+                                    }
+//                                    picasso.load(R.drawable.ic_checkbox_marked_circle_grey600_24dp).noPlaceholder().centerCrop().fit().
+//                                            into(myUserChatListViewHolder.sentPicture);
 
 //                                    myUserChatListViewHolder.sentPicture = (ImageView)
 //                                            myUserChatListViewHolder.itemView.findViewById(R.id.sent_image);
@@ -282,9 +298,13 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
                         }
                     }
                 });
-                myUserChatListViewHolder.setIsRecyclable(true);
+
                 //Set the time to when the last message was sent/received
-                myUserChatListViewHolder.dateOfLastChatMessage.setText(DateUtils.getRelativeTimeSpanString(activityContext, userChat.getUpdatedAt().getTime(), false));
+                final CharSequence date = DateUtils.getRelativeTimeSpanString(activityContext, userChat.getUpdatedAt().getTime(), false);
+                if (myUserChatListViewHolder.dateOfLastChatMessage != null && !date.equals(myUserChatListViewHolder.dateOfLastChatMessage.getText())) {
+                    myUserChatListViewHolder.dateOfLastChatMessage.setText(date);
+                }
+
 //                myUserChatListViewHolder.dateOfLastChatMessage.setText(DateUtils.getRelativeDateTimeString(activityContext, userChat.getUpdatedAt().getTime(),
 //                        DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
                 Log.d(LOG, "Parsefile Uri: " + userChat.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl());
@@ -342,7 +362,7 @@ public class UserChatListRecyclerAdapter extends RecyclerView.Adapter<UserChatLi
 
     @Override
     public int getItemCount() {
-        return userChatList.size() + 1; // +1 for Header +50 for more users
+        return userChatList.size() + 50; // +1 for Header +50 for more users
     }
 
     public static class MyUserChatListViewHolder extends RecyclerView.ViewHolder {

@@ -3,51 +3,52 @@
     android:id="@+id/llaa"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="end">
+    android:gravity="end"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/lbl1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/pad_5dp"
+        android:layout_marginBottom="@dimen/pad_5dp"
+        android:text="@string/send_message"
+        android:textColor="@color/secondary_text_icons_light_theme"
+        android:textSize="@dimen/txt_14sp" />
+
+    <RelativeLayout
         android:id="@+id/v1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/pad_10dp"
         android:layout_marginStart="@dimen/pad_10dp"
-        android:background="@drawable/chat_sent_bitmap"
-        android:gravity="center_vertical"
+        android:background="@drawable/chat_bubble_outgoing"
+        android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/pad_5dp"
-        android:paddingLeft="@dimen/pad_15dp"
+        android:paddingEnd="@dimen/pad_20dp"
         android:paddingStart="@dimen/pad_15dp"
-        android:paddingRight="@dimen/pad_chat_item"
-        android:paddingEnd="@dimen/pad_chat_item"
-        android:paddingTop="@dimen/pad_5dp" >
+        android:paddingBottom="@dimen/pad_10dp"
+        android:paddingTop="@dimen/pad_10dp">
 
-        <TextView
-            android:id="@+id/lbl1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/message"
-            android:textColor="@color/white"
-            android:textSize="@dimen/txt_13sp" />
         <TextView
             android:id="@+id/lbl2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/send_message"
+            android:text="@string/message"
             android:textColor="@color/white"
-            android:textSize="@dimen/txt_14sp"/>
+            android:textSize="@dimen/txt_13sp"
+            />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/lbl3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/pad_20dp"
+        android:layout_marginRight="@dimen/pad_20dp"
+        android:layout_marginTop="@dimen/pad_5dp"
         android:text="@string/status_text"
         android:textColor="@color/grey_700"
-        android:textSize="@dimen/txt_14sp"
-        android:layout_marginTop="@dimen/pad_5dp"
-        android:layout_marginRight="@dimen/pad_20dp"
-        android:layout_marginEnd="@dimen/pad_20dp"
-        />
+        android:textSize="@dimen/txt_14sp" />
 </LinearLayout>

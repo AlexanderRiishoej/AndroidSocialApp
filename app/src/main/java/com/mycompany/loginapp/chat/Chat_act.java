@@ -20,6 +20,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.androidquery.AQuery;
@@ -31,6 +32,7 @@ import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUserChat;
+import com.mycompany.loginapp.singletons.MySingleton;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -56,46 +58,18 @@ import de.greenrobot.event.EventBus;
 public class Chat_act extends BaseActivity {
 
     public static final String LOG = Chat_act.class.getSimpleName();
-
-    /**
-     * The Conversation list.
-     */
     private List<Conversation> conversationList;
-
-    /**
-     * The Editext to compose the message.
-     */
     private EditText txt;
-
-    /**
-     * The receiver name of receiver.
-     */
     private String receiver;
-
-    /**
-     * The date of last message in conversation.
-     */
     private Date lastMsgDate;
-
-    /**
-     * Flag to hold if the activity is running or not.
-     */
     private boolean isRunning;
-
-    /**
-     * The handler.
-     */
-
     private ParseObject userChatObject;
     private static Handler handler;
-
     private static AQuery aQuery;
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    private LinearLayoutManager mLayoutManager;
     private ChatRecyclerAdapter chatRecyclerAdapter;
-
+    private ImageView mToolbarImageView;
     /* (non-Javadoc)
      * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
      */
@@ -105,13 +79,13 @@ public class Chat_act extends BaseActivity {
         makeWindowTransition();
         EventBus.getDefault().register(this);
         aQuery = new AQuery(this);
-        conversationList = new ArrayList<Conversation>();
-        initializeRecyclerView();
-        chatRecyclerAdapter = new ChatRecyclerAdapter(this, conversationList);
-        mRecyclerView.setAdapter(chatRecyclerAdapter);
         txt = (EditText) findViewById(R.id.txt);
         //receiver = getIntent().getStringExtra(Constants.EXTRA_DATA);
         receiver = getChatReceiver();
+        conversationList = new ArrayList<Conversation>();
+        initializeRecyclerView();
+        chatRecyclerAdapter = new ChatRecyclerAdapter(this, conversationList, userChatObject);
+        mRecyclerView.setAdapter(chatRecyclerAdapter);
         aQuery.id(R.id.toolbar_title).text(receiver);
         handler = new Handler();
         this.loadConversationList();
@@ -123,6 +97,13 @@ public class Chat_act extends BaseActivity {
                 refreshContent();
             }
         });
+        mToolbarImageView = (ImageView) findViewById(R.id.chat_image);
+        MySingleton.getMySingleton().getPicasso().load(userChatObject.getParseUser(ParseConstants.USERNAME).
+                getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(mToolbarImageView);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
     }
 
     @Override
@@ -149,7 +130,7 @@ public class Chat_act extends BaseActivity {
         //mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,navigation_header view name, navigation_header view email,
         // and navigation_header view profile picture
-        mLayoutManager = new LinearLayoutManager(this);         // Creating a layout Manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
