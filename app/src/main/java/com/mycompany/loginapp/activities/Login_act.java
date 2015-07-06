@@ -20,6 +20,7 @@ import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.base.ApplicationMain;
+import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.registration.Register_act;
 import com.mycompany.loginapp.singletons.MySingleton;
@@ -154,7 +155,6 @@ public class Login_act extends BaseActivity {
         } else {
             startActivity(new Intent(this, Register_act.class));
         }
-        EventBus.getDefault().post(new MessageEvent("Hello everyone!"));
     }
 
     /**
@@ -166,7 +166,7 @@ public class Login_act extends BaseActivity {
         if (currentUser != null) {
             //ProfilePrivate_act.parseUser = currentUser;
             UserChatList_act.user = currentUser;
-            startActivityForResult(new Intent(this, ProfilePrivate_act.class), 9);
+            startActivityForResult(new Intent(this, Social_act.class), 9);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //this.finishAfterTransition();
                 this.finish();

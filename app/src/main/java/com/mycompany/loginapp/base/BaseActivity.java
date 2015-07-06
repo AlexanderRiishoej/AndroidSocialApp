@@ -62,12 +62,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract int getLayoutResource();
 
-    protected void setActionBarTitle(int titleId) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(titleId);
-        }
-    }
-
     // Setting and getting the toolbar
     protected Toolbar getToolbar() {
         if (mToolbar == null) {

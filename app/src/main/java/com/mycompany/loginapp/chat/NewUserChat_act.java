@@ -367,7 +367,7 @@ public class NewUserChat_act extends BaseActivity {
          */
         public ImageView profilePicture;
         /**
-         * ProgressBar for the small profile pictures in the list loading
+         * ProgressBar for the small profile_image pictures in the list loading
          */
         public ProgressBar userImageProgressBar;
 

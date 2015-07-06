@@ -12,36 +12,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="31dp"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:maxWidth="10dip"
-        android:minWidth="10dip"
+        android:layout_marginStart="34dp"
+        android:maxWidth="10dp"
+        android:minWidth="10dp"
         android:visibility="gone" />
-
+<!-- android:layout_marginLeft="31dp" -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_list_username_profile_parse_image"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/pad_16dp"
         app:border_color="@color/secondary_text_icons"
         app:border_width="0dp" />
 
     <LinearLayout
+        android:id="@+id/chat_list_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_marginLeft="@dimen/pad_72dp"
-        android:layout_marginRight="@dimen/activity_horizontal_margin">
-        <!-- android:layout_marginBottom="@dimen/pad_20dp"
-        android:layout_marginTop="@dimen/pad_20dp" -->
+        android:layout_toEndOf="@+id/user_list_username_profile_parse_image"
+        android:paddingStart="@dimen/pad_16dp"
+        android:paddingEnd="@dimen/pad_16dp"
+        >
+        <!-- android:layout_marginLeft="@dimen/pad_72dp" -->
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/user_list_username"
             android:layout_width="wrap_content"
@@ -57,8 +58,9 @@
                 android:orientation="horizontal"
                 android:text="@string/message_date_time"
                 android:singleLine="true"
-                android:textColor="@color/disable_hint_text_light_theme"
+                android:textColor="@color/secondary_text_icons_light_theme"
                 android:textSize="@dimen/txt_14sp"
+                android:fontFamily="sans-serif-condensed"
                 android:gravity="end"/>
         </RelativeLayout>
         <RelativeLayout
@@ -93,9 +95,9 @@
     <!--        android:text="@string/recent_chat"
      android:drawableLeft="@drawable/ic_online"
         android:drawableRight="@drawable/arrow"-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/list_divider"
-        android:layout_alignParentBottom="true"/>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@drawable/list_divider"-->
+        <!--android:layout_alignParentBottom="true"/>-->
 </RelativeLayout>

@@ -1,38 +1,28 @@
 package com.mycompany.loginapp.chat;
 
-import android.app.ActivityOptions;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Fade;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionSet;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.adapters.ChatListRecyclerAdapter;
-import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
-import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
-import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUserChat;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.FindCallback;
@@ -47,39 +37,58 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-//@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class UserChatList_act extends BaseActivity {
-
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ChatListFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ChatListFragment extends Fragment {
     public static final String LOG = UserChatList_act.class.getSimpleName();
-    /**
-     * The user.
-     */
     public static ParseUser user;
     private ChatListRecyclerAdapter chatListRecyclerAdapter;
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
     private RecyclerView.LayoutManager mLayoutManager;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private AQuery aQuery;
     private ArrayList<ParseObject> userList;
     private FloatingActionButton mFabButton;
     private boolean isRunning;
     // A list of DateHolders that represents the updated dates of the chats
     private ArrayList<DateHolder<Date>> dateHolderList;
+    private Context actContext;
+    private ProgressBar mProgressBar;
+
+    public static ChatListFragment newInstance() {
+        ChatListFragment fragment = new ChatListFragment();
+        return fragment;
+    }
+
+    public ChatListFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        makeWindowTransition();
-        EventBus.getDefault().register(this);
-        aQuery = new AQuery(this);
-        aQuery.id(R.id.toolbar_title).text("Chat users");
+        actContext  = getActivity();
+        //EventBus.getDefault().register(this);
+        aQuery = new AQuery(actContext);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
+        // Inflate the layout for this fragment
+        mProgressBar = (ProgressBar) view.findViewById(R.id.chat_list_progress);
+        mProgressBar.setVisibility(View.VISIBLE);
         //mFabButton = (ImageButton) findViewById(R.id.fabButton);
-        initializeRecyclerView();
+        initializeRecyclerView(view);
         userList = new ArrayList<>();
-        chatListRecyclerAdapter = new ChatListRecyclerAdapter(this, userList);
+        chatListRecyclerAdapter = new ChatListRecyclerAdapter(actContext, userList);
         mRecyclerView.setAdapter(chatListRecyclerAdapter);
-        initializeSwipeRefreshLayout();
-        mFabButton = (FloatingActionButton) findViewById(R.id.fab);
+        initializeSwipeRefreshLayout(view);
+        mFabButton = (FloatingActionButton) view.findViewById(R.id.fab);
         mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,50 +96,67 @@ public class UserChatList_act extends BaseActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        return view;
     }
 
-    private void initializeSwipeRefreshLayout() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.teal_500);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    public void setSwipeRefreshingEnabled(boolean enabled){
+        if(mSwipeRefreshLayout == null){
+            return;
+        }
+
+        if(enabled){
+            mSwipeRefreshLayout.setEnabled(true);
+        }
+        else{
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+    }
+
+    private void initializeSwipeRefreshLayout(View view) {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.teal_500);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshContent();
             }
         });
-//        swipeRefreshLayout.setProgressViewOffset(false, 180, 300);
+//        mSwipeRefreshLayout.setProgressViewOffset(false, 180, 300);
     }
 
-    private void initializeRecyclerView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.userChatListRecyclerView);
+    private void initializeRecyclerView(View view) {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.userChatListRecyclerView);
         mRecyclerView.setHasFixedSize(false);                            // Letting the system know that the list objects are of fixed size
         //mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,navigation_header view name, navigation_header view email,
         // and navigation_header view profile_image picture
-        mLayoutManager = new LinearLayoutManager(this);         // Creating a layout Manager
+        mLayoutManager = new LinearLayoutManager(actContext);         // Creating a layout Manager
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mRecyclerView, new ClickListener() {
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(actContext));
+        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(actContext, mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if (position == Constants.TYPE_HEADER) {
-                    return;
-                }
+//                if (position == Constants.TYPE_HEADER) {
+//                    return;
+//                }
                 // only for testing purposes
 //                if (position > 2) {
 //                    return;
 //                }
-                final int childViewPosition = position - 1; // minus position of header
+                final int childViewPosition = position; // minus position of header
 
-                if(userList.size() > 0) {
+                if (userList.size() > 0) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class).
-                                        putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
-                                ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
+//                        actContext.startActivity(new Intent(actContext, Chat_act.class).
+//                                        putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser(ParseConstants.USERNAME).getUsername()),
+//                                ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                        actContext.startActivity(new Intent(actContext, Chat_act.class));
                     } else {
                         EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class));
+                        actContext.startActivity(new Intent(actContext, Chat_act.class));
                     }
                 }
             }
@@ -140,31 +166,6 @@ public class UserChatList_act extends BaseActivity {
 
             }
         }));
-
-//        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
-//            @Override
-//            public void onHide() {
-//                hideViews();
-//            }
-//
-//            @Override
-//            public void onShow() {
-//                showViews();
-//            }
-//        });
-    }
-
-    private void hideViews() {
-        getToolbar().animate().translationY(-getToolbar().getHeight()).setInterpolator(new AccelerateInterpolator(2));
-
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mFabButton.getLayoutParams();
-        int fabBottomMargin = lp.bottomMargin;
-        mFabButton.animate().translationY(mFabButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
-    }
-
-    private void showViews() {
-        getToolbar().animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
-        mFabButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
     /**
@@ -175,38 +176,9 @@ public class UserChatList_act extends BaseActivity {
             @Override
             public void run() {
                 refreshUserList();
-                swipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
-    }
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.user_chat_list;
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_user_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_new_chat:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    startActivity(new Intent(UserChatList_act.this, NewUserChat_act.class),
-                            ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
-                } else {
-                    startActivity(new Intent(UserChatList_act.this, NewUserChat_act.class));
-                }
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -214,9 +186,8 @@ public class UserChatList_act extends BaseActivity {
      * When the system destroys your activity, it calls the onDestroy() method for your Activity
      */
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        //updateUserStatus(false);
         super.onDestroy();
     }
 
@@ -226,7 +197,7 @@ public class UserChatList_act extends BaseActivity {
      * that you release during onPause() and perform any other initializations that must occur each time the activity enters the Resumed state
      */
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         isRunning = true;
         this.getActiveUserChats();
@@ -236,22 +207,9 @@ public class UserChatList_act extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         this.isRunning = false;
-    }
-
-    /**
-     * Finishes this activity
-     *
-     * @param event - received when user presses Log Out
-     */
-    public void onEvent(MessageFinishActivities event) {
-        //Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        Log.d("CLOSE EVENT RECEIVED: ", "FINISHING USER_LIST");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.finishAfterTransition();
-        } else finish();
     }
 
     /**
@@ -276,18 +234,16 @@ public class UserChatList_act extends BaseActivity {
             public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
 //                dia.dismiss();
                 if (e == null) {
-                    if (parseUserChatObjects.size() > 0) {
+                    if (parseUserChatObjects.size() > 0 && (parseUserChatObjects.size() > userList.size() || parseUserChatObjects.size() < userList.size())) {
                         userChatList.addAll(parseUserChatObjects);
                         userList = new ArrayList<ParseObject>(userChatList);
                         chatListRecyclerAdapter.setUserChatObjectList(userList);
                         chatListRecyclerAdapter.notifyItemRangeChanged(1, userList.size());
                         //userChatListRecyclerAdapter.notifyDataSetChanged();
 
-                    } else {
-                        Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
                     }
                 } else {
-                    Utilities.showDialog(UserChatList_act.this, "Error: " + e.getMessage());
+                    Utilities.showDialog(actContext, "Error: " + e.getMessage());
                 }
             }
         });
@@ -300,22 +256,15 @@ public class UserChatList_act extends BaseActivity {
         getUserChatListQuery().orderByDescending(ParseConstants.UPDATED_AT).findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
-//                dia.dismiss();
+                mProgressBar.setVisibility(View.GONE);
                 if (e == null) {
                     if (parseUserChatObjects.size() > 0) {
-                        //userChatList.addAll(parseUserChatObjects);
-                        //Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
-                        //Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
-                        if (userList.size() >= 2) {
-                            //Log.d(LOG, userList.get(0).getUpdatedAt().toString());
-                            //Log.d(LOG, userList.get(1).getUpdatedAt().toString());
-                        }
                         loadUserList(parseUserChatObjects);
                     } else {
-                        Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
+                        Utilities.showDialog(actContext, "No users for chat were found. Try reloading the page.");
                     }
                 } else {
-                    Utilities.showDialog(UserChatList_act.this, "Error: " + e.getMessage());
+                    Utilities.showDialog(actContext, "Error: " + e.getMessage());
                 }
             }
         });
@@ -354,11 +303,11 @@ public class UserChatList_act extends BaseActivity {
      * The query for the list of chats
      */
     private ParseQuery<ParseObject> getUserChatListQuery() {
-        ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
+        ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery(ParseConstants.CHAT_USERS);
 //        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
-        parseObjectQuery.whereMatches("chatId", ParseUser.getCurrentUser().getObjectId());
-        parseObjectQuery.include("username");
-        parseObjectQuery.include("createdBy");
+        parseObjectQuery.whereMatches(ParseConstants.CHAT_ID, ParseUser.getCurrentUser().getObjectId());
+        parseObjectQuery.include(ParseConstants.USERNAME);
+        parseObjectQuery.include(ParseConstants.CREATED_BY);
 
         return parseObjectQuery;
     }
@@ -384,8 +333,8 @@ public class UserChatList_act extends BaseActivity {
                 // the position of the element in the old list has been updated to the one of the new list.
                 if (oldListObjectId.equals(newListObjectId) && i != j) {
                     // notify that item has changed and should be moved in the adapter to the top
-                    chatListRecyclerAdapter.notifyItemChanged(j + 1); // j+1 due to header
-                    chatListRecyclerAdapter.notifyItemMoved(j + 1, 1); // j+1 due to header
+                    chatListRecyclerAdapter.notifyItemChanged(j); // j+1 due to header
+                    chatListRecyclerAdapter.notifyItemMoved(j, 0); // j+1 due to header
                     // remove the item from its old position in the list and current dateHolder corresponding to the current chat list
                     userList.remove(j);
                     dateHolderList.remove(j);
@@ -402,7 +351,7 @@ public class UserChatList_act extends BaseActivity {
                     {
                         userList.set(0, userChats.get(0));
                         dateHolderList.add(0, new DateHolder<Date>(userChats.get(0).getUpdatedAt()));
-                        chatListRecyclerAdapter.notifyItemChanged(1);
+                        chatListRecyclerAdapter.notifyItemChanged(0);
                     }
                 }
                 // if the two object ids are the same and the are placed on the same position in the list, it means that they have not changed hence
@@ -412,84 +361,5 @@ public class UserChatList_act extends BaseActivity {
                 }
             }
         }
-    }
-
-    /**
-     * -------------------------------------------------------------------------------------------------------------------------------------------------
-     * Window Transitions
-     */
-    private void makeWindowTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setEnterTransition(makeEnterTransition());
-            getWindow().setExitTransition(makeExitTransition());
-//            getWindow().setReenterTransition(makeReenterTransition());
-            getWindow().setReturnTransition(makeReturnTransition());
-            ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-        }
-    }
-
-    private Transition makeEnterTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet enterTransition = new TransitionSet();
-
-            Transition t = new Slide(Gravity.TOP).setDuration(600);
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.appbar, true);
-            enterTransition.addTransition(t);
-
-            Transition tt = new Fade();
-            enterTransition.addTransition(tt).setDuration(1000);
-            return enterTransition;
-        } else return null;
-    }
-
-    private Transition makeExitTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet exitTransition = new TransitionSet();
-            exitTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            exitTransition.excludeTarget(R.id.appbar, true);
-            Transition slideInFromLeft = new Slide(Gravity.LEFT);
-
-            exitTransition.addTransition(slideInFromLeft).setDuration(400);
-            return exitTransition;
-        } else return null;
-    }
-
-    private Transition makeReenterTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet enterTransition = new TransitionSet();
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
-
-            Transition slideInFromLeft = new Slide(Gravity.LEFT);
-
-            enterTransition.addTransition(slideInFromLeft).setDuration(200);
-            return enterTransition;
-        } else return null;
-    }
-
-    private Transition makeReturnTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet enterTransition = new TransitionSet();
-
-            Transition leftPartSlide = new Slide(Gravity.LEFT);
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.appbar, true);
-            enterTransition.addTransition(leftPartSlide);
-
-            Transition fade = new Fade();
-            //enterTransition.addTransition(fade);
-
-            enterTransition.setDuration(300);
-            return enterTransition;
-        } else return null;
     }
 }

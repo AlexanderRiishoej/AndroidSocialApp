@@ -11,17 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/activity_main_swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/chat_board">
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/chat_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left|start"
+                android:layout_above="@+id/chat_board"
                 android:clipToPadding="false"
                 android:divider="@drawable/list_divider"
                 android:dividerHeight="1dp"
@@ -29,22 +23,17 @@
                 android:paddingTop="?attr/actionBarSize"
                 android:scrollbars="vertical" />
 
-            <!--<ListView-->
-            <!--android:id="@+id/list"-->
+        <!--<ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:id="@+id/progressBar_load_old_messages"-->
+            <!--style="?android:attr/progressBarStyleSmall"-->
             <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:divider="@color/white"-->
-            <!--android:dividerHeight="@dimen/pad_5dp"-->
-            <!--android:fastScrollEnabled="false"-->
-            <!--android:paddingBottom="@dimen/pad_10dp"-->
-            <!--android:paddingTop="@dimen/pad_10dp"-->
-            <!--tools:listitem="@layout/chat_item_receive" />-->
-        </android.support.v4.widget.SwipeRefreshLayout>
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/toolbar_teal"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:background="@color/grey_200"-->
+            <!--android:indeterminate="true"-->
+            <!--android:visibility="invisible" />-->
 
-        <!--<include-->
-        <!--android:id="@+id/toolbar_teal"-->
-        <!--layout="@layout/toolbar_teal" />-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_teal"
             android:layout_width="match_parent"
@@ -69,30 +58,43 @@
                     android:id="@+id/chat_image"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
-                    android:layout_gravity="start|center_vertical"/>
+                    android:layout_gravity="start|center_vertical" />
 
                 <TextView
                     android:id="@+id/toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|top"
+                    android:layout_marginStart="@dimen/pad_16dp"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:layout_marginStart="@dimen/pad_16dp"/>
+                    android:textSize="20sp" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:visibility="gone" />
+        <!-- This RelativeLayout serves the purpose of spanning the view of the ProgressBar to the entire window -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <View style="@style/divider_margin_bot" />
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+        </RelativeLayout>
+        <!--<ProgressBar-->
+            <!--android:id="@+id/progressBar_load_old_messages"-->
+            <!--style="?android:attr/progressBarStyleSmall"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:visibility="gone" />-->
 
         <LinearLayout
             android:id="@+id/chat_board"
@@ -100,38 +102,38 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="@color/grey_100"
             android:gravity="bottom"
             android:orientation="vertical">
+
+            <View style="@style/divider"
+                android:layout_margin="0dp"/>
 
             <EditText
                 android:id="@+id/txt"
                 style="@style/EditTextLoginStyle"
+                android:background="#00000000"
+                android:layout_marginTop="@dimen/pad_8dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/pad_10dp"
                 android:hint="@string/write_a_message"
-                android:inputType="textMultiLine" />
-
-            <View
-                style="@style/dividerInvisible"
-                android:layout_marginBottom="0dp" />
+                android:fontFamily="sans-serif-condensed"
+                android:inputType="textMultiLine"
+                />
 
             <Button
                 android:id="@+id/btnSend"
                 style="@style/ButtonFlatLoginStyle"
                 android:layout_width="wrap_content"
+                android:textColor="@color/colorPrimary"
                 android:layout_height="36dp"
                 android:layout_gravity="end"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/pad_16dp"
                 android:onClick="sendMessage"
                 android:text="@string/send_message" />
-
-            <View style="@style/divider_margin_top" />
-
         </LinearLayout>
 
     </RelativeLayout>
@@ -144,12 +146,12 @@
     <!--android:fitsSystemWindows="true">-->
 
     <!--<fragment-->
-        <!--android:id="@+id/fragment_navigation_view"-->
-        <!--android:name="com.mycompany.loginapp.base.NavigationDrawerFragment"-->
-        <!--android:layout_width="@dimen/navigation_width"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="left|start"-->
-        <!--app:layout="@layout/fragment_navigation_view" />-->
+    <!--android:id="@+id/fragment_navigation_view"-->
+    <!--android:name="com.mycompany.loginapp.base.NavigationDrawerFragment"-->
+    <!--android:layout_width="@dimen/navigation_width"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="left|start"-->
+    <!--app:layout="@layout/fragment_navigation_view" />-->
 
     <!--</com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout>-->
     <!--<android.support.design.widget.NavigationView-->

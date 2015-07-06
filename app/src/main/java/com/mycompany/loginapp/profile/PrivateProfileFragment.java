@@ -38,7 +38,7 @@ import de.greenrobot.event.EventBus;
 import java.util.List;
 
 /**
- * Fragment that handles the profile of the current user.
+ * Fragment that handles the profile_image of the current user.
  * Implements AppBarLayout.OnOffsetChangedListener in order to avoid unintentional invokation of SwipeRefreshing while scrolling:.
  * https://gist.github.com/blackcj/001a90c7775765ad5212
  */
@@ -65,12 +65,6 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-
-        //setHasOptionsMenu(true);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("FragmentView");
-
     }
 
     // http://stackoverflow.com/questions/27074717/android-fullscreen-dialog-confirmation-and-dismissive-actions
@@ -87,14 +81,14 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
 
-        mFabButton = (FloatingActionButton) view.findViewById(R.id.fab);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        mFabButton = (FloatingActionButton) view.findViewById(R.id.fab);
+//        mFabButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         this.initializeSwipeRefreshLayout(view);
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appbar);
@@ -149,6 +143,8 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
         profileRecyclerAdapter.updateRecyclerItem(0);
     }
 
+    //https://gist.github.com/blackcj/001a90c7775765ad5212
+    //https://developer.android.com/reference/android/support/design/widget/AppBarLayout.OnOffsetChangedListener.html
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
         if (i == 0) {
@@ -158,7 +154,7 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
         }
     }
 
-    /** Event received when a new profile picture has been chosen */
+    /** Event received when a new profile_image picture has been chosen */
     public void onEvent(MessageUpdateCoverPhoto newCoverPhotoEvent){
         this.loadCoverPhoto();
     }

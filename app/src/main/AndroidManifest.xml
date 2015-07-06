@@ -83,7 +83,7 @@
             android:label="@string/title_activity_new_user_chat" >
         </activity>
         <activity
-            android:name=".news.NewsFeed_act"
+            android:name=".news.Social_act"
             android:label="@string/title_activity_user_edit_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -93,14 +93,36 @@
             android:name=".profile.ProfilePublic_act"
             android:label="@string/title_activity_profile_act" >
         </activity>
+
+        <!-- ....................................................................................................................................... -->
+        <!-- For choosing files -->
         <activity
-            android:name=".observable.ToolbarControlRecyclerViewActivity"
-            android:label="@string/title_activity_profile_act" >
+            android:name="com.ipaulpro.afilechooser.FileChooserActivity"
+            android:icon="@drawable/ic_chooser"
+            android:enabled="@bool/use_activity"
+            android:exported="true"
+            android:label="@string/choose_file" >
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
         </activity>
-        <activity
-            android:name=".MaterialTabs.MainTab_act"
-            android:label="@string/title_activity_profile_act" >
-        </activity>
+        <provider
+            android:name="com.ianhanniballake.localstorage.LocalStorageProvider"
+            android:authorities="com.ianhanniballake.localstorage.documents"
+            android:enabled="@bool/use_provider"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:permission="android.permission.MANAGE_DOCUMENTS" >
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+            </intent-filter>
+        </provider>
+        <!-- ....................................................................................................................................... -->
     </application>
 
 </manifest>

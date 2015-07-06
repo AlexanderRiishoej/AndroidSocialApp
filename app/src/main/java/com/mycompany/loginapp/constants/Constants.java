@@ -19,14 +19,14 @@ public final class Constants {
     public static final int MEDIA_TYPE_VIDEO = 5;
 
     /** Constants for Chat ListView View-layout */
-    public static final int CHAT_ITEM_SENT = 0;
-    public static final int CHAT_ITEM_RECEIVE = 1;
+    public static final int CHAT_ITEM_SENT = 1;
+    public static final int CHAT_ITEM_RECEIVE = 2;
 
     /** Constants for NavigationAdapter */
     public final static String PROFILE_PRIVATE = "ProfilePrivate_act";
     public final static String USER_LIST_ACT_NAME = "UserChatList_act";
     public final static String NEW_USER_CHAT_ACT_NAME = "NewUserChat_act";
-    public final static String NEWS = "NewsFeed_act";
+    public final static String SOCIAL = "Social_act";
 
     /** Constants for ProfileRecyclerAdapter */
     public static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on

@@ -1,6 +1,7 @@
 package com.mycompany.loginapp.chat;
 
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.Date;
 
@@ -44,6 +45,7 @@ public class Conversation {
      */
     private String sender;
 
+    private boolean isProgress = false;
 
     /**
      * Instantiates a new conversation.
@@ -88,7 +90,7 @@ public class Conversation {
      * @return true, if is sent
      */
     public boolean isSent() {
-        return UserChatList_act.user.getUsername().equals(sender);
+        return ParseUser.getCurrentUser().getUsername().equals(sender);
     }
 
     /**
@@ -145,4 +147,13 @@ public class Conversation {
         this.status = status;
     }
 
+
+    /** Progressbar */
+    public void setProgress(boolean isProgress){
+        this.isProgress = isProgress;
+    }
+
+    public boolean isProgress(){
+        return this.isProgress;
+    }
 }

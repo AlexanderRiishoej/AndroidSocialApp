@@ -44,6 +44,7 @@ public class ProfileCoverPhotoLoader {
         try {
             parseCoverPhotoFile = new ParseFile("cover_photo.JPG", readBytesFromImageFile(ProfileImageHolder.profileCoverPhotoFile));
         } catch (Exception ex) {
+
             ex.printStackTrace();
             return;
         }
@@ -67,7 +68,7 @@ public class ProfileCoverPhotoLoader {
 
                             } else {
                                 Log.d(LOG, "Profile picture successfully saved to Parse!");
-                                // Inform subscribers about the new profile picture
+                                // Inform subscribers about the new profile_image picture
                             }
                         }
                     });
@@ -77,8 +78,8 @@ public class ProfileCoverPhotoLoader {
     }
 
     /**
-     * Loads the profile picture from Parse
-     * Only if the path to a profile picture is not existing any longer
+     * Loads the profile_image picture from Parse
+     * Only if the path to a profile_image picture is not existing any longer
      */
     private void getCoverPhotoFromParse() {
         Log.d(LOG, "Loading image from parse...");
@@ -91,7 +92,7 @@ public class ProfileCoverPhotoLoader {
             ex.printStackTrace();
         }
 
-        // If the profile image is different from null, then load is from parse
+        // If the profile_image image is different from null, then load is from parse
         if (profilePicture != null) {
 //            final ProgressBar progressBarImage = aQuery.id(R.id.profile_progress_bar).getProgressBar();
 //            progressBarImage.setVisibility(View.VISIBLE);
@@ -109,7 +110,7 @@ public class ProfileCoverPhotoLoader {
                             Files.write(data, newCoverPhotoFile);
                             /** Save the new path of the image to Parse. Path is created in getOutputMediaFile */
                             saveCoverPhotoPathToParse(newCoverPhotoFile);
-                            /** Finally update the picture directory with the profile picture */
+                            /** Finally update the picture directory with the profile_image picture */
                             updateDirectoryPictures();
                             EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.profileCoverPhotoFile.getAbsolutePath()));
                             //profileRecyclerAdapter.updateProfileImage(newProfileImageFile.getAbsolutePath());
@@ -138,7 +139,7 @@ public class ProfileCoverPhotoLoader {
     /**
      * Gets the ParseUser equal to the Username of the logged in User.
      * Checks whether the stored path is null or if the path to the file exists.
-     * If currentMediaFilePath is null it means that the profile picture path field in Parse is null, load the image stored in Parse instead
+     * If currentMediaFilePath is null it means that the profile_image picture path field in Parse is null, load the image stored in Parse instead
      * If the file exists, load it from the file, else load the image stored in Parse instead.
      */
     public void loadCoverPhoto() {
@@ -187,7 +188,7 @@ public class ProfileCoverPhotoLoader {
                     Log.d(LOG, "Profile picture path successfully saved to Parse!");
 
                 } else {
-                    Utilities.showDialog(activityContext, "Error saving profile picture file" + " " + e.getMessage());
+                    Utilities.showDialog(activityContext, "Error saving profile_image picture file" + " " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -195,7 +196,7 @@ public class ProfileCoverPhotoLoader {
     }
 
     /**
-     * Puts the updated profile picture visible in the public directory pictures
+     * Puts the updated profile_image picture visible in the public directory pictures
      */
     public void updateDirectoryPictures() {
         //activityContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(imageFile.getAbsolutePath())));

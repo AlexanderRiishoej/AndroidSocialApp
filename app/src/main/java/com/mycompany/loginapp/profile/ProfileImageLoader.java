@@ -69,7 +69,7 @@ public class ProfileImageLoader {
 
                             } else {
                                 Log.d(LOG, "Profile picture successfully saved to Parse!");
-                                // Inform subscribers about the new profile picture
+                                // Inform subscribers about the new profile_image picture
                             }
                         }
                     });
@@ -79,8 +79,8 @@ public class ProfileImageLoader {
     }
 
     /**
-     * Loads the profile picture from Parse
-     * Only if the path to a profile picture is not existing any longer
+     * Loads the profile_image picture from Parse
+     * Only if the path to a profile_image picture is not existing any longer
      */
     private void getProfilePictureFromParse() {
         Log.d(LOG, "Loading image from parse...");
@@ -93,7 +93,7 @@ public class ProfileImageLoader {
             ex.printStackTrace();
         }
 
-        // If the profile image is different from null, then load is from parse
+        // If the profile_image image is different from null, then load is from parse
         if (profilePicture != null) {
 //            final ProgressBar progressBarImage = aQuery.id(R.id.profile_progress_bar).getProgressBar();
 //            progressBarImage.setVisibility(View.VISIBLE);
@@ -111,7 +111,7 @@ public class ProfileImageLoader {
                             Files.write(data, newProfileImageFile);
                             /** Save the new path of the image to Parse. Path is created in getOutputMediaFile */
                             saveProfilePicturePathToParse(newProfileImageFile);
-                            /** Finally update the picture directory with the profile picture */
+                            /** Finally update the picture directory with the profile_image picture */
                             updateDirectoryPictures();
                             EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.imageFile.getAbsolutePath()));
                             //profileRecyclerAdapter.updateProfileImage(newProfileImageFile.getAbsolutePath());
@@ -140,7 +140,7 @@ public class ProfileImageLoader {
     /**
      * Gets the ParseUser equal to the Username of the logged in User.
      * Checks whether the stored path is null or if the path to the file exists.
-     * If currentMediaFilePath is null it means that the profile picture path field in Parse is null, load the image stored in Parse instead
+     * If currentMediaFilePath is null it means that the profile_image picture path field in Parse is null, load the image stored in Parse instead
      * If the file exists, load it from the file, else load the image stored in Parse instead.
      */
     public void loadProfilePicture() {
@@ -189,7 +189,7 @@ public class ProfileImageLoader {
                     Log.d(LOG, "Profile picture path successfully saved to Parse!");
 
                 } else {
-                    Utilities.showDialog(activityContext, "Error saving profile picture file" + " " + e.getMessage());
+                    Utilities.showDialog(activityContext, "Error saving profile_image picture file" + " " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -197,7 +197,7 @@ public class ProfileImageLoader {
     }
 
     /**
-     * Puts the updated profile picture visible in the public directory pictures
+     * Puts the updated profile_image picture visible in the public directory pictures
      */
     public void updateDirectoryPictures() {
         //activityContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(imageFile.getAbsolutePath())));
@@ -231,7 +231,7 @@ public class ProfileImageLoader {
         }
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MessengerApp");
+                Environment.DIRECTORY_PICTURES), "Social chat-app");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 

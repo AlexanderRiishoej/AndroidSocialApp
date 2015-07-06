@@ -101,7 +101,7 @@ public class PublicProfileFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
         //mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,navigation_header view name, navigation_header view email,
-        // and navigation_header view profile picture
+        // and navigation_header view profile_image picture
         profileRecyclerAdapter = new ProfileRecyclerAdapter(getActivity());
 
         mRecyclerView.setAdapter(profileRecyclerAdapter);                              // Setting the adapter to RecyclerView

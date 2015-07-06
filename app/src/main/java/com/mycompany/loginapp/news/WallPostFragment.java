@@ -1,28 +1,20 @@
 package com.mycompany.loginapp.news;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.adapters.WallPostRecyclerAdapter;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
-import com.mycompany.loginapp.utilities.Utilities;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +35,7 @@ public class WallPostFragment extends Fragment {
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
     private RecyclerView.LayoutManager mLayoutManager;
     private WallPostRecyclerAdapter mRecyclerWallPostAdapter;                        // Declaring Adapter For Recycler View
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     /**
      * Use this factory method to create a new instance of
@@ -88,9 +80,9 @@ public class WallPostFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mRecyclerWallPostAdapter);
         //recyclerOnTouchListener();
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_wall_post_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.teal_500);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_wall_post_refresh_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.teal_500);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshContent();
@@ -104,38 +96,6 @@ public class WallPostFragment extends Fragment {
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                    new MaterialDialog.Builder(getActivity())
-                            .positiveText("OK")
-                            .negativeText("Cancel")
-                            .title("Input")
-                            .content("Content")
-                            .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                            .widgetColorRes(R.color.amber_500)
-                            .iconRes(R.drawable.icon)
-                            .positiveColorRes(R.color.teal_500)
-                            .btnSelector(R.drawable.ripple_button_flat)
-                            .input("Phone number", "Test", new MaterialDialog.InputCallback() {
-                                @Override
-                                public void onInput(MaterialDialog dialog, CharSequence input) {
-                                    Log.d("", input.toString());
-                                    String phoneNumber = input.toString();
-                                    final ParseUser currentUser = ParseUser.getCurrentUser();
-                                    currentUser.put("phoneNumber", phoneNumber);
-                                    final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), null, getString(R.string.alert_wait));
-                                    currentUser.saveInBackground(new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            progressDialog.dismiss();
-                                            if (e == null) {
-                                                //profileRecyclerAdapter.notifyItemChanged(1);
-                                            } else {
-                                                Utilities.showDialog(getActivity(), "Error saving information... " + e.getMessage());
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                }
-                            }).show();
                 }
 
 
@@ -146,13 +106,26 @@ public class WallPostFragment extends Fragment {
         }));
     }
 
+    public void setSwipeRefreshingEnabled(boolean enabled){
+        if(mSwipeRefreshLayout == null){
+            return;
+        }
+
+        if(enabled){
+            mSwipeRefreshLayout.setEnabled(true);
+        }
+        else{
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+    }
+
     /** Refreshes the content  */
     private void refreshContent() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mRecyclerWallPostAdapter.notifyItemsHasChanged();
-                swipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
     }

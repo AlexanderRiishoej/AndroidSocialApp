@@ -22,7 +22,7 @@ import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
-import com.mycompany.loginapp.news.NewsFeed_act;
+import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.singletons.MySingleton;
@@ -42,7 +42,7 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
 
-    public ImageView profile;
+    public ImageView profile_image;
     public TextView name;
     public TextView email;
 
@@ -74,7 +74,7 @@ public class NavigationDrawerFragment extends Fragment {
                 selectDrawerItem(id);
                 mDrawerLayout.closeDrawers();
 
-                return false;
+                return true;
             }
         });
 
@@ -82,7 +82,7 @@ public class NavigationDrawerFragment extends Fragment {
         email = (TextView) navigationView.findViewById(R.id.email);       // Creating Text View object from navigation_header.xml_header.xml for email
         name.setText("Alexander Riishoej");
         email.setText("alexander_blazer@hotmail.com");
-        profile = (ImageView) navigationView.findViewById(R.id.circleView);
+        profile_image = (ImageView) navigationView.findViewById(R.id.circleView);
         this.loadNavigationHeaderViewImage();
         // Inflate the layout for this fragment
         return navigationView;
@@ -136,12 +136,14 @@ public class NavigationDrawerFragment extends Fragment {
                     startActivity(new Intent(getActivity(), ProfilePrivate_act.class));
                 }
                 break;
-            case 2: // item is profile not implemented yet
-                if(getActivity().getClass() == NewsFeed_act.class) break;
+            case 2: // item is profile_image not implemented yet
+                if(getActivity().getClass() == Social_act.class) break;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), NewsFeed_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+//                    getActivity().startActivity(new Intent(getActivity(), Social_act.class
+// ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                    getActivity().startActivity(new Intent(getActivity(), Social_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 } else {
-                    startActivity(new Intent(getActivity(), NewsFeed_act.class));
+                    startActivity(new Intent(getActivity(), Social_act.class));
                 }
                 break;
             case 3: // item is active chat user list
@@ -165,17 +167,21 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
-    /* Gets the drawer item id of the current active drawer item */
+    /* Gets the drawer item id of the navigation drawer in order to highlight it */
     private int getDrawerItemId() {
         switch (getActivity().getClass().getSimpleName()) {
             case Constants.PROFILE_PRIVATE:
                 return R.id.navigation_sub_item_1;
-            case Constants.NEWS:
+
+            case Constants.SOCIAL:
                 return R.id.navigation_sub_item_2;
+
             case Constants.USER_LIST_ACT_NAME:
                 return R.id.navigation_sub_item_3;
+
             case Constants.NEW_USER_CHAT_ACT_NAME:
                 return R.id.navigation_sub_item_4;
+
             default:
                 return R.id.navigation_sub_item_1;
         }
@@ -189,14 +195,14 @@ public class NavigationDrawerFragment extends Fragment {
         return mNavigationView;
     }
 
-    /** Event received when a new profile picture has been chosen */
+    /** Event received when a new profile_image picture has been chosen */
     public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
         loadNavigationHeaderViewImage();
     }
 
     private void loadNavigationHeaderViewImage(){
         if(ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()){
-            MySingleton.getMySingleton().getPicasso().load(ProfileImageHolder.imageFile).centerCrop().fit().noPlaceholder().into(profile);
+            MySingleton.getMySingleton().getPicasso().load(ProfileImageHolder.imageFile).centerCrop().fit().noPlaceholder().into(profile_image);
         }
         else {
             ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
@@ -204,7 +210,7 @@ public class NavigationDrawerFragment extends Fragment {
                 public void done(ParseUser parseUser, ParseException e) {
                     if (e == null) {
                         MySingleton.getMySingleton().getPicasso().load("file:" + parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH)).centerCrop().fit().noPlaceholder().
-                                into(profile);
+                                into(profile_image);
                     } else {
                         e.printStackTrace();
                     }

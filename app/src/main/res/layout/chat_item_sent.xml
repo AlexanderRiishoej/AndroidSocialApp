@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/pad_5dp"
         android:layout_marginBottom="@dimen/pad_5dp"
+        android:layout_marginTop="@dimen/pad_5dp"
         android:text="@string/send_message"
         android:textColor="@color/secondary_text_icons_light_theme"
         android:textSize="@dimen/txt_14sp" />
@@ -25,9 +25,9 @@
         android:background="@drawable/chat_bubble_outgoing"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/pad_10dp"
         android:paddingEnd="@dimen/pad_20dp"
         android:paddingStart="@dimen/pad_15dp"
-        android:paddingBottom="@dimen/pad_10dp"
         android:paddingTop="@dimen/pad_10dp">
 
         <TextView
@@ -36,19 +36,33 @@
             android:layout_height="wrap_content"
             android:text="@string/message"
             android:textColor="@color/white"
-            android:textSize="@dimen/txt_13sp"
-            />
+            android:textSize="@dimen/txt_13sp" />
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/lbl3"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/pad_20dp"
-        android:layout_marginRight="@dimen/pad_20dp"
-        android:layout_marginTop="@dimen/pad_5dp"
-        android:text="@string/status_text"
-        android:textColor="@color/grey_700"
-        android:textSize="@dimen/txt_14sp" />
+        android:layout_marginTop="@dimen/pad_5dp">
+
+        <TextView
+            android:id="@+id/lbl3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="25dp"
+            android:text="@string/status_text"
+            android:textColor="@color/grey_700"
+            android:textSize="@dimen/txt_14sp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chat_image_seen"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="@dimen/pad_5dp"
+            android:layout_marginEnd="@dimen/pad_5dp"/>
+    </RelativeLayout>
 </LinearLayout>

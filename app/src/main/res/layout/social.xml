@@ -54,19 +54,10 @@
 
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager2"
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/pad_16dp"
-            android:clickable="true"
-            android:src="@drawable/ic_pencil_box_outline_white_24dp"
-            android:layout_gravity="end|bottom"
-            app:layout_anchorGravity="bottom|right|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -1,6 +1,7 @@
 package com.mycompany.loginapp.profile;
 
 import android.app.ActivityOptions;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidquery.AQuery;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.activities.Login_act;
 import com.mycompany.loginapp.base.BaseActivity;
@@ -158,7 +161,7 @@ public class ProfilePrivate_act extends BaseActivity {
         this.finish();
     }
 
-    /** Event received when a new profile picture has been chosen
+    /** Event received when a new profile_image picture has been chosen
      *  ProfilePrivate starts this event from the OnActivityResult() */
     public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
         //profileRecyclerAdapter.updateRecyclerItem(0);
@@ -186,22 +189,51 @@ public class ProfilePrivate_act extends BaseActivity {
             if (requestCode == Constants.REQUEST_CHOOSE_PICTURE) {
                 Log.d(LOG + " onActivityResult", "Photo chosen with path: " + data.getData());
                 /** Get the Uri for the image chosen */
-                Uri imageUri = data.getData();
+                final Uri imageUri = data.getData();
+                String path = FileUtils.getPath(this, imageUri);
                 Log.d(LOG, "MediaUri: " + imageUri);
                 /** Populate image */
-                Log.d(LOG, "MediaImagePath: " + getMediaImagePath(imageUri));
+                //Log.d(LOG, "MediaImagePath: " + getMediaImagePath(imageUri));
+                if(path != null && FileUtils.isLocal(path)) {
+                    //ProfileImageHolder.imageFile = new File(getMediaImagePath(imageUri));
+                    ProfileImageHolder.imageFile = new File(path);
+                    profileImageLoader.saveImageToParse();
+                    EventBus.getDefault().post(new MessageUpdateProfilePicture(path));
+                }
+                else {
+                    Snackbar.make(mPrivateProfileFragment.getView(), "Error choosing image", Snackbar.LENGTH_LONG)
+                            .setAction("", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                ProfileImageHolder.imageFile = new File(getMediaImagePath(imageUri));
-                profileImageLoader.saveImageToParse();
-                EventBus.getDefault().post(new MessageUpdateProfilePicture(getMediaImagePath(imageUri)));
+                                }
+                            })
+                            .show();
+                }
             }
             //cover photo
             if(requestCode == Constants.REQUEST_CHOOSE_COVER_PHOTO){
                 Uri coverUri = data.getData();
+                // https://github.com/iPaulPro/aFileChooser
+                final String path = FileUtils.getPath(this, coverUri);
 
-                ProfileImageHolder.profileCoverPhotoFile = new File(getMediaImagePath(coverUri));
-                mProfileCoverPhotoLoader.saveCoverPhotoToParse();
-                EventBus.getDefault().post(new MessageUpdateCoverPhoto(getMediaImagePath(coverUri)));
+                File exampleFile = FileUtils.getFile(this, coverUri);
+
+                if(path != null && FileUtils.isLocal(path)) {
+                    ProfileImageHolder.profileCoverPhotoFile = new File(path);
+                    mProfileCoverPhotoLoader.saveCoverPhotoToParse();
+                    EventBus.getDefault().post(new MessageUpdateCoverPhoto(path));
+                }
+                else {
+                    Snackbar.make(mPrivateProfileFragment.getView(), "Error choosing image", Snackbar.LENGTH_LONG)
+                            .setAction("", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            })
+                            .show();
+                }
             }
 
             if (requestCode == Constants.REQUEST_CHOOSE_VIDEO) {
@@ -383,17 +415,53 @@ public class ProfilePrivate_act extends BaseActivity {
      * Opens the gallery
      */
     private void choosePictureFromGallery() {
-        Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        choosePictureIntent.setType("image/*");
-        //The data that is returned by the result is the path to the image file
-        startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_PICTURE);
+        if (Build.VERSION.SDK_INT < 19){
+//            Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//            choosePictureIntent.setType("image/*");
+//            startActivityForResult(Intent.createChooser(choosePictureIntent, "Select Picture"), Constants.REQUEST_CHOOSE_COVER_PHOTO);
+            // Use the GET_CONTENT intent from the utility class
+            Intent target = FileUtils.createGetContentIntent();
+            // Create the chooser Intent
+            Intent intent = Intent.createChooser(
+                    target, "Select file");
+            try {
+                startActivityForResult(intent, Constants.REQUEST_CHOOSE_PICTURE);
+            } catch (ActivityNotFoundException e) {
+                // The reason for the existence of aFileChooser
+            }
+        } else {
+            Intent choosePictureIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            //Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            //choosePictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            choosePictureIntent.setType("image/*");
+            //The data that is returned by the result is the path to the image file
+            startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_PICTURE);
+        }
     }
 
     private void chooseCoverFromGallery() {
-        Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        choosePictureIntent.setType("image/*");
-        //The data that is returned by the result is the path to the image file
-        startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_COVER_PHOTO);
+        if (Build.VERSION.SDK_INT < 19){
+//            Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//            choosePictureIntent.setType("image/*");
+//            startActivityForResult(Intent.createChooser(choosePictureIntent, "Select Picture"), Constants.REQUEST_CHOOSE_COVER_PHOTO);
+            // Use the GET_CONTENT intent from the utility class
+            Intent target = FileUtils.createGetContentIntent();
+            // Create the chooser Intent
+            Intent intent = Intent.createChooser(
+                    target, "Select file");
+            try {
+                startActivityForResult(intent, Constants.REQUEST_CHOOSE_COVER_PHOTO);
+            } catch (ActivityNotFoundException e) {
+                // The reason for the existence of aFileChooser
+            }
+        } else {
+            Intent choosePictureIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            //Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            //choosePictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            choosePictureIntent.setType("image/*");
+            //The data that is returned by the result is the path to the image file
+            startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_COVER_PHOTO);
+        }
     }
     private void chooseVideoFromGallery() {
         Intent chooseVideoIntent = new Intent(Intent.ACTION_GET_CONTENT);

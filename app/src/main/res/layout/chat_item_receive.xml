@@ -3,61 +3,64 @@
     android:id="@+id/llaa"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="start">
+    android:gravity="start"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/lbl1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/pad_5dp"
+        android:layout_marginTop="@dimen/pad_5dp"
         android:text="@string/message"
         android:textColor="@color/secondary_text_icons_light_theme"
-        android:textSize="@dimen/txt_13sp"
-        android:layout_marginTop="@dimen/pad_5dp"
-        android:layout_marginBottom="@dimen/pad_5dp" />
+        android:textSize="@dimen/txt_13sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/chat_image"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_gravity="start|center_vertical"
-            android:layout_marginStart="@dimen/pad_5dp"/>
-    <RelativeLayout
-        android:id="@+id/v1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/pad_10dp"
-        android:background="@drawable/chat_bubble_incoming"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/pad_20dp"
-        android:paddingEnd="@dimen/pad_15dp"
-        android:paddingBottom="@dimen/pad_10dp"
-        android:paddingTop="@dimen/pad_10dp">
+            android:layout_marginStart="@dimen/pad_5dp" />
 
-        <TextView
-            android:id="@+id/lbl2"
+        <RelativeLayout
+            android:id="@+id/v1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/send_message"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txt_14sp"/>
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginEnd="@dimen/pad_10dp"
+            android:background="@drawable/chat_bubble_incoming"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/pad_10dp"
+            android:paddingEnd="@dimen/pad_15dp"
+            android:paddingStart="@dimen/pad_20dp"
+            android:paddingTop="@dimen/pad_10dp">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/lbl2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send_message"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txt_14sp" />
+
+        </RelativeLayout>
     </LinearLayout>
+
     <TextView
         android:id="@+id/lbl3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pad_20dp"
+        android:layout_marginTop="@dimen/pad_5dp"
         android:text="text"
         android:textColor="@color/secondary_text_icons_light_theme"
-        android:textSize="@dimen/txt_14sp"
-        android:layout_marginTop="@dimen/pad_5dp"
-        android:layout_marginStart="@dimen/pad_20dp"
-        />
+        android:textSize="@dimen/txt_14sp" />
 </LinearLayout>
