@@ -46,6 +46,7 @@ public class Conversation {
     private String sender;
 
     private boolean isProgress = false;
+    private String chatMessageId;
 
     /**
      * Instantiates a new conversation.
@@ -54,10 +55,11 @@ public class Conversation {
      * @param date   the date
      * @param sender the sender
      */
-    public Conversation(String msg, Date date, String sender) {
+    public Conversation(String msg, Date date, String sender, String chatMessageId) {
         this.msg = msg;
         this.date = date;
         this.sender = sender;
+        this.chatMessageId = chatMessageId;
     }
 
     /**
@@ -155,5 +157,9 @@ public class Conversation {
 
     public boolean isProgress(){
         return this.isProgress;
+    }
+
+    public String getChatMessageId(){
+        return this.chatMessageId;
     }
 }

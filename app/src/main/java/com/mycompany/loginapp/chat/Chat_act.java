@@ -167,11 +167,11 @@ public class Chat_act extends BaseActivity {
                     public void run() {
                         //aQuery.id(R.id.progressBar_load_old_messages).visibility(View.VISIBLE);
                         //add progress item
-                        Conversation progressBarConversation = new Conversation("", null, "");
+                        Conversation progressBarConversation = new Conversation("", null, "", "");
                         progressBarConversation.setProgress(true);
                         conversationList.add(0, progressBarConversation);
                         //and notify the adapter
-                        mChatRecyclerAdapter.addItem(progressBarConversation);
+                        mChatRecyclerAdapter.addProgressItem(progressBarConversation, 0);
                         //scroll to the position of progress item
                         mRecyclerView.smoothScrollToPosition(0);
 
@@ -237,24 +237,20 @@ public class Chat_act extends BaseActivity {
 
 //        InputMethodManager imm = (InputMethodManager) getSystemService(Chat_act.INPUT_METHOD_SERVICE);
 //        imm.hideSoftInputFromWindow(txt.getWindowToken(), 0);
-        // scroll to the bottom of the recyclerview
-        mRecyclerView.scrollToPosition(conversationList.size());
+        // scroll to the bottom of the recyclerView
+        //mRecyclerView.scrollToPosition(mChatRecyclerAdapter.getItemCount());
 
-        String message = txt.getText().toString();
-        final Conversation conversation = new Conversation(message, Calendar.getInstance().getTime(), ParseUser.getCurrentUser().getUsername());
+        final String message = txt.getText().toString();
+        final Conversation conversation = new Conversation(message, Calendar.getInstance().getTime(), ParseUser.getCurrentUser().getUsername(), "");
         conversation.setStatus(Conversation.STATUS_SENDING);
         conversationList.add(conversation);
-        //chatAdapter.notifyDataSetChanged();
-        mChatRecyclerAdapter.setChatList(conversationList);
-        mChatRecyclerAdapter.notifyDataSetChanged();
-        Log.d("Notify: ", "NotifyDataSetChanged called");
+        mChatRecyclerAdapter.addItem(conversation);
+        mRecyclerView.scrollToPosition(mChatRecyclerAdapter.getItemCount()-1);
         txt.setText(null);
 
         final ParseObject chatObject = new ParseObject(ParseConstants.CHAT);
-        //ParseObject lastMsgRcvObject =
         chatObject.put(ParseConstants.CHAT_SENDER, ParseUser.getCurrentUser().getUsername());
         chatObject.put(ParseConstants.CHAT_RECEIVER, receiver);
-        // po.put("createdAt", "");
         chatObject.put(ParseConstants.MESSAGE, message);
         chatObject.put(ParseConstants.SEEN, false);
 
@@ -263,16 +259,13 @@ public class Chat_act extends BaseActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     conversation.setStatus(Conversation.STATUS_SENT);
+                    mChatRecyclerAdapter.notifyItemChanged(mChatRecyclerAdapter.getItemCount() - 1);
                 } else {
                     conversation.setStatus(Conversation.STATUS_FAILED);
+                    mChatRecyclerAdapter.notifyItemChanged(mChatRecyclerAdapter.getItemCount() - 1);
                 }
                 mUserChatObject.getRelation(ParseConstants.CHAT_RELATION).add(chatObject);
                 mUserChatObject.saveInBackground();
-                //chatAdapter.notifyDataSetChanged();
-                mChatRecyclerAdapter.setChatList(conversationList);
-                //mChatRecyclerAdapter.notifyDataSetChanged();
-                mChatRecyclerAdapter.notifyItemInserted(conversationList.size() - 1);
-                Log.d("Notify: ", "NotifyDataSetChanged called");
             }
         });
     }
@@ -407,7 +400,7 @@ public class Chat_act extends BaseActivity {
         final List<Conversation> newConversationList = new ArrayList<>();
         for (int i = chatMessages.size(); i < chatMessages.size(); i++) {
             ParseObject po = chatMessages.get(i);
-            Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER));
+            Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER), po.getObjectId());
             newConversationList.add(conversation);
         }
 
@@ -419,7 +412,7 @@ public class Chat_act extends BaseActivity {
     private void addConversationObjects(List<ParseObject> chatMessages) {
         for (int i = chatMessages.size() - 1; i >= 0; i--) {
             ParseObject po = chatMessages.get(i);
-            Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER));
+            Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER), po.getObjectId());
             conversationList.add(conversation);
         }
     }
@@ -429,7 +422,7 @@ public class Chat_act extends BaseActivity {
         final List<Conversation> oldConversationList = new ArrayList<>();
         for (int i = chatMessages.size() - 1; i >= 0; i--) {
             ParseObject po = chatMessages.get(i);
-            Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER));
+            Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER), po.getObjectId());
             oldConversationList.add(0, conversation);
         }
 
@@ -465,7 +458,7 @@ public class Chat_act extends BaseActivity {
 
                             for (int i = chatMessages.size(); i < chatMessages.size(); i++) {
                                 ParseObject po = chatMessages.get(i);
-                                Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER));
+                                Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER), po.getObjectId());
                                 conversationList.add(0, conversation);
                             }
 
@@ -479,7 +472,7 @@ public class Chat_act extends BaseActivity {
                         }
                     }
                     else {
-                        final MaterialDialog singupDialog =  new MaterialDialog.Builder(Chat_act.this)
+                        new MaterialDialog.Builder(Chat_act.this)
                                 .title("Chat")
                                 .content("There is no more chat messages...")
                                 .show();
