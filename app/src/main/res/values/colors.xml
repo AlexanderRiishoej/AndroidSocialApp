@@ -7,6 +7,11 @@
     <color name="windowBackground">@color/white</color>
     <color name="textColorPrimary">@color/text_light_theme</color>
 
+    <!-- Facebook colors-->
+    <color name="com_facebook_button_background_color">#415dae</color>
+    <color name="com_facebook_button_background_color_disabled">#bdc1c9</color>
+    <color name="com_facebook_button_background_color_pressed">#2f477a</color>
+
     <!-- DatePicker dialog theme -->
     <color name="mdtp_accent_color">@color/teal_500</color>
     <color name="mdtp_accent_color_dark">@color/teal_700</color>

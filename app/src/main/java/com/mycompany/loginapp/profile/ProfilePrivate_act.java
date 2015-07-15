@@ -20,10 +20,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.androidquery.AQuery;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.activities.Login_act;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.constants.Constants;
@@ -94,7 +95,26 @@ public class ProfilePrivate_act extends BaseActivity {
                 dispatchTakePictureIntent();
                 return true;
             case R.id.action_pictures:
-                choosePictureFromGallery();
+                final MaterialSimpleListAdapter profilePhotoAdapter = this.getMaterialSimpleListAdapter();
+                new MaterialDialog.Builder(this)
+                        .title("Cover photo")
+                        .adapter(profilePhotoAdapter, new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                MaterialSimpleListItem item = profilePhotoAdapter.getItem(which);
+                                switch (which){
+                                    case 0:
+                                        //
+                                        break;
+                                    case 1:
+                                        choosePhotoFromGallery(Constants.REQUEST_CHOOSE_PROFILE_PICTURE);
+                                        break;
+                                }
+                                dialog.dismiss();
+                                //showToast(item.getContent().toString());
+                            }
+                        })
+                        .show();
                 return true;
 //            case R.id.action_video:
 //                dispatchTakeVideoIntent();
@@ -125,7 +145,27 @@ public class ProfilePrivate_act extends BaseActivity {
 
                 return true;
             case R.id.action_cover_photo:
-                chooseCoverFromGallery();
+                final MaterialSimpleListAdapter coverPhotoAdapter = this.getMaterialSimpleListAdapter();
+
+                new MaterialDialog.Builder(this)
+                        .title("Cover photo")
+                        .adapter(coverPhotoAdapter, new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                MaterialSimpleListItem item = coverPhotoAdapter.getItem(which);
+                                switch (which){
+                                    case 0:
+                                        //
+                                        break;
+                                    case 1:
+                                        choosePhotoFromGallery(Constants.REQUEST_CHOOSE_COVER_PHOTO);
+                                        break;
+                                }
+                                dialog.dismiss();
+                                //showToast(item.getContent().toString());
+                            }
+                        })
+                        .show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -147,6 +187,21 @@ public class ProfilePrivate_act extends BaseActivity {
                     }
                 })
                 .show(); // Dont forget to show!
+    }
+
+    //Builds the adapter for the MaterialSimpleListAdapter dialog chooser
+    private MaterialSimpleListAdapter getMaterialSimpleListAdapter(){
+        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(this);
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content("Take picture")
+                .icon(R.drawable.ic_photo_camera_grey600_24dp)
+                .build());
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content("Choose cover photo")
+                .icon(R.drawable.ic_image_grey600_24dp)
+                .build());
+
+        return adapter;
     }
 
     /**
@@ -186,12 +241,10 @@ public class ProfilePrivate_act extends BaseActivity {
                 EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.imageFile.getAbsolutePath()));
             }
             // If is a picture taken from the gallery
-            if (requestCode == Constants.REQUEST_CHOOSE_PICTURE) {
-                Log.d(LOG + " onActivityResult", "Photo chosen with path: " + data.getData());
+            if (requestCode == Constants.REQUEST_CHOOSE_PROFILE_PICTURE) {
                 /** Get the Uri for the image chosen */
                 final Uri imageUri = data.getData();
-                String path = FileUtils.getPath(this, imageUri);
-                Log.d(LOG, "MediaUri: " + imageUri);
+                final String path = FileUtils.getPath(this, imageUri);
                 /** Populate image */
                 //Log.d(LOG, "MediaImagePath: " + getMediaImagePath(imageUri));
                 if(path != null && FileUtils.isLocal(path)) {
@@ -213,11 +266,9 @@ public class ProfilePrivate_act extends BaseActivity {
             }
             //cover photo
             if(requestCode == Constants.REQUEST_CHOOSE_COVER_PHOTO){
-                Uri coverUri = data.getData();
+                final Uri coverUri = data.getData();
                 // https://github.com/iPaulPro/aFileChooser
                 final String path = FileUtils.getPath(this, coverUri);
-
-                File exampleFile = FileUtils.getFile(this, coverUri);
 
                 if(path != null && FileUtils.isLocal(path)) {
                     ProfileImageHolder.profileCoverPhotoFile = new File(path);
@@ -276,19 +327,19 @@ public class ProfilePrivate_act extends BaseActivity {
             }
 
         } else if (resultCode == RESULT_CANCELED) {
-            if (requestCode == Constants.REQUEST_IMAGE_CAPTURE || requestCode == Constants.REQUEST_CHOOSE_PICTURE) {
-
-                if (ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()) {
-                    Log.d(LOG, "Camera request canceled and file exists: " + ProfileImageHolder.imageFile.exists());
-                    ProfileImageHolder.imageFile.delete();
-
-                    if (ProfileImageHolder.imageFile == null) {
-                        Log.d(LOG, "Camera request canceled and file deleted: " + true);
-                    } else {
-                        Log.d(LOG, "Camera request canceled and file deleted: " + false);
-                    }
-                }
-            }
+//            if (requestCode == Constants.REQUEST_IMAGE_CAPTURE || requestCode == Constants.REQUEST_CHOOSE_PROFILE_PICTURE) {
+//
+//                if (ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()) {
+//                    Log.d(LOG, "Camera request canceled and file exists: " + ProfileImageHolder.imageFile.exists());
+//                    ProfileImageHolder.imageFile.delete();
+//
+//                    if (ProfileImageHolder.imageFile == null) {
+//                        Log.d(LOG, "Camera request canceled and file deleted: " + true);
+//                    } else {
+//                        Log.d(LOG, "Camera request canceled and file deleted: " + false);
+//                    }
+//                }
+//            }
         }
 
     }
@@ -425,7 +476,7 @@ public class ProfilePrivate_act extends BaseActivity {
             Intent intent = Intent.createChooser(
                     target, "Select file");
             try {
-                startActivityForResult(intent, Constants.REQUEST_CHOOSE_PICTURE);
+                startActivityForResult(intent, Constants.REQUEST_CHOOSE_PROFILE_PICTURE);
             } catch (ActivityNotFoundException e) {
                 // The reason for the existence of aFileChooser
             }
@@ -435,11 +486,11 @@ public class ProfilePrivate_act extends BaseActivity {
             //choosePictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
             choosePictureIntent.setType("image/*");
             //The data that is returned by the result is the path to the image file
-            startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_PICTURE);
+            startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_PROFILE_PICTURE);
         }
     }
 
-    private void chooseCoverFromGallery() {
+    private void choosePhotoFromGallery(final int requestCode) {
         if (Build.VERSION.SDK_INT < 19){
 //            Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
 //            choosePictureIntent.setType("image/*");
@@ -450,7 +501,7 @@ public class ProfilePrivate_act extends BaseActivity {
             Intent intent = Intent.createChooser(
                     target, "Select file");
             try {
-                startActivityForResult(intent, Constants.REQUEST_CHOOSE_COVER_PHOTO);
+                startActivityForResult(intent, requestCode);
             } catch (ActivityNotFoundException e) {
                 // The reason for the existence of aFileChooser
             }
@@ -460,7 +511,7 @@ public class ProfilePrivate_act extends BaseActivity {
             //choosePictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
             choosePictureIntent.setType("image/*");
             //The data that is returned by the result is the path to the image file
-            startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_COVER_PHOTO);
+            startActivityForResult(choosePictureIntent, requestCode);
         }
     }
     private void chooseVideoFromGallery() {

@@ -77,18 +77,5 @@
         <!--app:layout_anchor="@+id/appbar"-->
         <!--app:layout_anchorGravity="bottom|right|end" />-->
 
-</android.support.design.widget.CoordinatorLayout><!-- using an AppBarLayout allows your Toolbar and other views (such as tabs provided
-    by TabLayout) to react to scroll events in a sibling view marked with a ScrollingViewBehavior
-    - scroll: this flag should be set for all views that want to scroll off the screen - for views that do not use this flag, they’ll remain pinned to the top of the screen
-    - enterAlways: this flag ensures that any downward scroll will cause this view to become visible, enabling the ‘quick return’ pattern
-    - enterAlwaysCollapsed: When your view has declared a minHeight and you use this flag, your View will only enter at its minimum height (i.e., ‘collapsed’), only re-expanding to its full height when the scrolling view has reached it’s top.
-    - exitUntilCollapsed: this flag causes the view to scroll off until it is ‘collapsed’ (its minHeight) before exiting
-    One note: all views using the scroll flag must be declared before views that do not use the flag. This ensures that all views exit from the top, leaving the fixed elements behind.
-    Link: http://android-developers.blogspot.dk/2015/05/android-design-support-library.html--><!--<android.support.design.widget.AppBarLayout--><!--android:id="@+id/appbar"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!-->-->
-
-    <!--&lt;!&ndash;<android.support.design.widget.CollapsingToolbarLayout&ndash;&gt;--><!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;--><!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;--><!--&lt;!&ndash;android:fitsSystemWindows="true"&ndash;&gt;--><!--&lt;!&ndash;app:layout_scrollFlags="scroll|exitUntilCollapsed">&ndash;&gt;-->
-
-    <!--&lt;!&ndash;<include&ndash;&gt;--><!--&lt;!&ndash;android:id="@+id/toolbar_teal"&ndash;&gt;--><!--&lt;!&ndash;layout="@layout/toolbar_teal"&ndash;&gt;--><!--&lt;!&ndash;app:layout_scrollFlags="scroll|enterAlways" />&ndash;&gt;--><!--<android.support.v7.widget.Toolbar--><!--android:id="@+id/fragment_toolbar"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@color/teal_500"--><!--android:minHeight="?attr/actionBarSize"--><!--android:titleTextAppearance="@style/customTextTitleViewStyle"--><!--app:contentInsetLeft="@dimen/activity_horizontal_margin"--><!--app:contentInsetStart="@dimen/pad_72dp"--><!--app:contentInsetRight="@dimen/activity_horizontal_margin"--><!--app:navigationIcon="@drawable/ic_menu_white_24dp"--><!--app:popupTheme="@style/ToolbarPopupTealTheme"--><!--app:theme="@style/ToolbarTealTheme"--><!--app:layout_scrollFlags="scroll|enterAlways">--><!--<TextView--><!--android:id="@+id/toolbar_title"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:layout_gravity="start|top"--><!--android:textColor="@color/white"--><!--android:textSize="20sp"/>--><!--</android.support.v7.widget.Toolbar>--><!--&lt;!&ndash;</android.support.design.widget.CollapsingToolbarLayout>&ndash;&gt;--><!--</android.support.design.widget.AppBarLayout>-->
-
-    <!--&lt;!&ndash; app:layout_anchor="@id/app_bar" &ndash;&gt;--><!--</android.support.design.widget.CoordinatorLayout>-->
+</android.support.design.widget.CoordinatorLayout>
 

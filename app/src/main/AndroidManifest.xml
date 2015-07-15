@@ -28,9 +28,13 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
-            android:name=".activities.Login_act"
-            android:icon="@drawable/ic_launcher"
+            android:name=".login.Login2_act"
+            android:icon="@drawable/messenger_bubble_large_white"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
@@ -43,19 +47,19 @@
         <activity
             android:name=".registration.Register_act"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".activities.Login_act" >
+            android:parentActivityName=".login.Login2_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Login_act" />
+                android:value=".login.Login2_act" />
         </activity>
         <activity
             android:name=".profile.ProfilePrivate_act"
             android:label="@string/title_activity_user"
-            android:parentActivityName=".activities.Login_act"
+            android:parentActivityName=".login.Login2_act"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Login_act" />
+                android:value=".login.Login2_act" />
         </activity>
         <activity
             android:name=".chat.UserChatList_act"
@@ -66,12 +70,12 @@
                 android:value=".profile.ProfilePrivate_act" />
         </activity>
         <activity
-            android:name=".activities.ResetPassword_act"
+            android:name=".general.ResetPassword_act"
             android:label="@string/title_activity_reset_password"
-            android:parentActivityName=".activities.Login_act" >
+            android:parentActivityName=".login.Login2_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Login_act" />
+                android:value=".login.Login2_act" />
         </activity>
         <activity
             android:name=".chat.Chat_act"
@@ -95,12 +99,21 @@
         </activity>
 
         <!-- ....................................................................................................................................... -->
+        <!-- For facebook -->
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+        <!-- ....................................................................................................................................... -->
+
+        <!-- ....................................................................................................................................... -->
         <!-- For choosing files -->
         <activity
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"
-            android:icon="@drawable/ic_chooser"
             android:enabled="@bool/use_activity"
             android:exported="true"
+            android:icon="@drawable/ic_chooser"
             android:label="@string/choose_file" >
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
@@ -111,6 +124,7 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="com.ianhanniballake.localstorage.LocalStorageProvider"
             android:authorities="com.ianhanniballake.localstorage.documents"
@@ -123,6 +137,7 @@
             </intent-filter>
         </provider>
         <!-- ....................................................................................................................................... -->
+
     </application>
 
 </manifest>

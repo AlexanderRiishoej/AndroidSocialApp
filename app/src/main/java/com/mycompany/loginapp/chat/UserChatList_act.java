@@ -54,7 +54,6 @@ public class UserChatList_act extends BaseActivity {
     /**
      * The user.
      */
-    public static ParseUser user;
     private ChatListRecyclerAdapter chatListRecyclerAdapter;
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
     private RecyclerView.LayoutManager mLayoutManager;
@@ -260,8 +259,8 @@ public class UserChatList_act extends BaseActivity {
      * @param online true if user is online
      */
     private void updateUserStatus(boolean online) {
-        user.put(ParseConstants.ONLINE, online);
-        user.saveEventually();
+        ParseUser.getCurrentUser().put(ParseConstants.ONLINE, online);
+        ParseUser.getCurrentUser().saveEventually();
     }
 
     /**

@@ -72,7 +72,6 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
 //    }
     public void setChatList(List<Conversation> conversationList) {
         this.conversationList = new ArrayList<>(conversationList);
-        //this.conversationList.addAll(conversationList);
         this.notifyDataSetChanged();
     }
 

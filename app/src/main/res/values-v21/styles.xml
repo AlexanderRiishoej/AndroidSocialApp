@@ -14,14 +14,23 @@
         <!-- To keep the borders rounded when clicked on the Button -->
         <item name="android:windowClipToOutline">true</item>
         <!-- Shadow animation onClick -->
-        <item name="android:stateListAnimator">@anim/anim_button</item>
-        <item name="android:layout_marginLeft">4dp</item>
-        <item name="android:layout_marginRight">4dp</item>
+        <!--<item name="android:stateListAnimator">@anim/anim_button</item>-->
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
         <item name="android:elevation">1dp</item>
         <!--<item name="android:paddingLeft">@dimen/button_horizontal_padding</item>-->
         <!--<item name="android:paddingRight">@dimen/button_horizontal_padding</item>-->
         <!--<item name="android:paddingTop">@dimen/button_vertical_padding</item>-->
         <!--<item name="android:paddingBottom">@dimen/button_vertical_padding</item>-->
+    </style>
+
+    <style name="ButtonLoginStyle" parent="android:Widget.Material.Light.Button">
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/ripple_button_login</item>
+        <item name="android:elevation">1dp</item>
     </style>
 
     <style name="ButtonRaisedWhiteLoginStyle" parent="android:Widget.Material.Light.Button">

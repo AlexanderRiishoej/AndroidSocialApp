@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><!-- This RelativeLayout serves the purpose of spanning the view of the ProgressBar to the entire window -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal_300">
+
+    <TextView
+        android:id="@+id/connect_with_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-regular"
+        android:text="Signing in please wait..."
+        android:layout_marginBottom="@dimen/pad_16dp"
+        android:layout_above="@+id/progress"
+        android:textSize="26sp"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:progressBackgroundTintMode="@color/white"
+        android:visibility="visible" />
+</RelativeLayout>

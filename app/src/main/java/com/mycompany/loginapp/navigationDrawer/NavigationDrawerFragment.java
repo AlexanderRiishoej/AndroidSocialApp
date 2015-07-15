@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.base;
+package com.mycompany.loginapp.navigationDrawer;
 
 
 import android.app.ActivityOptions;
@@ -22,6 +22,7 @@ import com.mycompany.loginapp.chat.UserChatList_act;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.login.Login2_act;
 import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
@@ -37,7 +38,8 @@ import de.greenrobot.event.EventBus;
  */
 public class NavigationDrawerFragment extends Fragment {
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
+    //own version of ActionBarDrawerToggle
+    private SmoothActionBarDrawerToggle mDrawerToggle;
     private NavigationView mNavigationView;
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
@@ -45,6 +47,8 @@ public class NavigationDrawerFragment extends Fragment {
     public ImageView profile_image;
     public TextView name;
     public TextView email;
+
+    private int id;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -95,7 +99,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     // The drawer toggle that binds the toolbar together with the navigation drawer
     private void setupDrawerToggle(){
-        this.mDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
+        this.mDrawerToggle = new SmoothActionBarDrawerToggle(getActivity(), mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
 
             public void onDrawerOpened(View drawerView) {
@@ -108,14 +112,14 @@ public class NavigationDrawerFragment extends Fragment {
                 }
                 //getSupportActionBar().setTitle("Navigation!");
                 /** Redraws the toolbar */
-                getActivity().invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+               // getActivity().invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 //getSupportActionBar().setTitle(mActivityTitle);
-                getActivity().invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                //getActivity().invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
@@ -127,41 +131,77 @@ public class NavigationDrawerFragment extends Fragment {
 
     // Starts an activity based on the draweritem clicked
     private void selectDrawerItem(int item) {
+        final String activityClassName = getActivity().getClass().getSimpleName();
         switch (item) {
             case 1: // item is Home/User activity
-                if(getActivity().getClass() == ProfilePrivate_act.class) break;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), ProfilePrivate_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                } else {
-                    startActivity(new Intent(getActivity(), ProfilePrivate_act.class));
-                }
+                if(activityClassName.equals(ProfilePrivate_act.class.getSimpleName())) break;
+                this.mDrawerToggle.runWhenIdle(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().startActivity(new Intent(getActivity(), ProfilePrivate_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                        } else {
+                            startActivity(new Intent(getActivity(), ProfilePrivate_act.class));
+                        }
+                    }
+                });
                 break;
+
             case 2: // item is profile_image not implemented yet
-                if(getActivity().getClass() == Social_act.class) break;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if(activityClassName.equals(Social_act.class.getSimpleName())) break;
+                this.mDrawerToggle.runWhenIdle(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    getActivity().startActivity(new Intent(getActivity(), Social_act.class
 // ).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    getActivity().startActivity(new Intent(getActivity(), Social_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                } else {
-                    startActivity(new Intent(getActivity(), Social_act.class));
-                }
+                            getActivity().startActivity(new Intent(getActivity(), Social_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                        } else {
+                            startActivity(new Intent(getActivity(), Social_act.class));
+                        }
+                    }
+                });
                 break;
+
             case 3: // item is active chat user list
-                if(getActivity().getClass() == UserChatList_act.class) break;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), UserChatList_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                } else {
-                    startActivity(new Intent(getActivity(), UserChatList_act.class));
-                }
+                if(activityClassName.equals(UserChatList_act.class.getSimpleName())) break;
+                this.mDrawerToggle.runWhenIdle(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().startActivity(new Intent(getActivity(), UserChatList_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                        } else {
+                            startActivity(new Intent(getActivity(), UserChatList_act.class));
+                        }
+                    }
+                });
                 break;
+
             case 4: // item is create new chat
-                if(getActivity().getClass() == NewUserChat_act.class) break;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getActivity().startActivity(new Intent(getActivity(), NewUserChat_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                } else {
-                    getActivity().startActivity(new Intent(getActivity(), NewUserChat_act.class));
-                }
+                if(activityClassName.equals(NewUserChat_act.class.getSimpleName())) break;
+                this.mDrawerToggle.runWhenIdle(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().startActivity(new Intent(getActivity(), NewUserChat_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                        } else {
+                            getActivity().startActivity(new Intent(getActivity(), NewUserChat_act.class));
+                        }
+                    }
+                });
                 break;
+
+            case 5:
+                this.mDrawerToggle.runWhenIdle(new Runnable() {
+                    @Override
+                    public void run() {
+                        ParseUser.logOut();
+                        ProfileImageHolder.setImageFilesNull();
+                        getActivity().startActivity(new Intent(getActivity(), Login2_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                        getActivity().finish();
+                    }
+                });
             default:
                 break;
         }

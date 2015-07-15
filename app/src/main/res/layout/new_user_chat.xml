@@ -54,5 +54,5 @@
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
         app:layout="@layout/fragment_navigation_view"
-        android:name="com.mycompany.loginapp.base.NavigationDrawerFragment"/>
+        android:name="com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment"/>
 </android.support.v4.widget.DrawerLayout>

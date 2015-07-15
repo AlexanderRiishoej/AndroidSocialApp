@@ -15,6 +15,9 @@
     <string name="search">Search</string>
     <string name="account">Account</string>
 
+    <!-- Parse -->
+    <string name="facebook_app_id">892893444125788</string>
+
     <!-- Login app -->
     <string name="type_msg">Type message</string>
     <string name="or">or</string>
@@ -78,4 +81,5 @@
     <string name="birthday">Birthday</string>
     <string name="gender">Gender</string>
     <string name="mobile_phone_number">Mobile phone number</string>
+    <string name="title_activity_login2_act">Login2_act</string>
 </resources>

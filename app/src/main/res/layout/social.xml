@@ -63,7 +63,7 @@
 
     <fragment
         android:id="@+id/fragment_navigation_view"
-        android:name="com.mycompany.loginapp.base.NavigationDrawerFragment"
+        android:name="com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment"
         android:layout_width="@dimen/navigation_width"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"

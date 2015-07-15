@@ -4,8 +4,6 @@ import android.app.ActivityOptions;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +17,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -76,7 +73,6 @@ public class Chat_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        makeWindowTransition();
         EventBus.getDefault().register(this);
         aQuery = new AQuery(this);
         txt = (EditText) findViewById(R.id.txt);
@@ -165,7 +161,6 @@ public class Chat_act extends BaseActivity {
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
-                        //aQuery.id(R.id.progressBar_load_old_messages).visibility(View.VISIBLE);
                         //add progress item
                         Conversation progressBarConversation = new Conversation("", null, "", "");
                         progressBarConversation.setProgress(true);
@@ -237,17 +232,16 @@ public class Chat_act extends BaseActivity {
 
 //        InputMethodManager imm = (InputMethodManager) getSystemService(Chat_act.INPUT_METHOD_SERVICE);
 //        imm.hideSoftInputFromWindow(txt.getWindowToken(), 0);
-        // scroll to the bottom of the recyclerView
-        //mRecyclerView.scrollToPosition(mChatRecyclerAdapter.getItemCount());
-
         final String message = txt.getText().toString();
         final Conversation conversation = new Conversation(message, Calendar.getInstance().getTime(), ParseUser.getCurrentUser().getUsername(), "");
         conversation.setStatus(Conversation.STATUS_SENDING);
         conversationList.add(conversation);
         mChatRecyclerAdapter.addItem(conversation);
-        mRecyclerView.scrollToPosition(mChatRecyclerAdapter.getItemCount()-1);
+        // scroll to the bottom of the recyclerView
+        mRecyclerView.scrollToPosition(mChatRecyclerAdapter.getItemCount() - 1);
         txt.setText(null);
 
+        //create the chat parseObject
         final ParseObject chatObject = new ParseObject(ParseConstants.CHAT);
         chatObject.put(ParseConstants.CHAT_SENDER, ParseUser.getCurrentUser().getUsername());
         chatObject.put(ParseConstants.CHAT_RECEIVER, receiver);
@@ -288,7 +282,7 @@ public class Chat_act extends BaseActivity {
                                     chatRelation.add(chatObject);
                                     mUserChatObject.saveInBackground();
                                     //notify that the last message in chat should update its image to the seen one
-                                    mChatRecyclerAdapter.notifyItemChanged(conversationList.size());
+                                    mChatRecyclerAdapter.notifyItemChanged(mChatRecyclerAdapter.getItemCount() - 1);
                                 }
                             }
                         });
@@ -307,6 +301,7 @@ public class Chat_act extends BaseActivity {
 
         //in the start, the list will always be 0
         if (conversationList.size() == 0) {
+            //the main progressbar when loading first time
             aQuery.id(R.id.progress).visibility(View.VISIBLE);
             // load all messages...
             ArrayList<String> chatQueryList = new ArrayList<String>();
@@ -316,10 +311,6 @@ public class Chat_act extends BaseActivity {
             chatQuery.whereContainedIn(ParseConstants.CHAT_RECEIVER, chatQueryList);
         } else {
             // load only newly received message..
-//            if (oldestMsgDate != null && mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-//                //aQuery.id(R.id.progressBar_load_old_messages).visibility(View.VISIBLE);
-//                chatQuery.whereLessThan(ParseConstants.CREATED_AT, oldestMsgDate);
-//            } else
             if (mostRecentMsgDate != null) {
                 chatQuery.whereGreaterThan(ParseConstants.CREATED_AT, mostRecentMsgDate);
             }
@@ -337,46 +328,38 @@ public class Chat_act extends BaseActivity {
             public void done(List<ParseObject> chatMessages, ParseException e) {
                 //chatMessages size will be 0 after first run if no new messages has been put in the chat
                 if (e == null && chatMessages.size() > 0) {
-                    final Date chatItemCreatedAt = chatMessages.get(0).getCreatedAt();
-                    final Date chatItemUpdatedAt = chatMessages.get(0).getUpdatedAt();
+                    final ParseObject recentChatItemMessage = chatMessages.get(0);
 
                     // mostRecentMsgDate will be null on the first run of this method = first load of chat messages
                     if (mostRecentMsgDate != null) {
                         // if the message date of the most recent message in the chatMessages is newer than the one recorded before
-                        if (chatItemCreatedAt.after(mostRecentMsgDate)) {
-//                            if (chatItemCreatedAt.before(chatItemUpdatedAt)) {
-//                                mChatRecyclerAdapter.notifyItemChanged(conversationList.size());
-//                            }
+                        if (recentChatItemMessage.getCreatedAt().after(mostRecentMsgDate)) {
                             // If the newly received chat message date is after the previous mostRecentMsgDate, then it means that a new message has been added to the
                             // chat, and this will be the new updated date
-                            mostRecentMsgDate = chatItemCreatedAt;
+                            mostRecentMsgDate = recentChatItemMessage.getCreatedAt();
                             // if current user is equal to the receiver of this chat message and the "seen" field is false, then set the field "seen" to true
-                            if (ParseUser.getCurrentUser().getUsername().equals(chatMessages.get(0).get(ParseConstants.CHAT_RECEIVER)) &&
-                                    !chatMessages.get(0).getBoolean(ParseConstants.SEEN)) {
+                            if (ParseUser.getCurrentUser().getUsername().equals(recentChatItemMessage.get(ParseConstants.CHAT_RECEIVER)) &&
+                                    !recentChatItemMessage.getBoolean(ParseConstants.SEEN)) {
                                 setSeenTrue();
                             }
                             // create all the conversation objects from the chatMessages
-                            addConversationObjects(chatMessages);
+                            addAllConversationObjects(chatMessages);
                             // update the adapters list too with the new messages
                             mChatRecyclerAdapter.addNewMessages(addNewConversationObjects(chatMessages));
                             //scroll to the position of the newly added message
                             mRecyclerView.scrollToPosition(conversationList.size() - 1);
                             //mChatRecyclerAdapter.setChatList(conversationList);
                         }
-//                        else if (chatMessages.get(0).getCreatedAt().before(oldestMsgDate)) {
-//                            getOldChatMessages(chatMessages);
-//                            //aQuery.id(R.id.progressBar_load_old_messages).visibility(View.GONE);
-//                        }
                     } else {
-                        mostRecentMsgDate = chatItemCreatedAt;
+                        mostRecentMsgDate = recentChatItemMessage.getCreatedAt();
                         oldestMsgDate = chatMessages.get(chatMessages.size() - 1).getCreatedAt();
 
-                        if (ParseUser.getCurrentUser().getUsername().equals(chatMessages.get(0).get(ParseConstants.CHAT_RECEIVER)) &&
-                                !chatMessages.get(0).getBoolean(ParseConstants.SEEN)) {
+                        if (ParseUser.getCurrentUser().getUsername().equals(recentChatItemMessage.get(ParseConstants.CHAT_RECEIVER)) &&
+                                !recentChatItemMessage.getBoolean(ParseConstants.SEEN)) {
                             setSeenTrue();
                         }
                         // create all the conversation objects from the chatMessages in an opposite order
-                        addConversationObjects(chatMessages);
+                        addAllConversationObjects(chatMessages);
                         mChatRecyclerAdapter.setChatList(conversationList);
                     }
                 }
@@ -409,12 +392,20 @@ public class Chat_act extends BaseActivity {
 
     // create all the conversation objects from the chatMessages and add them to the conversationList
     // this method is performed first to retrieve the whole chat
-    private void addConversationObjects(List<ParseObject> chatMessages) {
+    private void addAllConversationObjects(List<ParseObject> chatMessages) {
         for (int i = chatMessages.size() - 1; i >= 0; i--) {
             ParseObject po = chatMessages.get(i);
             Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER), po.getObjectId());
             conversationList.add(conversation);
         }
+//        final List<Conversation> allConversationList = new ArrayList<>();
+//        for (int i = chatMessages.size() - 1; i >= 0; i--) {
+//            ParseObject po = chatMessages.get(i);
+//            Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getString(ParseConstants.CHAT_SENDER), po.getObjectId());
+//            allConversationList.add(conversation);
+//        }
+//
+//        return allConversationList;
     }
 
     //adds newly created chat messages to the conversation list
@@ -480,91 +471,5 @@ public class Chat_act extends BaseActivity {
                 }
             }
         });
-    }
-
-    /**
-     * -------------------------------------------------------------------------------------------------------------------------------------------------
-     * Window Transitions
-     */
-
-    private void makeWindowTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setEnterTransition(makeEnterTransition());
-            getWindow().setReturnTransition(makeReturnTransition());
-            ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-        }
-    }
-
-    private Transition makeEnterTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionSet enterTransition = new TransitionSet();
-
-            Transition groupTransition = new Slide(Gravity.RIGHT);
-
-
-            RelativeLayout chatLayoutMain = (RelativeLayout) findViewById(R.id.chat_layout_main);
-//            FrameLayout chatLayoutMain = (FrameLayout) findViewById(R.id.chat_layout_main);
-//            LinearLayout chatLayoutMain = (LinearLayout) findViewById(R.id.chat_layout_main);
-
-            chatLayoutMain.setTransitionGroup(true);
-            groupTransition.addTarget(chatLayoutMain);
-
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
-            //enterTransition.addTransition(fadeIn);
-            enterTransition.addTransition(groupTransition).setDuration(300);
-
-            return enterTransition;
-        } else return null;
-    }
-
-    private Transition makeExitTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionSet exitTransition = new TransitionSet();
-
-            exitTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            exitTransition.excludeTarget(R.id.toolbar_teal, true);
-            Transition fade = new Fade();
-            exitTransition.addTransition(fade);
-
-            exitTransition.setDuration(500);
-            return exitTransition;
-        } else return null;
-    }
-
-    private Transition makeReenterTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionSet enterTransition = new TransitionSet();
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
-
-            Transition autoTransition = new AutoTransition().setDuration(700);
-            Transition fade = new Fade().setDuration(800);
-            enterTransition.addTransition(fade);
-            enterTransition.addTransition(autoTransition);
-            return enterTransition;
-        } else return null;
-    }
-
-    private Transition makeReturnTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionSet enterTransition = new TransitionSet();
-
-            Transition upperPartSlide = new Slide(Gravity.RIGHT);
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
-            enterTransition.addTransition(upperPartSlide);
-
-            Transition fade = new Fade();
-            //enterTransition.addTransition(fade);
-
-            enterTransition.setDuration(300);
-            return enterTransition;
-        }
-        return null;
     }
 }

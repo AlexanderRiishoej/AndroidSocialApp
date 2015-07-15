@@ -16,4 +16,10 @@ public class ProfileImageHolder {
     public ProfileImageHolder(){
 
     }
+
+    /** Sets the image files to null. Always do this when logging out. */
+    public static void setImageFilesNull(){
+        imageFile = null;
+        profileCoverPhotoFile = null;
+    }
 }

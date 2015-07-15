@@ -4,7 +4,6 @@ package com.mycompany.loginapp.base;
  * Created by Alexander on 06-02-2015.
  */
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,13 +14,10 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.activities.Login_act;
-import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
+import com.mycompany.loginapp.login.Login2_act;
+import com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
-import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.parse.ParseUser;
-
-import de.greenrobot.event.EventBus;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String LOG = BaseActivity.class.getSimpleName();
@@ -92,18 +88,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_logout:
                 ParseUser.logOut();
-                ProfileImageHolder.imageFile = null;
-                ProfileImageHolder.profileCoverPhotoFile = null;
+                ProfileImageHolder.setImageFilesNull();
                 //EventBus.getDefault().post(new MessageFinishActivities());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     //startActivity(new Intent(this, Login_act.class));
-                    startActivity(new Intent(this, Login_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    startActivity(new Intent(this, Login2_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                     this.finish();
                 } else {
 //                    startActivity(new Intent(this, Login_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    startActivity(new Intent(this, Login_act.class));
+                    startActivity(new Intent(this, Login2_act.class));
                     this.finish();
                 }
                 return true;

@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.activities;
+package com.mycompany.loginapp.login;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
@@ -18,21 +18,22 @@ import android.widget.LinearLayout;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.general.ResetPassword_act;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.registration.Register_act;
 import com.mycompany.loginapp.singletons.MySingleton;
-import com.mycompany.loginapp.chat.UserChatList_act;
-import com.mycompany.loginapp.eventMessages.MessageEvent;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.mycompany.loginapp.views.CharacterCountErrorWatcher;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
-import de.greenrobot.event.EventBus;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The Class Login is an Activity class that shows the login screen to users.
@@ -44,18 +45,11 @@ import de.greenrobot.event.EventBus;
 public class Login_act extends BaseActivity {
 
     public static final String LOG = Login_act.class.getSimpleName();
-    /**
-     * The parseUser edittext.
-     */
-    private EditText user;
-    private TextInputLayout mTextInputUsernameLayout;
-    private TextInputLayout mTextInputPasswordLayout;
-
-    /**
-     * The password edittext.
-     */
-    private EditText pwd;
-
+    private TextInputLayout mTextInputUsernameLayout, mTextInputPasswordLayout;
+    //http://stackoverflow.com/questions/1005073/initialization-of-an-arraylist-in-one-line
+    private final List<String> mPermissions = Arrays.asList("public_profile", "email");
+    private EditText user, pwd;
+    private String mFbUsername, mFbEmail;
     private AQuery aq;
 
     @Override
@@ -132,7 +126,6 @@ public class Login_act extends BaseActivity {
                 if (pu != null) {
                     // Start the logged in activity with the name of the person who logged in
                     //User_act.parseUser = pu;
-                    UserChatList_act.user = pu;
                     startActivity(new Intent(Login_act.this, ProfilePrivate_act.class));
                     finish();
                 } else {
@@ -145,6 +138,25 @@ public class Login_act extends BaseActivity {
             }
         });
     }
+
+    public void facebookLoginPressed(){
+        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, this.mPermissions, new LogInCallback() {
+            @Override
+            public void done(ParseUser parseUser, ParseException e) {
+                if (e == null) {
+                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+
+                } else if (parseUser.isNew()) {
+                    Log.d("MyApp", "User signed up and logged in through Facebook!");
+
+                } else {
+                    Log.d("MyApp", "User logged in through Facebook!");
+
+                }
+            }
+        });
+    }
+
 
     /**
      * Starts the Register activity.
@@ -165,7 +177,6 @@ public class Login_act extends BaseActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             //ProfilePrivate_act.parseUser = currentUser;
-            UserChatList_act.user = currentUser;
             startActivityForResult(new Intent(this, Social_act.class), 9);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //this.finishAfterTransition();
@@ -194,42 +205,14 @@ public class Login_act extends BaseActivity {
         }
     }
 
-    /* (non-Javadoc)
- * @see android.support.v4.app.FragmentActivity#onActivityResult(int, int, android.content.Intent)
- */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == RESULT_OK) {
             Log.d("Result_OK", "Result is ok");
             this.finish();
         }
-    }
-
-    @Override
-    public void finishAfterTransition() {
-        Log.d("Finishing Login", "Login");
-        super.finishAfterTransition();
-    }
-
-    // This method will be called when a MessageEvent is posted
-    public void onEvent(MessageEvent event) {
-        //Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        Log.d(LOG, event.message);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
     /**
@@ -238,7 +221,7 @@ public class Login_act extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        CurrentUserLoggedIn();
+        this.CurrentUserLoggedIn();
     }
 
     /**

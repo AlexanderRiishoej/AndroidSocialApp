@@ -10,7 +10,7 @@ public final class Constants {
     /** Media intents */
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_VIDEO_CAPTURE = 2;
-    public static final int REQUEST_CHOOSE_PICTURE = 3;
+    public static final int REQUEST_CHOOSE_PROFILE_PICTURE = 3;
     public static final int REQUEST_CHOOSE_VIDEO = 4;
     public static final int REQUEST_CHOOSE_COVER_PHOTO = 6;
     public static final int FILE_SIZE_LIMIT = 1024*1024*10; // 10 MB

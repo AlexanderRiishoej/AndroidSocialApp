@@ -156,6 +156,7 @@ public class ProfileImageLoader {
                     /** Check if the stored path in Parse is empty */
                     if (currentImageFilePath != null) {
                         File tempImageFile = new File(currentImageFilePath);
+                        Uri path = Uri.fromFile(tempImageFile);
                         Log.d(activityContext.getClass().getSimpleName(), "PhotoPath: " + currentImageFilePath);
 
                         /** Check if path exists since the user might have deleted this picture */
@@ -231,7 +232,7 @@ public class ProfileImageLoader {
         }
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "Social chat-app");
+                Environment.DIRECTORY_PICTURES), "SocialChatApp");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 

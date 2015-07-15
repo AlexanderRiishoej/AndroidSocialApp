@@ -1,14 +1,12 @@
-package com.mycompany.loginapp.activities;
+package com.mycompany.loginapp.general;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;

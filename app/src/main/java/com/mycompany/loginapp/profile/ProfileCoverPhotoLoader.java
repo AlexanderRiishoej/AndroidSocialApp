@@ -83,9 +83,9 @@ public class ProfileCoverPhotoLoader {
      */
     private void getCoverPhotoFromParse() {
         Log.d(LOG, "Loading image from parse...");
-        ParseFile profilePicture = null;
+        ParseFile coverPicture = null;
         try {
-            profilePicture = (ParseFile) ParseUser.getCurrentUser().get(ParseConstants.COVER_PHOTO);
+            coverPicture = (ParseFile) ParseUser.getCurrentUser().get(ParseConstants.COVER_PHOTO);
             //profilePicture.getUrl();
         } catch (Exception ex) {
             Utilities.showDialog(activityContext, "Error casting parseUser: " + " " + ex.getMessage());
@@ -93,11 +93,11 @@ public class ProfileCoverPhotoLoader {
         }
 
         // If the profile_image image is different from null, then load is from parse
-        if (profilePicture != null) {
+        if (coverPicture != null) {
 //            final ProgressBar progressBarImage = aQuery.id(R.id.profile_progress_bar).getProgressBar();
 //            progressBarImage.setVisibility(View.VISIBLE);
 
-            profilePicture.getDataInBackground(new GetDataCallback() {
+            coverPicture.getDataInBackground(new GetDataCallback() {
                 public void done(byte[] data, ParseException e) {
                     //progressBarImage.setVisibility(View.GONE);
 
@@ -198,7 +198,7 @@ public class ProfileCoverPhotoLoader {
     /**
      * Puts the updated profile_image picture visible in the public directory pictures
      */
-    public void updateDirectoryPictures() {
+    private void updateDirectoryPictures() {
         //activityContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(imageFile.getAbsolutePath())));
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
