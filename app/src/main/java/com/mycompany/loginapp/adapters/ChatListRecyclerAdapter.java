@@ -15,14 +15,14 @@ import android.widget.TextView;
 
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.ApplicationMain;
-import com.mycompany.loginapp.chat.UserChatList_act;
+import com.mycompany.loginapp.chat.Conversation;
+import com.mycompany.loginapp.chat.oldNotUsed.UserChatList_act;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.singletons.MySingleton;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -46,7 +46,22 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
     }
 
     public void setUserChatObjectList(List<ParseObject> mUserChatObjectList) {
-        this.mUserChatObjectList = mUserChatObjectList;
+        this.mUserChatObjectList.addAll(mUserChatObjectList);
+    }
+
+    //inserts conversation objects one-by-one at position zero
+    public void addRangeList(List<ParseObject> userChatObjects) {
+        //final int positionStart = this.conversationList.size();
+        for (ParseObject p : userChatObjects) {
+            this.mUserChatObjectList.add(0, p);
+            this.notifyItemInserted(0);
+        }
+    }
+
+    //used to add sending messages at the start of the list
+    public void addItemAtIndex(int index, ParseObject parseObject) {
+        this.mUserChatObjectList.add(index, parseObject);
+        this.notifyItemInserted(index);
     }
 
     /**
@@ -55,7 +70,7 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
     private String getChatReceiver(ParseObject userChat) {
         // Splits the string according to the pattern, which is the current username. Returns the username of the chat participant.
         // If CurrentUser is matched as the first part of the ChatUserId then the first array index will be empty
-        String[] splitChatUserArray = userChat.getString("chatUserId").split(ParseUser.getCurrentUser().getUsername());
+        String[] splitChatUserArray = userChat.getString("chatUserId").split(ApplicationMain.mCurrentParseUser.getUsername());
         String chatParticipantHolder = "";
         for (String match : splitChatUserArray) {
             if (!match.equals("")) {
@@ -76,127 +91,11 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
         myUserChatListViewHolder = new MyUserChatListViewHolder(convertView, Constants.TYPE_ITEM);
 
         return myUserChatListViewHolder;
-//        if (viewType == Constants.TYPE_HEADER) {
-//            //Get the layout for this Recycler item
-//            View convertView = layoutInflater.inflate(R.layout.recent_chat_header, parent, false);
-//            //Create a new ViewHolder with the Recycler item view
-//            myUserChatListViewHolder = new MyUserChatListViewHolder(convertView, Constants.TYPE_HEADER);
-//
-//            return myUserChatListViewHolder;
-//        } else {
-//            //Get the layout for this Recycler item
-//            View convertView = layoutInflater.inflate(R.layout.user_chat_list_item, parent, false);
-//            //Create a new ViewHolder with the Recycler item view
-//            myUserChatListViewHolder = new MyUserChatListViewHolder(convertView, Constants.TYPE_ITEM);
-//
-//            return myUserChatListViewHolder;
-//        }
     }
 
     @Override
     public void onBindViewHolder(MyUserChatListViewHolder viewHolder, final int position) {
         final MyUserChatListViewHolder myUserChatListViewHolder = viewHolder;
-
-        //viewHolder.itemView.setTag();
-//        if (position == Constants.TYPE_HEADER) {
-//            Log.d("POS OF RECYCLERVIEW: ", "" + position);
-//        } else
-//        if (position > mUserChatObjectList.size()) {
-//            if (mUserChatObjectList.size() > 0) {
-//                myUserChatListViewHolder.username.setText(null);
-//                myUserChatListViewHolder.lastChatMessage.setText(null);
-//                myUserChatListViewHolder.dateOfLastChatMessage.setText(null);
-//                myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-//                myUserChatListViewHolder.profilePicture.setImageBitmap(null);
-//                myUserChatListViewHolder.seenPicture.setImageBitmap(null);
-//                //myUserChatListViewHolder.sentPicture.setImageDrawable(null);
-//
-//                Log.d("POS OF RECYCLERVIEW: ", "" + position);
-//                final ParseObject userChat = mUserChatObjectList.get(0); // Minus 1 due to Header being position 0
-//                //Create a final ViewHolder in order to being able to use it in an inner class
-//                //final MyUserChatListViewHolder myUserChatListViewHolder = viewHolder;
-//
-//                //Set the progressbar for the image to Visible since its going to get fetched soon
-//                myUserChatListViewHolder.imageProgressBar.setVisibility(View.VISIBLE);
-//                Log.d(LOG, "Username: " + userChat.getParseUser("username").getUsername());
-//
-//                final String chatParticipant = getChatReceiver(userChat);
-//                //Get the name of the chat user from the userChat object
-//                myUserChatListViewHolder.username.setText(chatParticipant);
-//                //Get the relation of this chat user object and perform a query that gets the chat represented by current user and another user
-//                userChat.getRelation(ParseConstants.CHAT_RELATION).getQuery().orderByDescending(ParseConstants.CREATED_AT).getFirstInBackground(new GetCallback<ParseObject>() {
-//                    @Override
-//                    public void done(ParseObject parseObject, ParseException e) {
-//                        if (e == null) {
-//                            Log.d(LOG, "ChatRelation: " + parseObject.getString("sender") + "Postition: " + position);
-//                            Log.d(LOG, "ChatRelation: " + parseObject.getString("receiver") + "Postition: " + position);
-//                            /** if the user chatting to, has the last  message in the chat equal to the sender, then show that message */
-//                            if (chatParticipant.equals(parseObject.getString("sender"))) {
-//                                myUserChatListViewHolder.lastChatMessage.setText("Last message received: " + parseObject.getString("message"));
-//                            }
-//                            /** else the last message is sent by me and should be showed as the last message seen in the conversation */
-//                            else if (chatParticipant.equals(parseObject.getString("receiver"))) {
-//                                myUserChatListViewHolder.lastChatMessage.setText("You: " + parseObject.getString("message"));
-//                            }
-//                            /** no messages has been sent */
-//                            else {
-//                                myUserChatListViewHolder.lastChatMessage.setText("");
-//                            }
-//                        } else {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//
-//                //Set the time to when the last message was sent/received
-//                myUserChatListViewHolder.dateOfLastChatMessage.setText(DateUtils.getRelativeDateTimeString(activityContext, userChat.getUpdatedAt().getTime(),
-//                        DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
-//                //viewHolder.profilePicture = null;
-//                //viewHolder.username.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chat_list_bitmap, 0);
-//                Log.d(LOG, "Parsefile Uri: " + userChat.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl());
-//                /** try - catch in order to prevent a crash in case of CircularImageView throwing a null pointer exception during bitmap loading */
-//                if (chatParticipant.equals(userChat.getParseUser("username").getUsername())) {
-//                    try {
-//                        picasso.load(userChat.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().fit().
-//                                into(myUserChatListViewHolder.profilePicture, new Callback() {
-//                                    @Override
-//                                    public void onSuccess() {
-//                                        //hide progressbar
-//                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-//                                    }
-//
-//                                    @Override
-//                                    public void onError() {
-//                                        //hide progressbar
-//                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-//                                    }
-//                                });
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//                    try {
-//                        picasso.load(userChat.getParseUser("createdBy").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().fit().
-//                                into(myUserChatListViewHolder.profilePicture, new Callback() {
-//                                    @Override
-//                                    public void onSuccess() {
-//                                        //hide progressbar
-//                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-//                                    }
-//
-//                                    @Override
-//                                    public void onError() {
-//                                        //hide progressbar
-//                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-//                                    }
-//                                });
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//        }
         if (position < mUserChatObjectList.size() && mUserChatObjectList.size() > 0) {
             myUserChatListViewHolder.username.setText(null);
             myUserChatListViewHolder.lastChatMessage.setText(null);
@@ -296,43 +195,61 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
 
 //                myUserChatListViewHolder.dateOfLastChatMessage.setText(DateUtils.getRelativeDateTimeString(activityContext, userChatObject.getUpdatedAt().getTime(),
 //                        DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
-            Log.d(LOG, "Parsefile Uri: " + userChatObject.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl());
+//            Log.d(LOG, "Parsefile Uri: " + userChatObject.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl());
             /** try - catch in order to prevent a crash in case of CircularImageView throwing a null pointer exception during bitmap loading */
-            if (chatParticipant.equals(userChatObject.getParseUser("username").getUsername())) {
+            if (chatParticipant.equals(userChatObject.getParseUser(ParseConstants.USERNAME).getUsername())) {
                 try {
-                    picasso.load(userChatObject.getParseUser("username").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().centerCrop().fit().
-                            into(myUserChatListViewHolder.profilePicture, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    //hide progressbar
-                                    myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-                                }
+                    if(userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
+                        picasso.load(userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().centerCrop().fit().
+                                into(myUserChatListViewHolder.profilePicture, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        //hide progressbar
+                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
+                                    }
 
-                                @Override
-                                public void onError() {
-                                    //hide progressbar
-                                    myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-                                }
-                            });
+                                    @Override
+                                    public void onError() {
+                                        //hide progressbar
+                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
+                                    }
+                                });
+                    }
+                    else {
+                        MySingleton.getMySingleton().getPicasso().load(R.drawable.com_facebook_profile_picture_blank_portrait).centerCrop().fit().into(myUserChatListViewHolder.profilePicture);
+                        final int color = ApplicationMain.getAppContext().getResources().getColor(R.color.teal_500);
+                        myUserChatListViewHolder.profilePicture.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    picasso.load(userChatObject.getParseUser("createdBy").getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().centerCrop().fit().
-                            into(myUserChatListViewHolder.profilePicture, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    //hide progressbar
-                                    myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-                                }
+                    if(userChatObject.getParseUser(ParseConstants.CREATED_BY).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
+                        picasso.load(userChatObject.getParseUser(ParseConstants.CREATED_BY).getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().centerCrop().fit().
+                                into(myUserChatListViewHolder.profilePicture, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        //hide progressbar
+                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
+                                    }
 
-                                @Override
-                                public void onError() {
-                                    //hide progressbar
-                                    myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
-                                }
-                            });
+                                    @Override
+                                    public void onError() {
+                                        //hide progressbar
+                                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
+                                    }
+                                });
+                    }
+                    else {
+                        MySingleton.getMySingleton().getPicasso().load(R.drawable.com_facebook_profile_picture_blank_portrait).centerCrop().fit().into(myUserChatListViewHolder.profilePicture);
+                        final int color = ApplicationMain.getAppContext().getResources().getColor(R.color.teal_500);
+                        myUserChatListViewHolder.profilePicture.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                        myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

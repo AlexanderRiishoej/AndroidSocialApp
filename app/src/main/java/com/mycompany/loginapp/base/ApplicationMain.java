@@ -15,6 +15,8 @@ import com.facebook.FacebookSdk;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseSession;
+import com.parse.ParseUser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -29,14 +31,21 @@ public final class ApplicationMain extends Application {
     private static SharedPreferences sharedPreferences;
     private final static ApplicationMain MAIN_APP_SINGLETON = new ApplicationMain();
     public static Context context;
-    private final String applicationId = "N0vbt1RSFJBDS5RXGnM0DLqzCCxydwFsUcSUDEV6";
-    private final String clientId = "lAXzmFMVSAiQVSuZspt1pcDzvb70S3LXqdtPSKki";
+    private static final String applicationId = "N0vbt1RSFJBDS5RXGnM0DLqzCCxydwFsUcSUDEV6";
+    private static final String clientId = "lAXzmFMVSAiQVSuZspt1pcDzvb70S3LXqdtPSKki";
+//    private static final String testApplicationId = "9clfVMwznD2jtQByuaWQfGiUvbjuHqlsRbPPQU97";
+//    private static final String testClientId = "enGGp1KdABoEPvXrQ3Hr0jfY0tWqLEpMYT9WUA8W";
+    public static ParseUser mCurrentParseUser;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Parse.enableLocalDatastore(this);
+        //https://www.parse.com/tutorials/using-the-local-datastore guide to local datastore
+        //Parse.enableLocalDatastore(this);
         Parse.initialize(this, applicationId, clientId);
+        // https://www.parse.com/tutorials/session-migration-tutorial Session migration
+        // https://www.parse.com/docs/android/guide#sessions
+        ParseUser.enableRevocableSessionInBackground();
         FacebookSdk.sdkInitialize(this);
         ParseFacebookUtils.initialize(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

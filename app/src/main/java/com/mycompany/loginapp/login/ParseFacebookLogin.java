@@ -102,7 +102,7 @@ public class ParseFacebookLogin {
                                         final JSONObject coverUri = response.getJSONObject().getJSONObject("pic_cover");
 //                                        new MaterialDialog.Builder(mMainLoginActivity)
 //                                                .title("Information")
-//                                                .content("Name: " + mFbProfile.getName() + "\r\n" + "Email: " + mFbEmail + "\r\n" + "Birthday: " + mFbBirthday + "\r\n" + "Hometown: " + mFbHomeTown)
+//                                                .content("Name: " + mFbProfile.getName() + "\mMainItemLayout\n" + "Email: " + mFbEmail + "\mMainItemLayout\n" + "Birthday: " + mFbBirthday + "\mMainItemLayout\n" + "Hometown: " + mFbHomeTown)
 //                                                .show();
 
                                         //setup the parseUser with the data from the GraphRequest

@@ -3,7 +3,7 @@
     <!-- Navigation Drawer -->
 
     <!-- NavHeaderHeight = navWidth * 9/16 -->
-    <dimen name="navigation_header_height">180dp</dimen>
+    <dimen name="navigation_header_height">171dp</dimen>
     <!-- NavDrawerMaxWidth = 320dp.
          NavDrawerWidth = ScreenSize - ActionBarSize
          Nexus 5: 360dp - 56dp = 304dp -->

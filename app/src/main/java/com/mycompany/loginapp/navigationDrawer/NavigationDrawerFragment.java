@@ -18,11 +18,11 @@ import android.widget.TextView;
 
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.chat.NewUserChat_act;
-import com.mycompany.loginapp.chat.UserChatList_act;
+import com.mycompany.loginapp.chat.oldNotUsed.UserChatList_act;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
-import com.mycompany.loginapp.login.Login2_act;
+import com.mycompany.loginapp.general.Startup_act;
 import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
@@ -197,11 +197,12 @@ public class NavigationDrawerFragment extends Fragment {
                     public void run() {
                         ParseUser.logOut();
                         ProfileImageHolder.setImageFilesNull();
-                        getActivity().startActivity(new Intent(getActivity(), Login2_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        getActivity().startActivity(new Intent(getActivity(), Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         getActivity().finish();
                     }
                 });
+                break;
             default:
                 break;
         }

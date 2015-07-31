@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.general.Startup_act;
 import com.mycompany.loginapp.login.Login2_act;
 import com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
@@ -92,7 +93,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 //EventBus.getDefault().post(new MessageFinishActivities());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     //startActivity(new Intent(this, Login_act.class));
-                    startActivity(new Intent(this, Login2_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                     this.finish();

@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.chat;
+package com.mycompany.loginapp.chat.oldNotUsed;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -28,6 +28,9 @@ import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.adapters.ChatListRecyclerAdapter;
 import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.chat.Chat_act;
+import com.mycompany.loginapp.chat.DateHolder;
+import com.mycompany.loginapp.chat.NewUserChat_act;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.Constants;

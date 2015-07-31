@@ -82,4 +82,7 @@
     <string name="gender">Gender</string>
     <string name="mobile_phone_number">Mobile phone number</string>
     <string name="title_activity_login2_act">Login2_act</string>
+    <string name="email_reset_password">Enter e-mail address here</string>
+    <string name="title_activity_startup_act">Startup_act</string>
+    <string name="title_activity_public_profile_act">PublicProfile_act</string>
 </resources>

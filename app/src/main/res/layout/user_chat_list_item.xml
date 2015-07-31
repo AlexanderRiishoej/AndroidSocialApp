@@ -27,7 +27,7 @@
         app:border_width="0dp" />
 
     <LinearLayout
-        android:id="@+id/chat_list_content"
+        android:id="@+id/child_main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"

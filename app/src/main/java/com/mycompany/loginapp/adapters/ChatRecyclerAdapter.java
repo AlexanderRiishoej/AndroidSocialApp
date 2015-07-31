@@ -39,12 +39,12 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
     private Context activityContext;
     private LayoutInflater layoutInflater;
     private Picasso picasso;
-    private ArrayList<Conversation> conversationList;
+    private List<Conversation> conversationList;
     private ParseObject userChatObject;
 
     public ChatRecyclerAdapter(Context actContext, List<Conversation> conversationList, ParseObject userChatObject) {
         this.activityContext = actContext;
-        this.conversationList = new ArrayList<>(conversationList);
+        this.conversationList = conversationList;
         this.layoutInflater = LayoutInflater.from(actContext);
         this.picasso = Picasso.with(actContext);
         this.userChatObject = userChatObject;
@@ -71,7 +71,7 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
 //        this.notifyItemRangeInserted(positionStart, conversationList.size());
 //    }
     public void setChatList(List<Conversation> conversationList) {
-        this.conversationList = new ArrayList<>(conversationList);
+        this.conversationList.addAll(conversationList);
         this.notifyDataSetChanged();
     }
 
@@ -111,7 +111,7 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
     }
 
     //used to remove progress-conversation-item last in the list
-    public void removeItem(int index) {
+    public void removeItemAtPosition(int index) {
         this.conversationList.remove(index);
         this.notifyItemRemoved(index);
     }

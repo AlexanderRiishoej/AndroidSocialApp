@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -31,10 +32,10 @@ public class ResetPassword_act extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.makeWindowTransition();
+        TextInputLayout mTextInputResetPasswordLayout = (TextInputLayout) findViewById(R.id.forgot_password_textinput);
+        email = mTextInputResetPasswordLayout.getEditText();
         aQuery = new AQuery(this);
-        email = (EditText)findViewById(R.id.Email);
-        aQuery.id(R.id.toolbar_title).text("Reset");
-        aQuery.id(R.id.sub_header_text_view).text(R.string.reset_password);
+        aQuery.id(R.id.toolbar_title).text("Reset password");
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);

@@ -11,14 +11,13 @@ import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ScrollView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.registration.textWatchers.BirthdayTextWatcher;
@@ -33,11 +32,6 @@ import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
-
-import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 
@@ -103,23 +97,26 @@ public class Register_act extends BaseActivity {
                 .content("Please wait...")
                 .progress(true, 0)
                 .show();
-
-        if (noErrors()){
-            final ParseUser parseUser = new ParseUser();
-            parseUser.setPassword(mPasswordTextWatcher.getEditText().getText().toString());
-            parseUser.setEmail(mEmailTextWatcher.getEditText().getText().toString());
-            parseUser.setUsername(mUsernameTextWatcher.getEditText().getText().toString());
+        final ParseUser parseUser = new ParseUser();
+        parseUser.setPassword(mPasswordTextWatcher.getEditText().getText().toString());
+        parseUser.setEmail(mEmailTextWatcher.getEditText().getText().toString());
+        parseUser.setUsername(mUsernameTextWatcher.getEditText().getText().toString());
+//        if (noErrors()){
+//            final ParseUser parseUser = new ParseUser();
+//            parseUser.setPassword(mPasswordTextWatcher.getEditText().getText().toString());
+//            parseUser.setEmail(mEmailTextWatcher.getEditText().getText().toString());
+//            parseUser.setUsername(mUsernameTextWatcher.getEditText().getText().toString());
 
             parseUser.signUpInBackground(new SignUpCallback() {
                 @Override
                 public void done(ParseException e) {
                     singupDialog.dismiss();
                     if (e == null) {
-                        parseUser.put("mobilePhoneNumber", mMobilePhoneNumberTextWatcher.getEditText().getText().toString());
-                        parseUser.put("firstname", mFirstNameTextWatcher.getEditText().getText().toString());
-                        parseUser.put("lastname", mLastNameTextWatcher.getEditText().getText().toString());
-                        parseUser.put("gender", mMobilePhoneNumberTextWatcher.getEditText().getText().toString());
-
+//                        parseUser.put("mobilePhoneNumber", mMobilePhoneNumberTextWatcher.getEditText().getText().toString());
+//                        parseUser.put("firstname", mFirstNameTextWatcher.getEditText().getText().toString());
+//                        parseUser.put("lastname", mLastNameTextWatcher.getEditText().getText().toString());
+//                        parseUser.put("gender", mMobilePhoneNumberTextWatcher.getEditText().getText().toString());
+                        ApplicationMain.mCurrentParseUser = parseUser;
                         startActivity(new Intent(Register_act.this, ProfilePrivate_act.class));
                         Log.d(LOG, "Current user is: " + ParseUser.getCurrentUser().getUsername());
                         setResult(RESULT_OK);
@@ -134,13 +131,13 @@ public class Register_act extends BaseActivity {
                 }
             });
 
-        } else {
-            singupDialog.dismiss();
-            new MaterialDialog.Builder(this)
-                    .content("Error signing up")
-                    .negativeText("Cancel")
-                    .show();
-        }
+//        } else {
+//            singupDialog.dismiss();
+//            new MaterialDialog.Builder(this)
+//                    .content("Error signing up")
+//                    .negativeText("Cancel")
+//                    .show();
+//        }
     }
 
     private void setUpRegisterForm() {

@@ -18,19 +18,30 @@
     <!-- Useful guide: http://www.murrayc.com/permalink/2014/10/28/android-changing-the-toolbars-text-color-and-overflow-icon-color/ -->
     <style name="AppTheme.Teal" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- Colors the bottom navigation bar of the phone -->
+        <item name="android:navigationBarColor">@color/teal_500</item>
+        <item name="android:textColorSecondary">@color/secondary_text_icons_light_theme</item>
+        <!--<item name="android:textColorSecondary">@color/teal_500</item>-->
         <!--<item name="colorPrimary">@color/specialBlueColorPrimary</item>-->
         <!--<item name="colorPrimaryDark">@color/specialBlueColorPrimaryDark</item>-->
         <!--<item name="android:windowBackground">@color/text</item>-->
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <!--<item name="android:windowBackground">@color/windowBackground</item>-->
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <!--<item name="android:textColorPrimaryDisableOnly">@color/disable_hint_text</item>-->
         <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
+        <item name="android:windowActionBar">false</item>
         <item name="android:textViewStyle">@style/customTextViewStyle</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- Buttons -->
+        <item name="android:colorControlHighlight">@color/colorControlHighlight</item>
+        <item name="android:colorButtonNormal">@color/colorButtonNormal</item>
+        <item name="android:colorControlActivated">@color/colorControlActivated</item>
     </style>
 
     <!-- ToolBar Theme -->

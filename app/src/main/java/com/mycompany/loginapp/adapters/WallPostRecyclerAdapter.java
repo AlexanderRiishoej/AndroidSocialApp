@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.ApplicationMain;
-import com.mycompany.loginapp.chat.UserChatList_act;
+import com.mycompany.loginapp.chat.oldNotUsed.UserChatList_act;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.parse.GetCallback;
 import com.parse.ParseException;

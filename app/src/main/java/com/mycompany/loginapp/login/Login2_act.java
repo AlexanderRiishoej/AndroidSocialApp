@@ -2,35 +2,25 @@ package com.mycompany.loginapp.login;
 
 import android.app.ActivityOptions;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.androidquery.AQuery;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.general.ResetPassword_act;
 import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.base.BaseActivity;
-import com.mycompany.loginapp.constants.ParseConstants;
+import com.mycompany.loginapp.login.notUsed.Login_act;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.registration.Register_act;
 import com.mycompany.loginapp.singletons.MySingleton;
@@ -39,19 +29,7 @@ import com.mycompany.loginapp.views.CharacterCountErrorWatcher;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
 
 public class Login2_act extends BaseActivity {
 
@@ -63,6 +41,10 @@ public class Login2_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.teal_700));
         //final ImageView img = (ImageView) findViewById(R.id.background_image);
         //img.setImageAlpha(25);
         //img.setColorFilter(getResources().getColor(R.color.secondary_text_icons_light_theme), PorterDuff.Mode.DARKEN);
@@ -113,8 +95,8 @@ public class Login2_act extends BaseActivity {
             return;
         }
         //final ProgressDialog dia = ProgressDialog.show(this, null, getString(R.string.alert_wait));
-        MySingleton.getMySingleton().getAQuery().id(R.id.progress).visibility(View.VISIBLE);
-        final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_TranslucentDecor);
+        MySingleton.getMySingleton().getAQuery().id(R.id.main_progressBar).visibility(View.VISIBLE);
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
         dialog.setTitle(getString(R.string.alert_wait));
         dialog.setContentView(R.layout.log_in_progress_bar_layout);
         dialog.show();
@@ -126,6 +108,7 @@ public class Login2_act extends BaseActivity {
                 //dia.dismiss();
                 //MySingleton.getMySingleton().getAQuery().id(R.id.progress).visibility(View.GONE);
                 if (pu != null) {
+                    ApplicationMain.mCurrentParseUser = pu;
                     // Start the logged in activity with the name of the person who logged in
                     startActivity(new Intent(Login2_act.this, ProfilePrivate_act.class));
                     finish();
@@ -181,23 +164,52 @@ public class Login2_act extends BaseActivity {
      * You can treat this cache as a session, and automatically assume the user is logged in
      */
     private void CurrentUserLoggedIn() {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
-            //ProfilePrivate_act.parseUser = currentUser;
-//            startActivity(new Intent(this, Social_act.class));
-            startActivity(new Intent(this, ProfilePrivate_act.class));
-            this.finish();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //this.finishAfterTransition();
-                this.finish();
-            } else {
-                finish();
-            }
-        } else {
-            return;
-            // show the signup or login screen
+        final ParseUser currentUser = ParseUser.getCurrentUser();
+        if(currentUser != null) {
+            final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
+            dialog.setTitle(getString(R.string.alert_wait));
+            dialog.setContentView(R.layout.log_in_progress_bar_layout);
+            dialog.show();
+            //This method will ensure the session token is valid before setting the current user
+            ParseUser.becomeInBackground(currentUser.getSessionToken(), new LogInCallback() {
+                public void done(ParseUser loggedInUser, ParseException e) {
+                    if (user != null) {
+                        // The current user is now set to user.
+                        String user = loggedInUser.getUsername();
+                        ApplicationMain.mCurrentParseUser = loggedInUser;
+                        startActivity(new Intent(Login2_act.this, ProfilePrivate_act.class));
+                        //dialog.dismiss();
+                        Login2_act.this.finish();
+                    } else {
+                        // The token could not be validated.
+                        dialog.dismiss();
+                    }
+                }
+            });
         }
+        else {
+
+        }
+
+//        ParseUser currentUser = ParseUser.getCurrentUser();
+//        if (currentUser != null) {
+//            String user = currentUser.getUsername();
+//            //ProfilePrivate_act.parseUser = currentUser;
+////            startActivity(new Intent(this, Social_act.class));
+//            ApplicationMain.mCurrentParseUser = currentUser;
+//            startActivity(new Intent(this, ProfilePrivate_act.class));
+//            this.finish();
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                //this.finishAfterTransition();
+//                this.finish();
+//            } else {
+//                finish();
+//            }
+//        } else {
+//            return;
+//            // show the signup or login screen
+//        }
     }
 
     /**
@@ -207,8 +219,9 @@ public class Login2_act extends BaseActivity {
      */
     public void ForgotPassword(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(new Intent(Login2_act.this, ResetPassword_act.class));
 
-            startActivity(new Intent(Login2_act.this, ResetPassword_act.class), ActivityOptions.makeSceneTransitionAnimation(Login2_act.this).toBundle());
+            //startActivity(new Intent(Login2_act.this, ResetPassword_act.class), ActivityOptions.makeSceneTransitionAnimation(Login2_act.this).toBundle());
         } else {
             startActivity(new Intent(Login2_act.this, ResetPassword_act.class));
         }

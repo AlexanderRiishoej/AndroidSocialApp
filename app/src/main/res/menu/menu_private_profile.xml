@@ -13,9 +13,8 @@
         android:orderInCategory="6"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_camera"
-        android:icon="@drawable/ic_photo_camera_white_24dp"
-        android:title="Take picture"
+        android:id="@+id/edit_name"
+        android:title="Edit name"
         app:showAsAction="never"
         android:orderInCategory="1"/>
     <item

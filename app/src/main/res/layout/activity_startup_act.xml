@@ -1,0 +1,153 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/login_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/teal_500"
+        android:fitsSystemWindows="true">
+
+        <TextView
+            android:id="@+id/main_login_screen_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Social chat application"
+            android:textColor="@color/white"
+            android:textSize="32sp" />
+
+        <TextView
+            android:id="@+id/connect_with_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/main_login_screen_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/pad_16dp"
+            android:fontFamily="sans-serif-regular"
+            android:text="Connect with friends"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/connect_with_friends"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/pad_16dp"
+            android:fontFamily="sans-serif-regular"
+            android:text="Join now"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/pad_8dp"
+        android:onClick="onLoginPressed"
+        android:foreground="@drawable/card_view_ripple"
+        app:cardBackgroundColor="@color/teal_500"
+        app:cardCornerRadius="@dimen/pad_8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="32sp"
+            android:text="Sign in"
+            android:textColor="@color/white"
+            android:layout_gravity="center"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/pad_16dp">
+            <TextView
+                android:id="@+id/facebook_sign_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="@dimen/txt_14sp"
+                android:text="Also with "
+                android:textColor="@color/white"/>
+
+            <ImageView
+                android:id="@+id/facebook_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="24dp"
+                android:minWidth="24dp"
+                android:layout_margin="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:src="@drawable/com_facebook_button_icon"
+                android:background="@color/com_facebook_blue"
+                android:layout_toEndOf="@id/facebook_sign_in"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="@dimen/txt_14sp"
+                android:text="acebook"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:layout_toEndOf="@id/facebook_icon"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/pad_8dp"
+        android:onClick="onCreateAccountPressed"
+        android:foreground="@drawable/card_view_ripple"
+        app:cardBackgroundColor="@color/teal_500"
+        app:cardCornerRadius="@dimen/pad_8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Create account"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textSize="32sp" />
+    </android.support.v7.widget.CardView>
+
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_margin="@dimen/pad_8dp"-->
+        <!--android:onClick="onForgotPasswordPressed"-->
+        <!--android:foreground="@drawable/card_view_ripple"-->
+        <!--app:cardBackgroundColor="@color/blue_500"-->
+        <!--app:cardCornerRadius="@dimen/pad_8dp">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:fontFamily="sans-serif-condensed"-->
+            <!--android:text="Forgot password"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textSize="32sp" />-->
+    <!--</android.support.v7.widget.CardView>-->
+</LinearLayout>

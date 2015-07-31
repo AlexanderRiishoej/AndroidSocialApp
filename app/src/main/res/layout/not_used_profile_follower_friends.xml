@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -132,6 +133,17 @@
                 android:layout_marginStart="@dimen/pad_16dp"
                 android:layout_marginTop="@dimen/pad_20dp"
                 android:text="296 photos" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/gallery"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginEnd="@dimen/pad_16dp"
+                android:layout_marginStart="@dimen/pad_16dp"
+                android:gravity="start"
+                android:paddingBottom="@dimen/pad_8dp"
+                android:paddingTop="@dimen/pad_8dp"
+                android:scrollbars="vertical"/>
         </LinearLayout>
         <!--<android.support.v7.widget.RecyclerView-->
         <!--android:id="@+id/photo_recycler_view"-->

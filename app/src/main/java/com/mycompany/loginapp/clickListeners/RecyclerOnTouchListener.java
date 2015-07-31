@@ -1,12 +1,14 @@
 package com.mycompany.loginapp.clickListeners;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 
 /**
@@ -51,6 +53,10 @@ public class RecyclerOnTouchListener implements RecyclerView.OnItemTouchListener
     @Override
     public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e) {
         View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+//        if(e.getAction() == MotionEvent.ACTION_DOWN){
+//            return false;
+//        }
+        final int action = MotionEventCompat.getActionMasked(e);
         /** if the child view clicked is not null and the clickListener passed is not null and if our gestureDetector
          * handled the event correctly by returning true then we have to handle the click indicating that the user pressed
          * on the RecyclerView at a given position, then process the click event */
@@ -69,6 +75,5 @@ public class RecyclerOnTouchListener implements RecyclerView.OnItemTouchListener
 
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
     }
 }

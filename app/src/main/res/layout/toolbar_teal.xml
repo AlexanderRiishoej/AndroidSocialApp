@@ -6,12 +6,12 @@
     android:layout_height="wrap_content"
     android:background="@color/teal_500"
     android:minHeight="?attr/actionBarSize"
+    app:theme="@style/ToolbarTealTheme"
     app:contentInsetLeft="@dimen/activity_horizontal_margin"
     app:contentInsetStart="72dp"
     app:contentInsetRight="@dimen/activity_horizontal_margin"
     app:navigationIcon="@drawable/ic_menu_white_24dp"
-    app:popupTheme="@style/ToolbarPopupTealTheme"
-    app:theme="@style/ToolbarTealTheme">
+    app:popupTheme="@style/ToolbarPopupTealTheme">
  <!-- android:gravity="bottom"
      android:elevation="4dp"
 -->

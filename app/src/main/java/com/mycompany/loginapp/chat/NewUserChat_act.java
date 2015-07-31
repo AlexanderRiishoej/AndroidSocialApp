@@ -80,7 +80,7 @@ public class NewUserChat_act extends BaseActivity {
                 refreshContent();
             }
         });
-        getFriends();
+        //getFriends();
         //getAllUsers();
     }
 

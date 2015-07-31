@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/find_friends_main_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/pad_72dp"
+    android:background="@drawable/recycler_ripple"
+    android:clickable="true">
+
+    <ProgressBar
+        android:id="@+id/user_list_image_progress_bar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="34dp"
+        android:maxWidth="10dp"
+        android:minWidth="10dp"
+        android:visibility="gone" />
+    <!-- android:layout_marginLeft="31dp" -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_list_username_profile_parse_image"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/pad_16dp"
+        app:border_color="@color/secondary_text_icons"
+        app:border_width="0dp" />
+
+    <RelativeLayout
+        android:id="@+id/child_main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/user_list_username_profile_parse_image"
+        android:gravity="center_vertical"
+        android:paddingEnd="@dimen/pad_16dp"
+        android:paddingStart="@dimen/pad_16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/user_list_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textColor="@color/text_light_theme"
+                android:textSize="@dimen/txt_16sp" />
+
+            <TextView
+                android:id="@+id/user_list_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textSize="@dimen/txt_14sp" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/arrow_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="arrow"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/find_friends_button_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true">
+        <Button
+            android:id="@+id/find_friends_chat_button"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/ripple_button_raised"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:text="Chat"/>
+        </RelativeLayout>
+    </RelativeLayout>
+    <!--        android:text="@string/recent_chat"
+     android:drawableLeft="@drawable/ic_online"
+        android:drawableRight="@drawable/arrow"-->
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:background="@drawable/list_divider"-->
+    <!--android:layout_alignParentBottom="true"/>-->
+</RelativeLayout>

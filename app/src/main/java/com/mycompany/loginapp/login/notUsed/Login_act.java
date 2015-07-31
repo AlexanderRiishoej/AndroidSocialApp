@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.login;
+package com.mycompany.loginapp.login.notUsed;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;

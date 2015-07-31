@@ -9,6 +9,7 @@ import android.view.View;
 /**
  * Created by Alexander on 15-07-2015.
  * A version of ActionBarDrawerToggle that listens to the state of the NavigationDrawer
+ * http://stackoverflow.com/questions/18343018/optimizing-drawer-and-activity-launching-speed
  */
 public class SmoothActionBarDrawerToggle extends ActionBarDrawerToggle {
 

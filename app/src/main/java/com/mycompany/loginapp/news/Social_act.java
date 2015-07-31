@@ -32,6 +32,8 @@ public class Social_act extends BaseActivity implements AppBarLayout.OnOffsetCha
     private static final int FRAGMENT_2 = 2;
     private AQuery aQuery;
     private AppBarLayout mAppBarLayout;
+    private int mFragmentIndex = -1;
+    private Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,33 +104,40 @@ public class Social_act extends BaseActivity implements AppBarLayout.OnOffsetCha
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
         //http://stackoverflow.com/questions/7379165/update-data-in-listfragment-as-part-of-viewpager/8886019#8886019
-        Fragment currentFragment = (Fragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
-        int index = mViewPager.getCurrentItem();
+        final int index = mViewPager.getCurrentItem();
+        if(index != mFragmentIndex) {
+            mFragmentIndex = index;
+            mCurrentFragment = (Fragment) mViewPagerAdapter.instantiateItem(mViewPager, mFragmentIndex);
+        }
 
             if(i == 0) {
                 switch (index){
                     case 0:
-                        WallPostFragment w = (WallPostFragment)currentFragment;
+                        WallPostFragment w = (WallPostFragment)mCurrentFragment;
                         w.setSwipeRefreshingEnabled(true);
                         return;
                     case 1:
-                        ChatListFragment c = (ChatListFragment)currentFragment;
+                        ChatListFragment c = (ChatListFragment)mCurrentFragment;
                         c.setSwipeRefreshingEnabled(true);
                         return;
                     case 2:
+                        FindFriendsFragment f = (FindFriendsFragment)mCurrentFragment;
+                        f.setSwipeRefreshingEnabled(true);
                         return;
                 }
         } else {
                 switch (index){
                     case 0:
-                        WallPostFragment w = (WallPostFragment)currentFragment;
+                        WallPostFragment w = (WallPostFragment)mCurrentFragment;
                         w.setSwipeRefreshingEnabled(false);
                         return;
                     case 1:
-                        ChatListFragment c = (ChatListFragment)currentFragment;
+                        ChatListFragment c = (ChatListFragment)mCurrentFragment;
                         c.setSwipeRefreshingEnabled(false);
                         return;
                     case 2:
+                        FindFriendsFragment f = (FindFriendsFragment)mCurrentFragment;
+                        f.setSwipeRefreshingEnabled(false);
                         return;
                 }
         }
@@ -168,7 +177,7 @@ public class Social_act extends BaseActivity implements AppBarLayout.OnOffsetCha
                     tabFragment = ChatListFragment.newInstance();
                     break;
                 case FRAGMENT_2:
-                    tabFragment = WallPostFragment.newInstance("", "");
+                    tabFragment = FindFriendsFragment.newInstance();
                     break;
             }
 

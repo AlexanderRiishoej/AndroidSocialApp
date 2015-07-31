@@ -2,6 +2,7 @@ package com.mycompany.loginapp.adapters;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +11,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.chat.UserChatList_act;
+import com.mycompany.loginapp.chat.oldNotUsed.UserChatList_act;
+import com.mycompany.loginapp.clickListeners.ClickListener;
+import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
@@ -22,7 +24,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Alexander on 15-04-2015.
@@ -31,27 +33,14 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
 
     public static final String LOG = UserChatList_act.class.getSimpleName();
     private Context activityContext;
-    private List<ParseObject> userChatList;
     private LayoutInflater layoutInflater;
     private String name = ParseUser.getCurrentUser().getUsername();
-    private String profilePicturePath;
-    private AQuery aQuery;
     private Picasso picasso;
-
-    private String mNavTitles[] = {"Mobile", "Profile", "Chat", "New Chat", "Mail", "Settings"};
-    private int mIcons[] = {R.drawable.ic_local_phone_grey600_24dp, R.drawable.ic_person_grey600_24dp,
-            R.drawable.ic_messenger_grey600_24dp, R.drawable.ic_chat_grey600_24dp, R.drawable.ic_action_email, R.drawable.ic_settings_applications_grey600_24dp};
 
     public ProfileRecyclerAdapter(Context actContext) {
         this.activityContext = actContext;
         this.layoutInflater = LayoutInflater.from(actContext);
-        this.aQuery = new AQuery(actContext);
         this.picasso = Picasso.with(actContext);
-    }
-
-    public void updateProfileImage(String profilePicturePath) {
-        this.profilePicturePath = profilePicturePath;
-        this.notifyItemChanged(0);
     }
 
     public void updateRecyclerItem(int position) {
@@ -66,23 +55,23 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
 
             //View convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.navigation_list_items, parent, false); //Inflating the layout
             /** View layout to be inflated onto the Recycler */
-            View convertView = layoutInflater.inflate(R.layout.profile_list_items, parent, false); //Inflating the layout
-            myProfileViewHolder = new MyProfileViewHolder(convertView, Constants.TYPE_ITEM); //Creating ViewHolder and passing the object of type view
+            View convertView = layoutInflater.inflate(R.layout.not_used_profile_list_items, parent, false); //Inflating the layout
+            myProfileViewHolder = new MyProfileViewHolder(convertView, Constants.TYPE_ITEM, null); //Creating ViewHolder and passing the object of type view
 
             return myProfileViewHolder; // Returning the created object
 
         } else if (viewType == Constants.TYPE_HEADER) {
 
             /** View layout to be inflated onto the Recycler */
-            View convertView = layoutInflater.inflate(R.layout.private_profile_header, parent, false); //Inflating the layout
-            myProfileViewHolder = new MyProfileViewHolder(convertView, Constants.TYPE_HEADER); //Creating ViewHolder and passing the object of type view
+            View convertView = layoutInflater.inflate(R.layout.not_used_private_profile_header, parent, false); //Inflating the layout
+            myProfileViewHolder = new MyProfileViewHolder(convertView, Constants.TYPE_HEADER, null); //Creating ViewHolder and passing the object of type view
 
             return myProfileViewHolder; //returning the object created
         } else if (viewType == Constants.TYPE_SECOND_ITEM) {
 
             /** View layout to be inflated onto the Recycler */
-            View convertView = layoutInflater.inflate(R.layout.profile_follower_friends, parent, false); //Inflating the layout
-            myProfileViewHolder = new MyProfileViewHolder(convertView, Constants.TYPE_SECOND_ITEM); //Creating ViewHolder and passing the object of type view
+            View convertView = layoutInflater.inflate(R.layout.not_used_profile_follower_friends, parent, false); //Inflating the layout
+            myProfileViewHolder = new MyProfileViewHolder(convertView, Constants.TYPE_SECOND_ITEM, activityContext); //Creating ViewHolder and passing the object of type view
 
             return myProfileViewHolder; //returning the object created
         }
@@ -173,8 +162,12 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
         public TextView in_common;
         public TextView videos;
         public TextView photos;
+        private RecyclerView mRecyclerView;
+        private GridLayoutManager mGridLayoutManager;
+        private Context actContext;
+        //private adapter
 
-        public MyProfileViewHolder(View itemView, int ViewType) {
+        public MyProfileViewHolder(View itemView, int ViewType, Context actContext) {
             super(itemView);
             if (ViewType == Constants.TYPE_ITEM) {
                 holderId = Constants.TYPE_ITEM;
@@ -200,17 +193,46 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
                 in_common = (TextView) itemView.findViewById(R.id.in_common);
                 videos = (TextView) itemView.findViewById(R.id.videos);
                 photos = (TextView) itemView.findViewById(R.id.photos);
+                this.actContext = actContext;
+                //setUpRecyclerView(itemView);
             }
         }
 
         private void setButtonClickListeners(){
             mEditProfileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     Snackbar.make(v.getRootView(), "Here's a Snackbar", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             });
+        }
+
+        private void setUpRecyclerView(View view){
+            mRecyclerView = (RecyclerView) view.findViewById(R.id.gallery);
+            mRecyclerView.setHasFixedSize(false);
+            ProfileGalleryAdapter mProfileGalleryAdapter = new ProfileGalleryAdapter(actContext, new ArrayList<ParseObject>());
+
+            mRecyclerView.setAdapter(mProfileGalleryAdapter);
+            mGridLayoutManager = new GridLayoutManager(actContext, 3);
+            mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return (3 - position % 3);
+                }
+            });
+            mRecyclerView.setLayoutManager(mGridLayoutManager);
+            /** OnItemTouchListener for the RecyclerView */
+            mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(actContext, mRecyclerView, new ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+
+                }
+            }));
         }
     }
 }

@@ -8,11 +8,12 @@ public final class Constants {
     public static final String EXTRA_DATA = "extraData";
 
     /** Media intents */
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
-    public static final int REQUEST_VIDEO_CAPTURE = 2;
-    public static final int REQUEST_CHOOSE_PROFILE_PICTURE = 3;
-    public static final int REQUEST_CHOOSE_VIDEO = 4;
-    public static final int REQUEST_CHOOSE_COVER_PHOTO = 6;
+    public static final int REQUEST_PROFILE_IMAGE_CAPTURE = 1;
+//    public static final int REQUEST_VIDEO_CAPTURE = 2;
+    public static final int REQUEST_CHOOSE_PROFILE_PICTURE = 2;
+    public static final int REQUEST_CHOOSE_VIDEO = 8;
+    public static final int REQUEST_COVER_IMAGE_CAPTURE = 3;
+    public static final int REQUEST_CHOOSE_COVER_PHOTO = 4;
     public static final int FILE_SIZE_LIMIT = 1024*1024*10; // 10 MB
 
     public static final int MEDIA_TYPE_IMAGE = 4;

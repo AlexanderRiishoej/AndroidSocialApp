@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.profile;
+package com.mycompany.loginapp.profile.imageLoaders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,12 +6,12 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.androidquery.AQuery;
 import com.google.common.io.Files;
-import com.mycompany.loginapp.adapters.ProfileRecyclerAdapter;
+import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -31,44 +31,49 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Alexander on 19-04-2015.
  */
-public class ProfileImageLoader {
+public class CoverPhotoLoader {
     private String LOG;
     private Context activityContext;
 
-    public ProfileImageLoader(Context context) {
+    public CoverPhotoLoader(Context context) {
         this.activityContext = context;
         this.LOG = context.getClass().getSimpleName();
     }
 
-    public void saveImageToParse() {
-        final File finalImageFile = ProfileImageHolder.imageFile;
-        final ParseFile parseImageFile;
+    public void saveCoverPhotoToParse() {
+        final File finalCoverPhotoFile = ProfileImageHolder.profileCoverPhotoFile;
+        final ParseFile parseCoverPhotoFile;
         try {
-            parseImageFile = new ParseFile("profile_pic.JPG", readBytesFromImageFile(ProfileImageHolder.imageFile));
+            parseCoverPhotoFile = new ParseFile("cover_photo.JPG", readBytesFromImageFile(ProfileImageHolder.profileCoverPhotoFile));
         } catch (Exception ex) {
+
             ex.printStackTrace();
             return;
         }
         /** Add picture to the Parse-cloud-backend */
-        parseImageFile.saveInBackground(new SaveCallback() {
+        parseCoverPhotoFile.saveInBackground(new SaveCallback() {
             public void done(ParseException e) {
                 if (e != null) {
                     Utilities.showDialog(activityContext, "Error saving imageFile to cloud server... " + " " + e.getMessage());
                     e.printStackTrace();
 
                 } else {
-                    ParseUser.getCurrentUser().put(ParseConstants.PROFILE_PICTURE, parseImageFile);
-                    ParseUser.getCurrentUser().put(ParseConstants.PROFILE_PICTURE_PATH, finalImageFile.getAbsolutePath());
+                    ApplicationMain.mCurrentParseUser.put(ParseConstants.COVER_PHOTO, parseCoverPhotoFile);
+                    ApplicationMain.mCurrentParseUser.put(ParseConstants.COVER_PHOTO_PATH, finalCoverPhotoFile.getAbsolutePath());
 
-                    ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                    ParseUser currentUser = ApplicationMain.mCurrentParseUser;
+                    String user = currentUser.getUsername();
+                    ApplicationMain.mCurrentParseUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             if (e != null) {
-                                Utilities.showDialog(activityContext, "Error loading imageFile" + " " + e.getMessage());
+                                Utilities.showDialog(activityContext, "Error saving ParseUser in ProfileCoverPhotoLoader" + " " + e.getMessage());
                                 e.printStackTrace();
 
                             } else {
                                 Log.d(LOG, "Profile picture successfully saved to Parse!");
+                                Utilities.showDialog(activityContext, "Profile picture successfully saved to Parse!");
+
                                 // Inform subscribers about the new profile_image picture
                             }
                         }
@@ -82,11 +87,11 @@ public class ProfileImageLoader {
      * Loads the profile_image picture from Parse
      * Only if the path to a profile_image picture is not existing any longer
      */
-    private void getProfilePictureFromParse() {
+    private void getCoverPhotoFromParse() {
         Log.d(LOG, "Loading image from parse...");
-        ParseFile profilePicture = null;
+        ParseFile coverPicture = null;
         try {
-            profilePicture = (ParseFile) ParseUser.getCurrentUser().get(ParseConstants.PROFILE_PICTURE);
+            coverPicture = (ParseFile) ParseUser.getCurrentUser().get(ParseConstants.COVER_PHOTO);
             //profilePicture.getUrl();
         } catch (Exception ex) {
             Utilities.showDialog(activityContext, "Error casting parseUser: " + " " + ex.getMessage());
@@ -94,26 +99,26 @@ public class ProfileImageLoader {
         }
 
         // If the profile_image image is different from null, then load is from parse
-        if (profilePicture != null) {
+        if (coverPicture != null) {
 //            final ProgressBar progressBarImage = aQuery.id(R.id.profile_progress_bar).getProgressBar();
 //            progressBarImage.setVisibility(View.VISIBLE);
 
-            profilePicture.getDataInBackground(new GetDataCallback() {
+            coverPicture.getDataInBackground(new GetDataCallback() {
                 public void done(byte[] data, ParseException e) {
                     //progressBarImage.setVisibility(View.GONE);
 
                     if (e == null) {
                         try {
                             /** Creates a new file */
-                            File newProfileImageFile = getOutputMediaFile(Constants.MEDIA_TYPE_IMAGE);
+                            File newCoverPhotoFile = getOutputMediaFile(Constants.MEDIA_TYPE_IMAGE);
                             //currentMediaFilePath = newProfileImageFile.getAbsolutePath();
                             /** Write the data stream of the image to the new file */
-                            Files.write(data, newProfileImageFile);
+                            Files.write(data, newCoverPhotoFile);
                             /** Save the new path of the image to Parse. Path is created in getOutputMediaFile */
-                            saveProfilePicturePathToParse(newProfileImageFile);
+                            saveCoverPhotoPathToParse(newCoverPhotoFile);
                             /** Finally update the picture directory with the profile_image picture */
                             updateDirectoryPictures();
-                            EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.imageFile.getAbsolutePath()));
+                            EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.profileCoverPhotoFile.getAbsolutePath()));
                             //profileRecyclerAdapter.updateProfileImage(newProfileImageFile.getAbsolutePath());
 
                         } catch (Exception ex) {
@@ -143,32 +148,31 @@ public class ProfileImageLoader {
      * If currentMediaFilePath is null it means that the profile_image picture path field in Parse is null, load the image stored in Parse instead
      * If the file exists, load it from the file, else load the image stored in Parse instead.
      */
-    public void loadProfilePicture() {
+    public void loadCoverPhoto() {
         Log.d(LOG, "Current user: " + ParseUser.getCurrentUser().getUsername());
         /** https://parse.com/docs/android_guide#queries-basic */
-        ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
+        ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ApplicationMain.mCurrentParseUser.getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
 
                 if (parseUser != null) {
-                    String currentImageFilePath = parseUser.getString(ParseConstants.PROFILE_PICTURE_PATH);
+                    String currentCoverPhotoFilePath = parseUser.getString(ParseConstants.COVER_PHOTO_PATH);
 
                     /** Check if the stored path in Parse is empty */
-                    if (currentImageFilePath != null) {
-                        File tempImageFile = new File(currentImageFilePath);
-                        Uri path = Uri.fromFile(tempImageFile);
-                        Log.d(activityContext.getClass().getSimpleName(), "PhotoPath: " + currentImageFilePath);
+                    if (currentCoverPhotoFilePath != null) {
+                        File tempCoverPhotoFile = new File(currentCoverPhotoFilePath);
+                        Log.d(activityContext.getClass().getSimpleName(), "PhotoPath: " + currentCoverPhotoFilePath);
 
                         /** Check if path exists since the user might have deleted this picture */
-                        if (tempImageFile.exists()) {
-                            ProfileImageHolder.imageFile = tempImageFile;
-                            EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.imageFile.getAbsolutePath()));
+                        if (tempCoverPhotoFile.exists()) {
+                            ProfileImageHolder.profileCoverPhotoFile = tempCoverPhotoFile;
+                            EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.profileCoverPhotoFile.getAbsolutePath()));
                         } else {
-                            getProfilePictureFromParse();
+                            getCoverPhotoFromParse();
                         }
 
                     } else {
-                        getProfilePictureFromParse();
+                        getCoverPhotoFromParse();
                     }
 
                 } else {
@@ -179,8 +183,8 @@ public class ProfileImageLoader {
         });
     }
 
-    private void saveProfilePicturePathToParse(File imageFile) {
-        ParseUser.getCurrentUser().put(ParseConstants.PROFILE_PICTURE_PATH, imageFile.getAbsolutePath());
+    private void saveCoverPhotoPathToParse(File imageFile) {
+        ParseUser.getCurrentUser().put(ParseConstants.COVER_PHOTO_PATH, imageFile.getAbsolutePath());
 
         ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
             @Override
@@ -204,7 +208,7 @@ public class ProfileImageLoader {
         //activityContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(imageFile.getAbsolutePath())));
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(ProfileImageHolder.imageFile.getAbsolutePath());
+        File f = new File(ProfileImageHolder.profileCoverPhotoFile.getAbsolutePath());
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         activityContext.sendBroadcast(mediaScanIntent);
@@ -232,7 +236,7 @@ public class ProfileImageLoader {
         }
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "SocialChatApp");
+                Environment.DIRECTORY_PICTURES), "Social chat-app");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -249,19 +253,13 @@ public class ProfileImageLoader {
         if (type == Constants.MEDIA_TYPE_IMAGE) {
             File imageFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_" + timeStamp + ".jpg");
-            ProfileImageHolder.imageFile = imageFile;
-            //ProfileImageHolder.profileImagePath = imageFile.getAbsolutePath();
-
-        } else if (type == Constants.MEDIA_TYPE_VIDEO) {
-            File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_" + timeStamp + ".mp4");
-            //currentMediaFilePath = mediaFile.getAbsolutePath();
-
+            ProfileImageHolder.profileCoverPhotoFile = imageFile;
+            //ProfileImageHolder.profileCoverPath = imageFile.getAbsolutePath();
         } else {
             return null;
         }
 
-        return ProfileImageHolder.imageFile;
+        return ProfileImageHolder.profileCoverPhotoFile;
     }
 
     private boolean isExternalStorageAvailable() {
