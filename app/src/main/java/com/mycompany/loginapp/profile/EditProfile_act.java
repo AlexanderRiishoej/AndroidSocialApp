@@ -1,28 +1,40 @@
-package com.mycompany.loginapp.general;
+package com.mycompany.loginapp.profile;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.login.SignIn_act;
-import com.mycompany.loginapp.registration.Register_act;
+import com.mycompany.loginapp.base.BaseActivity;
 
-public class Startup_act extends AppCompatActivity {
+public class EditProfile_act extends BaseActivity {
+    private EditProfileFragment mEditProfileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_startup_act);
+        mEditProfileFragment = EditProfileFragment.newInstance();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, mEditProfileFragment)
+                    .commit();
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_edit_profile_act;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_startup_act, menu);
+        getMenuInflater().inflate(R.menu.menu_edit_profile_act, menu);
         return true;
     }
 
@@ -39,18 +51,5 @@ public class Startup_act extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onLoginPressed(View view){
-        startActivity(new Intent(this, SignIn_act.class));
-
-    }
-
-    public void onCreateAccountPressed(View view){
-        startActivity(new Intent(this, Register_act.class));
-    }
-
-    public void onForgotPasswordPressed(View view){
-        startActivity(new Intent(this, ResetPassword_act.class));
     }
 }

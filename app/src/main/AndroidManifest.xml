@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".login.Login2_act"
+            android:name=".login.SignIn_act"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
@@ -57,10 +57,10 @@
         <activity
             android:name=".registration.Register_act"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".login.Login2_act" >
+            android:parentActivityName=".login.SignIn_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".login.Login2_act" />
+                android:value=".login.SignIn_act" />
         </activity>
         <activity
             android:name=".profile.ProfilePrivate_act"
@@ -78,10 +78,10 @@
         <activity
             android:name=".general.ResetPassword_act"
             android:label="@string/title_activity_reset_password"
-            android:parentActivityName=".login.Login2_act" >
+            android:parentActivityName=".login.SignIn_act" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".login.Login2_act" />
+                android:value=".login.SignIn_act" />
         </activity>
         <activity
             android:name=".chat.Chat_act"
@@ -141,6 +141,10 @@
             </intent-filter>
         </provider>
         <!-- ....................................................................................................................................... -->
+        <activity
+            android:name=".profile.EditProfile_act"
+            android:label="@string/title_activity_edit_profile_act" >
+        </activity>
     </application>
 
 </manifest>

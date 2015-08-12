@@ -6,9 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.androidquery.AQuery;
 import com.google.common.io.Files;
-import com.mycompany.loginapp.adapters.ProfileRecyclerAdapter;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;

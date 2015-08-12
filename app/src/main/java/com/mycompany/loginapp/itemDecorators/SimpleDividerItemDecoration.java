@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.chat;
+package com.mycompany.loginapp.itemDecorators;
 
 import android.content.Context;
 import android.graphics.Canvas;

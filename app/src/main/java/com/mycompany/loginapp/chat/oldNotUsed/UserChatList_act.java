@@ -184,7 +184,7 @@ public class UserChatList_act extends BaseActivity {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.user_chat_list;
+        return R.layout.not_used_user_chat_list;
     }
 
 

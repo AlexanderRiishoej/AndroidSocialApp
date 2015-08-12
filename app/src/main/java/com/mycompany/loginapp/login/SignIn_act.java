@@ -1,7 +1,6 @@
 package com.mycompany.loginapp.login;
 
 import android.app.ActivityOptions;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
-public class Login2_act extends BaseActivity {
+public class SignIn_act extends BaseActivity {
 
     public static final String LOG = Login_act.class.getSimpleName();
     private TextInputLayout mTextInputUsernameLayout, mTextInputPasswordLayout;
@@ -94,27 +93,22 @@ public class Login2_act extends BaseActivity {
             Utilities.showDialog(this, R.string.err_fields_empty);
             return;
         }
-        //final ProgressDialog dia = ProgressDialog.show(this, null, getString(R.string.alert_wait));
         MySingleton.getMySingleton().getAQuery().id(R.id.main_progressBar).visibility(View.VISIBLE);
-        final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
-        dialog.setTitle(getString(R.string.alert_wait));
-        dialog.setContentView(R.layout.log_in_progress_bar_layout);
-        dialog.show();
+        LoginDialogClass.showLoginDialog(this, "Logging in please wait...");
         ParseUser.logInInBackground(username, password, new LogInCallback() {
 
             @Override
             public void done(ParseUser pu, ParseException e) {
-                //dialog.dismiss();
-                //dia.dismiss();
-                //MySingleton.getMySingleton().getAQuery().id(R.id.progress).visibility(View.GONE);
                 if (pu != null) {
                     ApplicationMain.mCurrentParseUser = pu;
                     // Start the logged in activity with the name of the person who logged in
-                    startActivity(new Intent(Login2_act.this, ProfilePrivate_act.class));
+                    startActivity(new Intent(SignIn_act.this, ProfilePrivate_act.class));
+                    //LoginDialogClass.dismissLoginDialog();
                     finish();
+                    LoginDialogClass.dismissLoginDialog();
                 } else {
-                    Utilities.showDialog(Login2_act.this, getString(R.string.err_login) + " " + e.getMessage());
-                    dialog.dismiss();
+                    Utilities.showDialog(SignIn_act.this, getString(R.string.err_login) + " " + e.getMessage());
+                    LoginDialogClass.dismissLoginDialog();
                     e.printStackTrace();
                 }
             }
@@ -126,6 +120,7 @@ public class Login2_act extends BaseActivity {
         //signInUserWithParse();
         this.mParseFacebookLogin.signInUserWithParse();
     }
+
 
 //    private void getUserDetailsFromParse() {
 //        parseUser = ParseUser.getCurrentUser();
@@ -153,7 +148,7 @@ public class Login2_act extends BaseActivity {
      */
     public void RegisterPressed(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivityForResult(new Intent(this, Register_act.class), 10, ActivityOptions.makeSceneTransitionAnimation(Login2_act.this).toBundle());
+            startActivityForResult(new Intent(this, Register_act.class), 10, ActivityOptions.makeSceneTransitionAnimation(SignIn_act.this).toBundle());
         } else {
             startActivity(new Intent(this, Register_act.class));
         }
@@ -166,10 +161,11 @@ public class Login2_act extends BaseActivity {
     private void CurrentUserLoggedIn() {
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if(currentUser != null) {
-            final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
-            dialog.setTitle(getString(R.string.alert_wait));
-            dialog.setContentView(R.layout.log_in_progress_bar_layout);
-            dialog.show();
+//            final Dialog dialog = new Dialog(this, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
+//            dialog.setTitle(getString(R.string.alert_wait));
+//            dialog.setContentView(R.layout.log_in_progress_bar_layout);
+//            dialog.show();
+            LoginDialogClass.showLoginDialog(this, "Logging in please wait...");
             //This method will ensure the session token is valid before setting the current user
             ParseUser.becomeInBackground(currentUser.getSessionToken(), new LogInCallback() {
                 public void done(ParseUser loggedInUser, ParseException e) {
@@ -177,18 +173,15 @@ public class Login2_act extends BaseActivity {
                         // The current user is now set to user.
                         String user = loggedInUser.getUsername();
                         ApplicationMain.mCurrentParseUser = loggedInUser;
-                        startActivity(new Intent(Login2_act.this, ProfilePrivate_act.class));
+                        startActivity(new Intent(SignIn_act.this, ProfilePrivate_act.class));
                         //dialog.dismiss();
-                        Login2_act.this.finish();
+                        SignIn_act.this.finish();
                     } else {
                         // The token could not be validated.
-                        dialog.dismiss();
+                        LoginDialogClass.dismissLoginDialog();
                     }
                 }
             });
-        }
-        else {
-
         }
 
 //        ParseUser currentUser = ParseUser.getCurrentUser();
@@ -219,11 +212,11 @@ public class Login2_act extends BaseActivity {
      */
     public void ForgotPassword(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivity(new Intent(Login2_act.this, ResetPassword_act.class));
+            startActivity(new Intent(SignIn_act.this, ResetPassword_act.class));
 
             //startActivity(new Intent(Login2_act.this, ResetPassword_act.class), ActivityOptions.makeSceneTransitionAnimation(Login2_act.this).toBundle());
         } else {
-            startActivity(new Intent(Login2_act.this, ResetPassword_act.class));
+            startActivity(new Intent(SignIn_act.this, ResetPassword_act.class));
         }
     }
 
@@ -267,6 +260,7 @@ public class Login2_act extends BaseActivity {
         super.onDestroy();
         //this.mFacebookLoginClass.stopTracking();
         this.mParseFacebookLogin.stopTracking();
+        LoginDialogClass.dismissLoginDialog();
     }
 
     /**
@@ -277,7 +271,7 @@ public class Login2_act extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.getWindow().setReenterTransition(makeReenterTransition());
             this.getWindow().setEnterTransition(makeEnterTransition());
-            ActivityOptions.makeSceneTransitionAnimation(Login2_act.this).toBundle();
+            ActivityOptions.makeSceneTransitionAnimation(SignIn_act.this).toBundle();
         }
     }
 

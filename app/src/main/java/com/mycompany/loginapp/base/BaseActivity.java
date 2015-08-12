@@ -15,7 +15,8 @@ import android.view.MenuItem;
 
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.general.Startup_act;
-import com.mycompany.loginapp.login.Login2_act;
+import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
+import com.mycompany.loginapp.login.LoginDialogClass;
 import com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.parse.ParseUser;
@@ -88,8 +89,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_logout:
+                LoginDialogClass.showLoginDialog(this, "Logging out. Please wait...");
                 ParseUser.logOut();
                 ProfileImageHolder.setImageFilesNull();
+                ProfileHelperClass.setOffline();
                 //EventBus.getDefault().post(new MessageFinishActivities());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     //startActivity(new Intent(this, Login_act.class));
@@ -99,7 +102,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     this.finish();
                 } else {
 //                    startActivity(new Intent(this, Login_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    startActivity(new Intent(this, Login2_act.class));
+                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     this.finish();
                 }
                 return true;

@@ -34,6 +34,8 @@ import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUpdateCoverPhoto;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
+import com.mycompany.loginapp.login.LoginDialogClass;
 import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.imageLoaders.CoverPhotoLoader;
 import com.mycompany.loginapp.profile.imageLoaders.ProfilePhotoLoader;
@@ -60,8 +62,9 @@ public class ProfilePrivate_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //LoginDialogClass.dismissLoginDialog();
         //makeWindowTransition();
-        this.setOnline();
+        ProfileHelperClass.setOnline();
         EventBus.getDefault().register(this);
         mPrivateProfileFragment = PrivateProfileFragment.newInstance();
         aQuery = new AQuery(this);
@@ -205,7 +208,6 @@ public class ProfilePrivate_act extends BaseActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        this.setOffline();
         Log.d(LOG, "is destroyed.");
         super.onDestroy();
     }
@@ -337,7 +339,10 @@ public class ProfilePrivate_act extends BaseActivity {
 
                     //picasso.load(mediaUri).fit().memoryPolicy(MemoryPolicy.NO_CACHE).into(aQuery.id(R.id.profile_picture).getImageView());
                     //Copy Uri contents into temp imageFile.
-                    File videoFile = new File(getMediaImagePath(mediaUri));
+                    final String videoPath = FileUtils.getPath(this, mediaUri);
+                    if(videoPath != null) {
+                    File videoFile = new File(videoPath);
+                    }
                     //saveCoverPhotoToParse();
                 }
             }
@@ -358,33 +363,6 @@ public class ProfilePrivate_act extends BaseActivity {
 //            }
         }
 
-    }
-
-    /**
-     * http://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework?lq=1
-     * Gets the path from the URI
-     * This is needed since i have to read the bytes from the file and store it in Parse
-     */
-    public String getMediaImagePath(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        String document_id = cursor.getString(0);
-        Log.d(LOG, "Document id: " + document_id);
-        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
-        cursor.close();
-
-        cursor = getContentResolver().query(
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
-        cursor.moveToFirst();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-        if (path == null) {
-            return null;
-        }
-        Log.d(LOG, "Path: " + path);
-        cursor.close();
-
-        return path;
     }
 
     /**
@@ -474,18 +452,6 @@ public class ProfilePrivate_act extends BaseActivity {
             //The data that is returned by the result is the path to the image file
             startActivityForResult(choosePictureIntent, requestCode);
         }
-    }
-
-    /** Sets user online */
-    private void setOnline(){
-        ApplicationMain.mCurrentParseUser.put(ParseConstants.ONLINE, "online");
-        ApplicationMain.mCurrentParseUser.saveEventually();
-    }
-
-    /** Sets user offline */
-    private void setOffline(){
-        ApplicationMain.mCurrentParseUser.put(ParseConstants.ONLINE, "offline");
-        ApplicationMain.mCurrentParseUser.saveEventually();
     }
 
     /**

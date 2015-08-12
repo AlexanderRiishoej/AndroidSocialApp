@@ -1,7 +1,6 @@
 package com.mycompany.loginapp.news;
 
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -23,28 +22,19 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.ApplicationMain;
-import com.mycompany.loginapp.chat.Chat_act;
-import com.mycompany.loginapp.chat.FriendsDividerItemDecoration;
+import com.mycompany.loginapp.itemDecorators.FriendsDividerItemDecoration;
 import com.mycompany.loginapp.chat.StartNewChatClass;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.FriendsClickListener;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFindFriends;
-import com.mycompany.loginapp.eventMessages.MessageUserChat;
-import com.mycompany.loginapp.helperClasses.AlphabeticSortClass;
 import com.mycompany.loginapp.profile.ProfilePublic_act;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;

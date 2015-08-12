@@ -5,12 +5,11 @@
     android:background="@color/teal_300">
 
     <TextView
-        android:id="@+id/connect_with_friends"
+        android:id="@+id/login_logout_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:fontFamily="sans-serif-regular"
-        android:text="Signing in please wait..."
         android:layout_marginBottom="@dimen/pad_16dp"
         android:layout_above="@+id/main_progressBar"
         android:textSize="26sp"

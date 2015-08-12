@@ -1,4 +1,4 @@
-package com.mycompany.loginapp.adapters;
+package com.mycompany.loginapp.adapters.notUsed;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.adapters.ProfileGalleryAdapter;
 import com.mycompany.loginapp.chat.oldNotUsed.UserChatList_act;
 import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;

@@ -34,4 +34,7 @@ public final class Constants {
     // IF the view under inflation and population is navigation_header or Items
     public static final int TYPE_SECOND_ITEM = 1;
     public static final int TYPE_ITEM = 2;
+
+    //Constant for logging in
+    public static final int LOGGING_IN = 10;
 }

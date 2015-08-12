@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.chat.NewUserChat_act;
 import com.mycompany.loginapp.chat.oldNotUsed.UserChatList_act;
@@ -23,11 +24,14 @@ import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
 import com.mycompany.loginapp.general.Startup_act;
+import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
+import com.mycompany.loginapp.login.LoginDialogClass;
 import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
 import com.mycompany.loginapp.singletons.MySingleton;
 import com.parse.GetCallback;
+import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -195,11 +199,23 @@ public class NavigationDrawerFragment extends Fragment {
                 this.mDrawerToggle.runWhenIdle(new Runnable() {
                     @Override
                     public void run() {
-                        ParseUser.logOut();
-                        ProfileImageHolder.setImageFilesNull();
-                        getActivity().startActivity(new Intent(getActivity(), Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                        getActivity().finish();
+                        LoginDialogClass.showLoginDialog(getActivity(), "Logging out please wait...");
+                        ParseUser.logOutInBackground(new LogOutCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    ProfileImageHolder.setImageFilesNull();
+                                    ProfileHelperClass.setOffline();
+                                    getActivity().startActivity(new Intent(getActivity(), Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                    getActivity().finish();
+                                    LoginDialogClass.dismissLoginDialog();
+                                } else {
+                                    LoginDialogClass.dismissLoginDialog();
+                                    new MaterialDialog.Builder(getActivity()).content("An error occurred while logging out...").show();
+                                }
+                            }
+                        });
                     }
                 });
                 break;

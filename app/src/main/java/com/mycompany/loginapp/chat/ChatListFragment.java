@@ -28,6 +28,7 @@ import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.RecyclerOnTouchListener;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUserChat;
+import com.mycompany.loginapp.itemDecorators.SimpleDividerItemDecoration;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.FindCallback;
 import com.parse.ParseException;

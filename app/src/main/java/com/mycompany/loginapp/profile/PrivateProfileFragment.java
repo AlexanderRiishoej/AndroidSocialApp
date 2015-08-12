@@ -1,6 +1,7 @@
 package com.mycompany.loginapp.profile;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.design.widget.AppBarLayout;
@@ -194,6 +195,7 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
         mOnlineStatus = (TextView) fragmentView.findViewById(R.id.status);
         mBirthday = (TextView) fragmentView.findViewById(R.id.birth_date);
         mEditProfileButton = (Button) fragmentView.findViewById(R.id.edit_profile);
+        this.setUpEditProfileClickListener();
         this.profileHeaderParseQuery();
     }
 
@@ -205,11 +207,12 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
                 if (e == null) {
                     mCity.setText(parseUser.getString("hometown"));
                     mName.setText(parseUser.getString("fullName"));
-                    if (parseUser.getBoolean("online")) {
-                        mOnlineStatus.setText("online");
-                    } else {
-                        mOnlineStatus.setText("offline");
-                    }
+                    mOnlineStatus.setText("online");
+//                    if (parseUser.getBoolean("online")) {
+//                        mOnlineStatus.setText("online");
+//                    } else {
+//                        mOnlineStatus.setText("offline");
+//                    }
                     mBirthday.setText(parseUser.getString("birthday"));
                 } else {
                     new MaterialDialog.Builder(getActivity())
@@ -284,5 +287,14 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
     /** Sets the name of the current logged in user */
     public void setName(String name){
         this.mName.setText(name);
+    }
+
+    private void setUpEditProfileClickListener(){
+        mEditProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), EditProfile_act.class));
+            }
+        });
     }
 }

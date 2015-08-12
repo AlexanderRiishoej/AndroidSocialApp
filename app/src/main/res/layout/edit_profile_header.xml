@@ -1,0 +1,17 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_group"
+    android:layout_height="@dimen/pad_48dp"
+    android:layout_width="match_parent"
+    android:background="@color/white">
+
+    <TextView
+        style="@style/TextViewSubHeaderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/pad_16dp"
+        android:layout_marginRight="@dimen/pad_16dp"
+        android:textColor="@color/teal_500"
+        android:text="Personal info" />
+</RelativeLayout>
