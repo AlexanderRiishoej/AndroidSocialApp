@@ -2,8 +2,7 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,7 +10,170 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/header_cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pad_8dp"
+            android:clickable="false"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/pad_16dp"
+                    android:layout_marginStart="@dimen/pad_16dp"
+                    android:layout_marginTop="@dimen/pad_16dp"
+                    android:orientation="horizontal"
+                    android:text="Personal information"
+                    android:textColor="@color/teal_500"
+                    android:textSize="@dimen/txt_16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/pad_16dp"
+                    android:paddingStart="@dimen/pad_16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:text="@string/username"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="36dp"
+                        android:orientation="horizontal"
+                        android:singleLine="true"
+                        android:text="Kappa123"
+                        android:textColor="@color/secondary_text_icons_light_theme"
+                        android:textSize="@dimen/txt_14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/pad_16dp"
+                    android:paddingStart="@dimen/pad_16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:text="Full name"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="36dp"
+                        android:orientation="horizontal"
+                        android:singleLine="true"
+                        android:text="Alexander"
+                        android:textColor="@color/secondary_text_icons_light_theme"
+                        android:textSize="@dimen/txt_14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme" />
+
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/pad_72dp"
+                android:background="@drawable/recycler_ripple"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/pad_16dp"
+                android:paddingStart="@dimen/pad_16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:text="Phonenumber"
+                    android:textColor="@color/text_light_theme"
+                    android:textSize="@dimen/txt_16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="36dp"
+                    android:orientation="horizontal"
+                    android:singleLine="true"
+                    android:text="20446784"
+                    android:textColor="@color/secondary_text_icons_light_theme"
+                    android:textSize="@dimen/txt_14sp" />
+
+            </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/pad_16dp"
+                    android:paddingStart="@dimen/pad_16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:text="E-mail"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="36dp"
+                        android:orientation="horizontal"
+                        android:singleLine="true"
+                        android:text="alexander_blazer@hotmail.com"
+                        android:textColor="@color/secondary_text_icons_light_theme"
+                        android:textSize="@dimen/txt_14sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- .............................................................................................................................. -->
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/pad_8dp"
@@ -21,8 +183,7 @@
             app:cardCornerRadius="2dp"
             app:cardElevation="2dp">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -30,28 +191,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/child_main_content"
-                    android:layout_marginBottom="@dimen/pad_16dp"
+                    android:layout_marginEnd="@dimen/pad_16dp"
+                    android:layout_marginStart="@dimen/pad_16dp"
                     android:layout_marginTop="@dimen/pad_16dp"
                     android:orientation="horizontal"
-                    android:text="@string/username"
+                    android:text="Notifications and messages"
                     android:textColor="@color/teal_500"
                     android:textSize="@dimen/txt_16sp" />
 
                 <LinearLayout
-                    android:id="@+id/child_main_content"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     android:paddingEnd="@dimen/pad_16dp"
-                    android:paddingStart="@dimen/pad_16dp"
-                    android:clickable="true"
-                    android:background="@drawable/recycler_ripple"
-                    >
+                    android:paddingStart="@dimen/pad_16dp">
 
                     <TextView
-                        android:id="@+id/edit_profile_first_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -60,13 +218,176 @@
                         android:textSize="@dimen/txt_16sp" />
 
                     <TextView
-                        android:id="@+id/edit_profile_second_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="36dp"
                         android:orientation="horizontal"
                         android:singleLine="true"
-                        android:text="@string/recent_chat"
+                        android:text="Alexander Riishøj"
+                        android:textColor="@color/secondary_text_icons_light_theme"
+                        android:textSize="@dimen/txt_14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/pad_16dp"
+                    android:paddingStart="@dimen/pad_16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:text="@string/username"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="36dp"
+                        android:orientation="horizontal"
+                        android:singleLine="true"
+                        android:text="Alexander Riishøj"
+                        android:textColor="@color/secondary_text_icons_light_theme"
+                        android:textSize="@dimen/txt_14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/pad_16dp"
+                    android:paddingStart="@dimen/pad_16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:text="@string/username"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="36dp"
+                        android:orientation="horizontal"
+                        android:singleLine="true"
+                        android:text="Alexander Riishøj"
+                        android:textColor="@color/secondary_text_icons_light_theme"
+                        android:textSize="@dimen/txt_14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/dividers_light_theme" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/pad_16dp"
+                    android:paddingStart="@dimen/pad_16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:text="@string/username"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="36dp"
+                        android:orientation="horizontal"
+                        android:singleLine="true"
+                        android:text="Alexander Riishøj"
+                        android:textColor="@color/secondary_text_icons_light_theme"
+                        android:textSize="@dimen/txt_14sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- ........................................................................................................................... -->
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pad_8dp"
+            android:clickable="false"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/pad_16dp"
+                    android:layout_marginStart="@dimen/pad_16dp"
+                    android:layout_marginTop="@dimen/pad_16dp"
+                    android:orientation="horizontal"
+                    android:text="Settings"
+                    android:textColor="@color/teal_500"
+                    android:textSize="@dimen/txt_16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/pad_72dp"
+                    android:background="@drawable/recycler_ripple"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/pad_16dp"
+                    android:paddingStart="@dimen/pad_16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:text="@string/username"
+                        android:textColor="@color/text_light_theme"
+                        android:textSize="@dimen/txt_16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="36dp"
+                        android:orientation="horizontal"
+                        android:singleLine="true"
+                        android:text="Alexander Riishøj"
                         android:textColor="@color/secondary_text_icons_light_theme"
                         android:textSize="@dimen/txt_14sp" />
 
@@ -75,5 +396,31 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dividers_light_theme" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pad_48dp"
+            android:background="@drawable/recycler_ripple"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/pad_16dp"
+            android:paddingStart="@dimen/pad_16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:text="Phonenumber"
+                android:textColor="@color/text_light_theme"
+                android:textSize="@dimen/txt_16sp"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
