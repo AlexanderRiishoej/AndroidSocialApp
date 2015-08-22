@@ -30,6 +30,9 @@ import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageImageDialog;
 import com.mycompany.loginapp.eventMessages.MessageUpdateCoverPhoto;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.profile.editProfile.MessageUpdateName;
+import com.mycompany.loginapp.profile.editProfile.MessageUpdateUsername;
+import com.mycompany.loginapp.profile.editProfile.EditProfile_act;
 import com.mycompany.loginapp.singletons.MySingleton;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -50,6 +53,7 @@ import de.greenrobot.event.EventBus;
  */
 public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener {
 
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
     private LinearLayoutManager mLayoutManager;
     private Toolbar mToolbar;
@@ -81,13 +85,14 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_private_profile, container, false);
-        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-        //collapsingToolbar.setTitle("Profile view");
-        collapsingToolbar.setTitle(ApplicationMain.mCurrentParseUser.getUsername());
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+        //collapsingToolbar.setTitle(ApplicationMain.mCurrentParseUser.getUsername());
+        mCollapsingToolbarLayout.setTitle(ApplicationMain.mCurrentParseUser.getUsername());
         //collapsingToolbar.setStatusBarScrimColor(R.drawable.md_transparent);
         mParallaxImageView = (ImageView) view.findViewById(R.id.header);
         mProfilePictureImageView = (ImageView) view.findViewById(R.id.profile_picture);
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar_teal);
+        mToolbar = (Toolbar) view.findViewById(R.id.fragment_toolbar_teal);
+        //mToolbar.setTitle(ApplicationMain.mCurrentParseUser.getUsername());
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         this.setUpHeaderLayout(view);
@@ -154,6 +159,12 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
         mAppBarLayout.addOnOffsetChangedListener(this);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     public void updateProfilePicture(){
         mProfileGalleryAdapter.addAllFiles();
         mProfileGalleryAdapter.notifyDataSetChanged();
@@ -168,16 +179,6 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
         } else {
             mSwipeRefreshLayout.setEnabled(false);
         }
-    }
-
-    /** Event received when a new profile_image picture has been chosen */
-    public void onEvent(MessageUpdateCoverPhoto newCoverPhotoEvent){
-        this.loadCoverPhoto();
-    }
-
-    /** Event received when a new profile_image picture has been chosen */
-    public void onEvent(MessageUpdateProfilePicture newProfilePhotoEvent){
-        this.loadProfilePhoto();
     }
 
     private void setUpSecondItemLayout(View fragmentView) {
@@ -296,5 +297,25 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
                 startActivity(new Intent(getActivity(), EditProfile_act.class));
             }
         });
+    }
+
+    /** Event received when a new profile_image picture has been chosen */
+    public void onEvent(MessageUpdateCoverPhoto newCoverPhotoEvent){
+        this.loadCoverPhoto();
+    }
+
+    /** Event received when a new profile_image picture has been chosen */
+    public void onEvent(MessageUpdateProfilePicture newProfilePhotoEvent){
+        this.loadProfilePhoto();
+    }
+
+    /** Event received when a new username has been chosen */
+    public void onEvent(MessageUpdateUsername messageUpdateUsername){
+        mCollapsingToolbarLayout.setTitle(messageUpdateUsername.message);
+    }
+
+    /** Event received when a new name has been chosen */
+    public void onEvent(MessageUpdateName messageUpdateName){
+        mName.setText(messageUpdateName.message);
     }
 }

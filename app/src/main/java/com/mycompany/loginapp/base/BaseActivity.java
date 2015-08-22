@@ -88,25 +88,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         switch (id) {
-            case R.id.action_logout:
-                LoginDialogClass.showLoginDialog(this, "Logging out. Please wait...");
-                ParseUser.logOut();
-                ProfileImageHolder.setImageFilesNull();
-                ProfileHelperClass.setOffline();
-                //EventBus.getDefault().post(new MessageFinishActivities());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    //startActivity(new Intent(this, Login_act.class));
-                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-
-                    this.finish();
-                } else {
-//                    startActivity(new Intent(this, Login_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                    this.finish();
-                }
-                return true;
+//            case R.id.action_logout:
+//                LoginDialogClass.showLoginDialog(this, "Logging out. Please wait...");
+//                ParseUser.logOut();
+//                ProfileImageHolder.setImageFilesNull();
+//                ProfileHelperClass.setOffline();
+//                //EventBus.getDefault().post(new MessageFinishActivities());
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                    //startActivity(new Intent(this, Login_act.class));
+//                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+//                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+//
+//                    this.finish();
+//                } else {
+////                    startActivity(new Intent(this, Login_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+//                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+//                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+//                    this.finish();
+//                }
+//                return true;
 
         }
         return super.onOptionsItemSelected(item);

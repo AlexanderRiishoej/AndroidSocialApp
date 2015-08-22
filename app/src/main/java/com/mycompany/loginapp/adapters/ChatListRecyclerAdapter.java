@@ -21,8 +21,11 @@ import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.singletons.MySingleton;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -64,23 +67,6 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
         this.notifyItemInserted(index);
     }
 
-    /**
-     * Gets the chat participant in this chat
-     */
-    private String getChatReceiver(ParseObject userChat) {
-        // Splits the string according to the pattern, which is the current username. Returns the username of the chat participant.
-        // If CurrentUser is matched as the first part of the ChatUserId then the first array index will be empty
-        String[] splitChatUserArray = userChat.getString("chatUserId").split(ApplicationMain.mCurrentParseUser.getUsername());
-        String chatParticipantHolder = "";
-        for (String match : splitChatUserArray) {
-            if (!match.equals("")) {
-                chatParticipantHolder = match;
-            }
-        }
-
-        return chatParticipantHolder;
-    }
-
     @Override
     public MyUserChatListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Initialize the ViewHolder
@@ -109,22 +95,50 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
 
             //Get the current object from the list of chat users
             final ParseObject userChatObject = mUserChatObjectList.get(position); // Minus 1 due to Header being position 0
+            final ParseUser createdByUserObject = mUserChatObjectList.get(position).getParseUser(ParseConstants.CREATED_BY);
+            final ParseUser usernameUserObject = mUserChatObjectList.get(position).getParseUser(ParseConstants.USERNAME);
+
+            final String chatParticipant;
+            if (ApplicationMain.mCurrentParseUser.getUsername().equals(createdByUserObject.getUsername())) {
+                chatParticipant = usernameUserObject.getUsername();
+            } else {
+                chatParticipant = createdByUserObject.getUsername();
+            }
             //Set the progressbar for the image to Visible since its going to get fetched soon
             myUserChatListViewHolder.imageProgressBar.setVisibility(View.VISIBLE);
             Log.d(LOG, "Username: " + userChatObject.getParseUser("username").getUsername());
             //Get the name of the chat user from the userChatObject object
-            final String chatParticipant = getChatReceiver(userChatObject);
             myUserChatListViewHolder.username.setText(chatParticipant);
             //Get the most recent chat object of this userChatObject relation
-            userChatObject.getRelation(ParseConstants.CHAT_RELATION).getQuery().orderByDescending(ParseConstants.CREATED_AT).getFirstInBackground(new GetCallback<ParseObject>() {
+            ParseQuery<ParseObject> mChatQuery = userChatObject.getRelation(ParseConstants.CHAT_RELATION).getQuery();
+            mChatQuery.include(ParseConstants.CHAT_SENDER);
+            mChatQuery.include(ParseConstants.CHAT_RECEIVER);
+            mChatQuery.orderByDescending(ParseConstants.CREATED_AT).getFirstInBackground(new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject chatParseObject, ParseException e) {
                     if (e == null) {
-                        Log.d(LOG, "ChatRelation: " + chatParseObject.getString("sender") + "Postition: " + position);
-                        Log.d(LOG, "ChatRelation: " + chatParseObject.getString("receiver") + "Postition: " + position);
-                        //if the user chatting to, has the last  message in the chat equal to the sender, then show that message as the last message sent
-                        if (chatParticipant.equals(chatParseObject.getString(ParseConstants.CHAT_SENDER))) {
-//                                myUserChatListViewHolder.lastChatMessage.setText(chatParticipant + ": " + chatParseObject.getString("message"));
+                        if (chatParseObject.getParseUser(ParseConstants.CHAT_SENDER) != null && chatParseObject.getParseUser(ParseConstants.CHAT_SENDER).getUsername().equals(ApplicationMain.mCurrentParseUser.getUsername())) {
+                            final String chatMessage = "You: " + chatParseObject.getString(ParseConstants.MESSAGE);
+                            myUserChatListViewHolder.lastChatMessage.setText(chatMessage);
+                            myUserChatListViewHolder.lastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.secondary_text_icons_light_theme));
+                            myUserChatListViewHolder.username.setTextColor(activityContext.getResources().getColor(R.color.black));
+                            myUserChatListViewHolder.username.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
+                            myUserChatListViewHolder.dateOfLastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.secondary_text_icons_light_theme));
+
+                            if (chatParseObject.getBoolean(ParseConstants.SEEN)) {
+                                //check if the receiver equals to either the creator of the chat or participator in order to determining which picture to load
+                                picasso.load(chatParseObject.getParseUser(ParseConstants.CHAT_RECEIVER).getParseFile(ParseConstants.PROFILE_PICTURE).
+                                        getUrl()).noPlaceholder().centerCrop().fit().
+                                        into(myUserChatListViewHolder.seenPicture);
+                            }
+                            // else it has not yet been seen and an image indicating that i have send the message should be shown instead
+                            else {
+                                picasso.load(R.drawable.ic_checkbox_marked_circle_grey600_24dp).noPlaceholder().centerCrop().fit().
+                                        into(myUserChatListViewHolder.seenPicture);
+                                final int color = ApplicationMain.getAppContext().getResources().getColor(R.color.teal_500);
+                                myUserChatListViewHolder.seenPicture.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                            }
+                        } else if (chatParseObject.getParseUser(ParseConstants.CHAT_RECEIVER) != null && chatParseObject.getParseUser(ParseConstants.CHAT_RECEIVER).getUsername().equals(ApplicationMain.mCurrentParseUser.getUsername())) {
                             final String chatMessage = chatParseObject.getString(ParseConstants.MESSAGE);
                             myUserChatListViewHolder.lastChatMessage.setText(chatMessage);
                             // if the current user has not yet seen the message sent, highlight the mUserChatObject on screen
@@ -134,44 +148,7 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
                                 myUserChatListViewHolder.username.setTypeface(myUserChatListViewHolder.username.getTypeface(), Typeface.BOLD);
                                 myUserChatListViewHolder.dateOfLastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.teal_500));
                             }
-                        }
-                        // else if the last message is sent by me my message should be shown as the last message seen in the conversation
-                        else if (chatParticipant.equals(chatParseObject.getString(ParseConstants.CHAT_RECEIVER))) {
-                            final String chatMessage = "You: " + chatParseObject.getString(ParseConstants.MESSAGE);
-                            myUserChatListViewHolder.lastChatMessage.setText(chatMessage);
-                            myUserChatListViewHolder.lastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.secondary_text_icons_light_theme));
-                            myUserChatListViewHolder.username.setTextColor(activityContext.getResources().getColor(R.color.black));
-                            myUserChatListViewHolder.username.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
-                            myUserChatListViewHolder.dateOfLastChatMessage.setTextColor(activityContext.getResources().getColor(R.color.secondary_text_icons_light_theme));
-
-                            //if the chatParticipant equals to the receiver of the last message in the chat and the receiver has seen the message, then show that chatParticipants picture as
-                            //an indicator of the receiver has seen the message
-                            if (chatParseObject.getBoolean(ParseConstants.SEEN)) {
-                                //check if the receiver equals to either the creator of the chat or participator in order to determining which picture to load
-                                if (userChatObject.getParseUser(ParseConstants.USERNAME).getUsername().equals(chatParticipant)) { //if the receiver equals to the participator of the chat
-                                    picasso.load(userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE).
-                                            getUrl()).noPlaceholder().centerCrop().fit().
-                                            into(myUserChatListViewHolder.seenPicture);
-                                }
-                                else { //if the receiver equals to the creator of the chat
-                                    MySingleton.getMySingleton().getPicasso().load(userChatObject.getParseUser("createdBy").
-                                            getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(myUserChatListViewHolder.seenPicture);
-                                }
-                            }
-                            // else it has not yet been seen and an image indicating that i have send the message should be shown instead
-                            else {
-                                picasso.load(R.drawable.ic_checkbox_marked_circle_grey600_24dp).noPlaceholder().centerCrop().fit().
-                                        into(myUserChatListViewHolder.seenPicture);
-                                final int color = ApplicationMain.getAppContext().getResources().getColor(R.color.teal_500);
-                                myUserChatListViewHolder.seenPicture.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-
-                                if (chatParticipant.equals("Ib")) {
-                                    Log.d(LOG, "IB SEEN == FALSE");
-                                }
-                            }
-                        }
-                        /** no messages has been sent */
-                        else {
+                        } else {
                             myUserChatListViewHolder.lastChatMessage.setText("");
                             myUserChatListViewHolder.seenPicture.setImageBitmap(null);
                             myUserChatListViewHolder.seenPicture.setImageDrawable(null);
@@ -179,9 +156,9 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
                             myUserChatListViewHolder.sentPicture.setImageDrawable(null);
                             myUserChatListViewHolder.sentPicture.setImageBitmap(null);
                         }
+                    } else
 
-
-                    } else {
+                    {
                         e.printStackTrace();
                     }
                 }
@@ -199,7 +176,7 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
             /** try - catch in order to prevent a crash in case of CircularImageView throwing a null pointer exception during bitmap loading */
             if (chatParticipant.equals(userChatObject.getParseUser(ParseConstants.USERNAME).getUsername())) {
                 try {
-                    if(userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
+                    if (userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
                         picasso.load(userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().centerCrop().fit().
                                 into(myUserChatListViewHolder.profilePicture, new Callback() {
                                     @Override
@@ -214,8 +191,7 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
                                         myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
                                     }
                                 });
-                    }
-                    else {
+                    } else {
                         MySingleton.getMySingleton().getPicasso().load(R.drawable.com_facebook_profile_picture_blank_portrait).centerCrop().fit().into(myUserChatListViewHolder.profilePicture);
                         final int color = ApplicationMain.getAppContext().getResources().getColor(R.color.teal_500);
                         myUserChatListViewHolder.profilePicture.setColorFilter(color, PorterDuff.Mode.SRC_IN);
@@ -227,7 +203,7 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
                 }
             } else {
                 try {
-                    if(userChatObject.getParseUser(ParseConstants.CREATED_BY).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
+                    if (userChatObject.getParseUser(ParseConstants.CREATED_BY).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
                         picasso.load(userChatObject.getParseUser(ParseConstants.CREATED_BY).getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).noPlaceholder().centerCrop().fit().
                                 into(myUserChatListViewHolder.profilePicture, new Callback() {
                                     @Override
@@ -242,8 +218,7 @@ public class ChatListRecyclerAdapter extends RecyclerView.Adapter<ChatListRecycl
                                         myUserChatListViewHolder.imageProgressBar.setVisibility(View.GONE);
                                     }
                                 });
-                    }
-                    else {
+                    } else {
                         MySingleton.getMySingleton().getPicasso().load(R.drawable.com_facebook_profile_picture_blank_portrait).centerCrop().fit().into(myUserChatListViewHolder.profilePicture);
                         final int color = ApplicationMain.getAppContext().getResources().getColor(R.color.teal_500);
                         myUserChatListViewHolder.profilePicture.setColorFilter(color, PorterDuff.Mode.SRC_IN);

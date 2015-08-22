@@ -1,17 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.mycompany.loginapp.profile.ProfilePrivate_act">
-    <item
-        android:id="@+id/action_chat"
-        android:title="@string/chat"
-        android:orderInCategory="4"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_logout"
-        android:title="@string/logout"
-        android:orderInCategory="6"
-        app:showAsAction="never" />
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--<item-->
+        <!--android:id="@+id/action_chat"-->
+        <!--android:title="@string/chat"-->
+        <!--android:orderInCategory="4"-->
+        <!--app:showAsAction="never" />-->
+    <!--<item-->
+        <!--android:id="@+id/action_logout"-->
+        <!--android:title="@string/logout"-->
+        <!--android:orderInCategory="6"-->
+        <!--app:showAsAction="never" />-->
     <item
         android:id="@+id/edit_name"
         android:title="Edit name"
@@ -29,10 +28,10 @@
         android:title="Cover Photo"
         app:showAsAction="never"
         android:orderInCategory="5"/>
-    <item
-        android:id="@+id/action_edit_profile"
-        android:icon="@drawable/ic_pencil_box_outline_white_24dp"
-        android:title="Edit profile"
-        app:showAsAction="never"
-        android:orderInCategory="2"/>
+    <!--<item-->
+        <!--android:id="@+id/action_edit_profile"-->
+        <!--android:icon="@drawable/ic_pencil_box_outline_white_24dp"-->
+        <!--android:title="Edit profile"-->
+        <!--app:showAsAction="never"-->
+        <!--android:orderInCategory="2"/>-->
 </menu>

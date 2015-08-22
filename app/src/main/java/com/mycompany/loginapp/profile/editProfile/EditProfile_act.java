@@ -1,6 +1,5 @@
-package com.mycompany.loginapp.profile;
+package com.mycompany.loginapp.profile.editProfile;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;

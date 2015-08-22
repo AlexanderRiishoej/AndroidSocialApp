@@ -33,7 +33,7 @@
                 app:layout_collapseParallaxMultiplier="0.7" />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_teal"
+                android:id="@+id/fragment_toolbar_teal"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:titleTextAppearance="@style/customTextTitleViewStyle"

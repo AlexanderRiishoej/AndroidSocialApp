@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toolbar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -69,7 +70,7 @@ public class ProfilePrivate_act extends BaseActivity {
         mPrivateProfileFragment = PrivateProfileFragment.newInstance();
         aQuery = new AQuery(this);
         //setActionBarIcon(R.drawable.ic_arrow_back_white_24dp);
-        aQuery.id(R.id.toolbar_title).text(ParseUser.getCurrentUser().getUsername());
+        //aQuery.id(R.id.toolbar_title).text(ParseUser.getCurrentUser().getUsername());
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, mPrivateProfileFragment)
@@ -144,13 +145,13 @@ public class ProfilePrivate_act extends BaseActivity {
                 mNameDialog.show();
                 mPositiveAction.setEnabled(false);
                 return true;
-            case R.id.action_chat:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    startActivity(new Intent(ProfilePrivate_act.this, Social_act.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-                } else {
-                    startActivity(new Intent(ProfilePrivate_act.this, Social_act.class));
-                }
-                return true;
+//            case R.id.action_chat:
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                    startActivity(new Intent(ProfilePrivate_act.this, Social_act.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+//                } else {
+//                    startActivity(new Intent(ProfilePrivate_act.this, Social_act.class));
+//                }
+//                return true;
             case R.id.action_pictures:
                 final MaterialDialogCustomAdapter profilePhotoAdapter = new MaterialDialogCustomAdapter(this, Arrays.asList("Take picture", "Choose profile photo"));
                 new MaterialDialog.Builder(this)
@@ -176,9 +177,9 @@ public class ProfilePrivate_act extends BaseActivity {
 //            case R.id.action_video:
 //                dispatchTakeVideoIntent();
 //                return true;
-            case R.id.action_edit_profile:
-                startActivity(new Intent(this, ProfilePublic_act.class));
-                return true;
+//            case R.id.action_edit_profile:
+//                startActivity(new Intent(this, ProfilePublic_act.class));
+//                return true;
             case R.id.action_cover_photo:
                 final MaterialDialogCustomAdapter coverPhotoAdapter = new MaterialDialogCustomAdapter(this, Arrays.asList("Take picture", "Choose cover photo"));
                 new MaterialDialog.Builder(this)

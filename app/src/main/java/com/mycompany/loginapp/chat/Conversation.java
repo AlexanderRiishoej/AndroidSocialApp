@@ -1,6 +1,6 @@
 package com.mycompany.loginapp.chat;
 
-import com.parse.ParseObject;
+import com.mycompany.loginapp.base.ApplicationMain;
 import com.parse.ParseUser;
 
 import java.util.Date;
@@ -26,9 +26,9 @@ public class Conversation {
     public static final int STATUS_FAILED = 2;
 
     /**
-     * The msg.
+     * The message.
      */
-    private String msg;
+    private String message;
 
     /**
      * The status.
@@ -43,7 +43,8 @@ public class Conversation {
     /**
      * The sender.
      */
-    private String sender;
+    private ParseUser sender;
+    private ParseUser receiver;
 
     private boolean isProgress = false;
     private String chatMessageId;
@@ -51,15 +52,15 @@ public class Conversation {
     /**
      * Instantiates a new conversation.
      *
-     * @param msg    the msg
+     * @param message    the message
      * @param date   the date
      * @param sender the sender
      */
-    public Conversation(String msg, Date date, String sender, String chatMessageId) {
-        this.msg = msg;
+    public Conversation(String message, Date date, ParseUser sender, ParseUser receiver) {
+        this.message = message;
         this.date = date;
         this.sender = sender;
-        this.chatMessageId = chatMessageId;
+        this.receiver = receiver;
     }
 
     /**
@@ -69,21 +70,21 @@ public class Conversation {
     }
 
     /**
-     * Gets the msg.
+     * Gets the message.
      *
-     * @return the msg
+     * @return the message
      */
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
     /**
-     * Sets the msg.
+     * Sets the message.
      *
-     * @param msg the new msg
+     * @param message the new message
      */
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     /**
@@ -91,8 +92,8 @@ public class Conversation {
      *
      * @return true, if is sent
      */
-    public boolean isSent() {
-        return ParseUser.getCurrentUser().getUsername().equals(sender);
+    public boolean isSender() {
+        return ApplicationMain.mCurrentParseUser.getUsername().equals(sender.getUsername());
     }
 
     /**
@@ -118,8 +119,16 @@ public class Conversation {
      *
      * @return the sender
      */
-    public String getSender() {
+    public ParseUser getChatUser() {
+        return this.isSender() ? sender : receiver;
+    }
+
+    public ParseUser getSender(){
         return sender;
+    }
+
+    public ParseUser getReceiver(){
+        return receiver;
     }
 
     /**
@@ -127,7 +136,7 @@ public class Conversation {
      *
      * @param sender the new sender
      */
-    public void setSender(String sender) {
+    public void setSender(ParseUser sender) {
         this.sender = sender;
     }
 

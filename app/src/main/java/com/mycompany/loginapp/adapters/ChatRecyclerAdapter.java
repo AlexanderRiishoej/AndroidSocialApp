@@ -26,8 +26,6 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,92 +37,106 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
     private Context activityContext;
     private LayoutInflater layoutInflater;
     private Picasso picasso;
-    private List<Conversation> conversationList;
-    private ParseObject userChatObject;
+    private List<Conversation> mConversationList;
+    private ParseObject mUserChatObject;
 
     public ChatRecyclerAdapter(Context actContext, List<Conversation> conversationList, ParseObject userChatObject) {
         this.activityContext = actContext;
-        this.conversationList = conversationList;
+        this.mConversationList = conversationList;
         this.layoutInflater = LayoutInflater.from(actContext);
         this.picasso = Picasso.with(actContext);
-        this.userChatObject = userChatObject;
+        this.mUserChatObject = userChatObject;
     }
 
-    //    public void setChatList(List<Conversation> conversationList) {
-//        //this.conversationList = new ArrayList<>(conversationList);
-//        this.conversationList.addAll(conversationList);
+    //    public void setChatList(List<Conversation> mConversationList) {
+//        //this.mConversationList = new ArrayList<>(mConversationList);
+//        this.mConversationList.addAll(mConversationList);
 //        this.notifyDataSetChanged();
 //    }
 //
-//    public void addRangeList(List<Conversation> conversationList) {
-//        final int positionStart = this.conversationList.size();
-////        this.conversationList.clear();
-////        this.conversationList.addAll(conversationList);
-//        this.conversationList = new ArrayList<>(conversationList);
+//    public void addRangeList(List<Conversation> mConversationList) {
+//        final int positionStart = this.mConversationList.size();
+////        this.mConversationList.clear();
+////        this.mConversationList.addAll(mConversationList);
+//        this.mConversationList = new ArrayList<>(mConversationList);
 //        //this.notifyDataSetChanged();
-//        this.notifyItemRangeInserted(positionStart, conversationList.size());
+//        this.notifyItemRangeInserted(positionStart, mConversationList.size());
 //    }
 //
-//    public void addNewMessages(List<Conversation> conversationList){
-//        final int positionStart = this.conversationList.size();
-//        this.conversationList.addAll(conversationList);
-//        this.notifyItemRangeInserted(positionStart, conversationList.size());
+//    public void addNewMessages(List<Conversation> mConversationList){
+//        final int positionStart = this.mConversationList.size();
+//        this.mConversationList.addAll(mConversationList);
+//        this.notifyItemRangeInserted(positionStart, mConversationList.size());
 //    }
     public void setChatList(List<Conversation> conversationList) {
-        this.conversationList.addAll(conversationList);
+        this.mConversationList.addAll(conversationList);
         this.notifyDataSetChanged();
     }
 
     //inserts conversation objects one-by-one at position zero
     public void addRangeList(List<Conversation> conversationList) {
-        //final int positionStart = this.conversationList.size();
+        //final int positionStart = this.mConversationList.size();
         for (Conversation c : conversationList) {
-            this.conversationList.add(0, c);
+            this.mConversationList.add(0, c);
             this.notifyItemInserted(0);
         }
     }
 
     public void addTestMessageSingle(List<Conversation> conversationList) {
-        final int positionStart = this.conversationList.size();
-        this.conversationList.addAll(0, conversationList);
-        //this.conversationList = new ArrayList<>(conversationList);
+        final int positionStart = this.mConversationList.size();
+        this.mConversationList.addAll(0, conversationList);
+        //this.mConversationList = new ArrayList<>(mConversationList);
         //this.notifyDataSetChanged();
         this.notifyItemRangeInserted(positionStart, conversationList.size());
     }
 
     public void addNewMessages(List<Conversation> conversationList) {
-        final int positionStart = this.conversationList.size();
-        this.conversationList.addAll(conversationList);
+        final int positionStart = this.mConversationList.size();
+        this.mConversationList.addAll(conversationList);
         this.notifyItemRangeInserted(positionStart, conversationList.size());
     }
 
     //used to add progress-conversation-item last in the list
     public void addProgressItem(Conversation conversation, int index) {
-        this.conversationList.add(index, conversation);
+        this.mConversationList.add(index, conversation);
         this.notifyItemInserted(index);
     }
 
     //used to add sending messages at the start of the list
     public void addItem(Conversation conversation) {
-        this.conversationList.add(conversation);
-        this.notifyItemInserted(conversationList.size() - 1);
+        this.mConversationList.add(conversation);
+        this.notifyItemInserted(mConversationList.size() - 1);
     }
 
     //used to remove progress-conversation-item last in the list
     public void removeItemAtPosition(int index) {
-        this.conversationList.remove(index);
+        this.mConversationList.remove(index);
         this.notifyItemRemoved(index);
     }
 
+//    private String getChatReceiver() {
+//        String[] splitChatUserArray = mUserChatObject.getString("chatUserId").split(ParseUser.getCurrentUser().getUsername());
+//        String chatParticipantHolder = "";
+//        for (String match : splitChatUserArray) {
+//            if (!match.equals("")) {
+//                chatParticipantHolder = match;
+//            }
+//        }
+//        return chatParticipantHolder;
+//    }
+
     private String getChatReceiver() {
-        String[] splitChatUserArray = userChatObject.getString("chatUserId").split(ParseUser.getCurrentUser().getUsername());
-        String chatParticipantHolder = "";
-        for (String match : splitChatUserArray) {
-            if (!match.equals("")) {
-                chatParticipantHolder = match;
-            }
+        final ParseUser createdByUserObject = mUserChatObject.getParseUser(ParseConstants.CREATED_BY);
+        final ParseUser usernameUserObject = mUserChatObject.getParseUser(ParseConstants.USERNAME);
+
+        final String chatParticipant;
+        if(ApplicationMain.mCurrentParseUser.getUsername().equals(createdByUserObject.getUsername())){
+            chatParticipant = usernameUserObject.getUsername();
         }
-        return chatParticipantHolder;
+        else {
+            chatParticipant = createdByUserObject.getUsername();
+        }
+        return chatParticipant;
     }
 
     @Override
@@ -163,67 +175,81 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
             chatViewHolder.mProgressBar.setIndeterminate(true);
         }
         if (itemViewType == Constants.CHAT_ITEM_SENT) {
+            final Conversation mChatConversationObject = mConversationList.get(position);
+            final ParseUser mChatItemSender = mConversationList.get(position).getSender();
+
             //set the recycled imageView's image to null
             if (chatViewHolder.mChatReceiverSeenImageView.getDrawable() != null) {
                 chatViewHolder.mChatReceiverSeenImageView.setImageBitmap(null);
                 chatViewHolder.mChatReceiverSeenImageView.setImageDrawable(null);
             }
-            //gets the chat object associated with current user & receiver at the last position of the chat
-            if (position == conversationList.size() - 1) {
-                userChatObject.getRelation(ParseConstants.CHAT_RELATION).getQuery().orderByDescending(ParseConstants.CREATED_AT).getFirstInBackground(new GetCallback<ParseObject>() {
+            //this query is to show the little image in the bottom-right corner of the chat if the message has been seen
+            if (position == mConversationList.size() - 1) {
+                mUserChatObject.getRelation(ParseConstants.CHAT_RELATION).getQuery().orderByDescending(ParseConstants.CREATED_AT).getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject chatParseObject, ParseException e) {
                         //if the receiver has seen the most recently message send by current user (me), then show the receivers photo at the bottom-right
-                        if (chatParseObject.getBoolean(ParseConstants.SEEN) && ParseUser.getCurrentUser().getUsername().equals(chatParseObject.getString(ParseConstants.CHAT_SENDER))) {
+                        if (chatParseObject.getBoolean(ParseConstants.SEEN)) {
                             //load the profile photo of the user in the "username" field
-                            if (userChatObject.getParseUser(ParseConstants.USERNAME).getUsername().equals(getChatReceiver())) {
-                                picasso.load(userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE).
+                                picasso.load(mChatConversationObject.getReceiver().getParseFile(ParseConstants.PROFILE_PICTURE).
                                         getUrl()).noPlaceholder().centerCrop().fit().
                                         into(chatViewHolder.mChatReceiverSeenImageView);
-                            } else {
-                                //load the profile photo of the user in the "createdBy" field
-                                picasso.load(userChatObject.getParseUser(ParseConstants.CREATED_BY).getParseFile(ParseConstants.PROFILE_PICTURE).
-                                        getUrl()).noPlaceholder().centerCrop().fit().
-                                        into(chatViewHolder.mChatReceiverSeenImageView);
-                            }
+
                         }
+//                        if (chatParseObject.getBoolean(ParseConstants.SEEN) && ApplicationMain.mCurrentParseUser.getUsername().equals(chatParseObject.getString(ParseConstants.CHAT_SENDER))) {
+//                            //load the profile photo of the user in the "username" field
+//                            if (mUserChatObject.getParseUser(ParseConstants.USERNAME).getUsername().equals(getChatReceiver())) {
+//                                picasso.load(mUserChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE).
+//                                        getUrl()).noPlaceholder().centerCrop().fit().
+//                                        into(chatViewHolder.mChatReceiverSeenImageView);
+//                            } else {
+//                                //load the profile photo of the user in the "createdBy" field
+//                                picasso.load(mUserChatObject.getParseUser(ParseConstants.CREATED_BY).getParseFile(ParseConstants.PROFILE_PICTURE).
+//                                        getUrl()).noPlaceholder().centerCrop().fit().
+//                                        into(chatViewHolder.mChatReceiverSeenImageView);
+//                            }
+//                        }
                     }
                 });
             }
 
-            final CharSequence chatMessageDate = DateUtils.getRelativeDateTimeString(activityContext, conversationList.get(position)
+            final CharSequence chatMessageDate = DateUtils.getRelativeDateTimeString(activityContext, mConversationList.get(position)
                     .getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0);
             chatViewHolder.timeTextView.setText(chatMessageDate);
 
-            final String chatMessage = conversationList.get(position).getMsg();
+            final String chatMessage = mConversationList.get(position).getMessage();
             chatViewHolder.messageTextView.setText(chatMessage);
 
-            if (conversationList.get(position).getStatus() == Conversation.STATUS_SENT) {
+            if (mConversationList.get(position).getStatus() == Conversation.STATUS_SENT) {
                 chatViewHolder.statusTextView.setText("Delivered");
-            } else if (conversationList.get(position).getStatus() == Conversation.STATUS_SENDING) {
+            } else if (mConversationList.get(position).getStatus() == Conversation.STATUS_SENDING) {
                 chatViewHolder.statusTextView.setText("Sending...");
             } else {
                 chatViewHolder.statusTextView.setText("Failed");
             }
 
         } else if (itemViewType == Constants.CHAT_ITEM_RECEIVE) {
+            final Conversation mChatConversationObject = mConversationList.get(position);
+            final ParseUser mChatItemReceiver = mConversationList.get(position).getReceiver();
+            MySingleton.getMySingleton().getPicasso().load(mChatConversationObject.getSender().
+                    getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(chatViewHolder.mChatImageView);
             //loads the profile picture of the receiver into the receivers photo at the left in the chat
-            if (userChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
+//            if (mUserChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
+//
+//                if (mUserChatObject.getParseUser(ParseConstants.USERNAME).getUsername().equals(getChatReceiver())) {
+//                    MySingleton.getMySingleton().getPicasso().load(mUserChatObject.getParseUser(ParseConstants.USERNAME).
+//                            getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(chatViewHolder.mChatImageView);
+//                } else {
+//                    MySingleton.getMySingleton().getPicasso().load(mUserChatObject.getParseUser(ParseConstants.CREATED_BY).
+//                            getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(chatViewHolder.mChatImageView);
+//                }
+//
+//            }
 
-                if (userChatObject.getParseUser(ParseConstants.USERNAME).getUsername().equals(getChatReceiver())) {
-                    MySingleton.getMySingleton().getPicasso().load(userChatObject.getParseUser(ParseConstants.USERNAME).
-                            getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(chatViewHolder.mChatImageView);
-                } else {
-                    MySingleton.getMySingleton().getPicasso().load(userChatObject.getParseUser("createdBy").
-                            getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(chatViewHolder.mChatImageView);
-                }
-
-            }
-
-            chatViewHolder.timeTextView.setText(DateUtils.getRelativeDateTimeString(activityContext, conversationList.get(position)
+            chatViewHolder.timeTextView.setText(DateUtils.getRelativeDateTimeString(activityContext, mConversationList.get(position)
                     .getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
 
-            chatViewHolder.messageTextView.setText(conversationList.get(position).getMsg());
+            chatViewHolder.messageTextView.setText(mConversationList.get(position).getMessage());
 
             chatViewHolder.statusTextView.setText("");
         }
@@ -231,7 +257,7 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
 
     @Override
     public int getItemViewType(int position) {
-        return conversationList.get(position).isProgress() ? Constants.TYPE_HEADER : conversationList.get(position).isSent() ? Constants.CHAT_ITEM_SENT : Constants.CHAT_ITEM_RECEIVE;
+        return mConversationList.get(position).isProgress() ? Constants.TYPE_HEADER : mConversationList.get(position).isSender() ? Constants.CHAT_ITEM_SENT : Constants.CHAT_ITEM_RECEIVE;
     }
 
     @Override
@@ -241,7 +267,7 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return conversationList.size();
+        return mConversationList.size();
     }
 
     public static class MyChatViewHolder extends RecyclerView.ViewHolder {

@@ -142,7 +142,7 @@
         </provider>
         <!-- ....................................................................................................................................... -->
         <activity
-            android:name=".profile.EditProfile_act"
+            android:name=".profile.editProfile.EditProfile_act"
             android:label="@string/title_activity_edit_profile_act" >
         </activity>
     </application>

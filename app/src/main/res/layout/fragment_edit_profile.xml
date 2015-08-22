@@ -35,6 +35,7 @@
                     android:textSize="@dimen/txt_16sp" />
 
                 <LinearLayout
+                    android:id="@+id/change_username_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/pad_72dp"
                     android:background="@drawable/recycler_ripple"
@@ -53,12 +54,12 @@
                         android:textSize="@dimen/txt_16sp" />
 
                     <TextView
+                        android:id="@+id/edit_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="36dp"
                         android:orientation="horizontal"
                         android:singleLine="true"
-                        android:text="Kappa123"
                         android:textColor="@color/secondary_text_icons_light_theme"
                         android:textSize="@dimen/txt_14sp" />
 
@@ -70,6 +71,7 @@
                     android:background="@color/dividers_light_theme" />
 
                 <LinearLayout
+                    android:id="@+id/change_name_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/pad_72dp"
                     android:background="@drawable/recycler_ripple"
@@ -83,11 +85,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:text="Full name"
+                        android:text="Name"
                         android:textColor="@color/text_light_theme"
                         android:textSize="@dimen/txt_16sp" />
 
                     <TextView
+                        android:id="@+id/edit_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="36dp"

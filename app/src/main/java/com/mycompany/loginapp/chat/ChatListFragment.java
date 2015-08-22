@@ -135,17 +135,12 @@ public class ChatListFragment extends Fragment {
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivityContext, mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                final int childViewPosition = position; // minus position of header
-
                 if (userList.size() > 0) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-//                        mActivityContext.startActivity(new Intent(mActivityContext, Chat_act.class).
-//                                        putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser(ParseConstants.USERNAME).getUsername()),
-//                                ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(position)));
                         mActivityContext.startActivity(new Intent(mActivityContext, Chat_act.class));
                     } else {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
+                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(position)));
                         mActivityContext.startActivity(new Intent(mActivityContext, Chat_act.class));
                     }
                 }
