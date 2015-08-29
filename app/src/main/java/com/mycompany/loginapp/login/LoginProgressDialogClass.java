@@ -11,10 +11,10 @@ import com.mycompany.loginapp.R;
  * Created by Alexander on 08-08-2015.
  * Responsibility of showing and dismissing the login and logout dialog
  */
-public class LoginDialogClass {
+public class LoginProgressDialogClass {
     private static Dialog mLoginDialog;
 
-    public LoginDialogClass(){
+    public LoginProgressDialogClass(){
     }
 
     /** Shows the login dialog */

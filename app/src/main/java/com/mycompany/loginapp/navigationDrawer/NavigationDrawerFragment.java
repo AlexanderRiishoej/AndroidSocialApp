@@ -25,7 +25,7 @@ import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
 import com.mycompany.loginapp.general.Startup_act;
 import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
-import com.mycompany.loginapp.login.LoginDialogClass;
+import com.mycompany.loginapp.login.LoginProgressDialogClass;
 import com.mycompany.loginapp.news.Social_act;
 import com.mycompany.loginapp.profile.ProfileImageHolder;
 import com.mycompany.loginapp.profile.ProfilePrivate_act;
@@ -199,7 +199,7 @@ public class NavigationDrawerFragment extends Fragment {
                 this.mDrawerToggle.runWhenIdle(new Runnable() {
                     @Override
                     public void run() {
-                        LoginDialogClass.showLoginDialog(getActivity(), "Logging out please wait...");
+                        LoginProgressDialogClass.showLoginDialog(getActivity(), "Logging out please wait...");
                         ParseUser.logOutInBackground(new LogOutCallback() {
                             @Override
                             public void done(ParseException e) {
@@ -209,9 +209,9 @@ public class NavigationDrawerFragment extends Fragment {
                                     getActivity().startActivity(new Intent(getActivity(), Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                                     getActivity().finish();
-                                    LoginDialogClass.dismissLoginDialog();
+                                    LoginProgressDialogClass.dismissLoginDialog();
                                 } else {
-                                    LoginDialogClass.dismissLoginDialog();
+                                    LoginProgressDialogClass.dismissLoginDialog();
                                     new MaterialDialog.Builder(getActivity()).content("An error occurred while logging out...").show();
                                 }
                             }

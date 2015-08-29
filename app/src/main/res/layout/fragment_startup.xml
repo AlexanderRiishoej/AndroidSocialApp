@@ -1,0 +1,102 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:background="@color/teal_500"
+            android:layout_height="400dp">
+            <ImageView
+                android:id="@+id/background_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="image_background"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/pad_20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/login"
+                    style="@style/ButtonLoginStyle"
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/pad_56dp"
+                    android:layout_marginEnd="@dimen/pad_16dp"
+                    android:layout_marginStart="@dimen/pad_16dp"
+                    android:layout_weight="1"
+                    android:text="Sign in" />
+
+                <Button
+                    android:id="@+id/sign_up"
+                    style="@style/ButtonRaisedLoginStyle"
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/pad_56dp"
+                    android:layout_marginEnd="@dimen/pad_16dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_button_raised_white"
+                    android:text="Sign up"
+                    android:textColor="@color/secondary_text_icons_light_theme" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/header_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/pad_16dp"
+                android:text="ChatTap"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txt_20sp" />
+
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/header_text"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/pad_16dp"
+                android:layout_marginStart="@dimen/pad_30dp"
+                android:layout_marginTop="@dimen/pad_16dp"
+                android:text="Bring your friends together and join the community. Chat with friends, meet new people and share your experiences. ."
+                android:textSize="@dimen/txt_12sp" />
+
+            <!--<Button-->
+                <!--style="@style/ButtonRaisedLoginStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginBottom="@dimen/pad_16dp"-->
+                <!--android:layout_marginEnd="@dimen/pad_16dp"-->
+                <!--android:layout_marginStart="@dimen/pad_16dp"-->
+                <!--android:background="@drawable/ripple_button_raised_white_green_border"-->
+                <!--android:elevation="0dp"-->
+                <!--android:text="Join as guest"-->
+                <!--android:textColor="@color/secondary_text_icons_light_theme" />-->
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</FrameLayout>

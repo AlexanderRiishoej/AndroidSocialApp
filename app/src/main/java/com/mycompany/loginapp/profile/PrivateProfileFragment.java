@@ -62,7 +62,7 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
     private FloatingActionButton mFabButton;
     private AppBarLayout mAppBarLayout;
     private ImageView mParallaxImageView, mProfilePictureImageView;
-    private TextView mCity, mName, mOnlineStatus, mBirthday;
+    private TextView mCity, mNameTextView, mOnlineStatus, mBirthday;
     private TextView mFriends, mFollowers, mInCommon, mVideos, mPhotos;
     private Button mEditProfileButton;
 
@@ -192,7 +192,7 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
 
     private void setUpHeaderLayout(View fragmentView) {
         mCity = (TextView) fragmentView.findViewById(R.id.city);
-        mName = (TextView) fragmentView.findViewById(R.id.wall_post_username);
+        mNameTextView = (TextView) fragmentView.findViewById(R.id.wall_post_username);
         mOnlineStatus = (TextView) fragmentView.findViewById(R.id.status);
         mBirthday = (TextView) fragmentView.findViewById(R.id.birth_date);
         mEditProfileButton = (Button) fragmentView.findViewById(R.id.edit_profile);
@@ -207,7 +207,7 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
             public void done(ParseUser parseUser, ParseException e) {
                 if (e == null) {
                     mCity.setText(parseUser.getString("hometown"));
-                    mName.setText(parseUser.getString("fullName"));
+                    mNameTextView.setText(parseUser.getString("fullName"));
                     mOnlineStatus.setText("online");
 //                    if (parseUser.getBoolean("online")) {
 //                        mOnlineStatus.setText("online");
@@ -281,13 +281,13 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
     }
 
     /** Gets the name of the current logged in user */
-    public String getName(){
-        return mName.getText().toString();
+    public TextView getNameTextView(){
+        return mNameTextView;
     }
 
     /** Sets the name of the current logged in user */
     public void setName(String name){
-        this.mName.setText(name);
+        this.mNameTextView.setText(name);
     }
 
     private void setUpEditProfileClickListener(){
@@ -316,6 +316,6 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
 
     /** Event received when a new name has been chosen */
     public void onEvent(MessageUpdateName messageUpdateName){
-        mName.setText(messageUpdateName.message);
+        mNameTextView.setText(messageUpdateName.message);
     }
 }

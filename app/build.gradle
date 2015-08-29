@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.mycompany.loginapp"
-        targetSdkVersion 22
+        targetSdkVersion 23
         minSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -24,18 +24,19 @@ dependencies {
     compile fileTree(dir: 'libs', include: 'android-query-full.0.26.8.jar') // https://code.google.com/p/android-query/
     compile fileTree(dir: 'libs', include: 'guava-18.0.jar') // https://code.google.com/p/guava-libraries/
     compile 'com.facebook.android:facebook-android-sdk:4.2.0'
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:cardview-v7:22.2.0'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.android.support:palette-v7:22.0.+'
+    compile 'com.android.support:design:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:cardview-v7:23.0.0'
+    compile 'com.android.support:recyclerview-v7:23.0.0'
+    compile 'com.android.support:palette-v7:23.0.+'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.squareup.picasso:picasso:2.5.2' // http://square.github.io/picasso/
     compile 'de.greenrobot:eventbus:2.4.0' // https://github.com/greenrobot/EventBus/blob/master/README.md
-    compile 'com.afollestad:material-dialogs:0.7.6.0' // material dialogs https://github.com/afollestad/material-dialogs
+    compile 'com.afollestad:material-dialogs:0.7.8.1' // material dialogs https://github.com/afollestad/material-dialogs
     compile 'de.hdodenhof:circleimageview:1.3.0' // Much better circular imageview library https://github.com/hdodenhof/CircleImageView
     compile 'com.wdullaer:materialdatetimepicker:1.3.1' //Datepicker supports 4.0 and up https://github.com/wdullaer/MaterialDateTimePicker
 //    compile 'com.github.ganfra:material-spinner:1.1.0'
     // How to add an external library http://www.truiton.com/2015/02/android-studio-add-library-project/
     compile project(':aFileChooser') //https://github.com/iPaulPro/aFileChooser
+    compile 'me.relex:circleindicator:1.1.5@aar' //rounded viewpager https://github.com/ongakuer/CircleIndicator
 }

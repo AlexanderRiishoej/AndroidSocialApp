@@ -94,7 +94,7 @@ public class SignIn_act extends BaseActivity {
             return;
         }
         MySingleton.getMySingleton().getAQuery().id(R.id.main_progressBar).visibility(View.VISIBLE);
-        LoginDialogClass.showLoginDialog(this, "Logging in please wait...");
+        LoginProgressDialogClass.showLoginDialog(this, "Logging in please wait...");
         ParseUser.logInInBackground(username, password, new LogInCallback() {
 
             @Override
@@ -103,12 +103,11 @@ public class SignIn_act extends BaseActivity {
                     ApplicationMain.mCurrentParseUser = pu;
                     // Start the logged in activity with the name of the person who logged in
                     startActivity(new Intent(SignIn_act.this, ProfilePrivate_act.class));
-                    //LoginDialogClass.dismissLoginDialog();
                     finish();
-                    LoginDialogClass.dismissLoginDialog();
+                    //LoginProgressDialogClass.dismissLoginDialog();
                 } else {
                     Utilities.showDialog(SignIn_act.this, getString(R.string.err_login) + " " + e.getMessage());
-                    LoginDialogClass.dismissLoginDialog();
+                    LoginProgressDialogClass.dismissLoginDialog();
                     e.printStackTrace();
                 }
             }
@@ -165,7 +164,7 @@ public class SignIn_act extends BaseActivity {
 //            dialog.setTitle(getString(R.string.alert_wait));
 //            dialog.setContentView(R.layout.log_in_progress_bar_layout);
 //            dialog.show();
-            LoginDialogClass.showLoginDialog(this, "Logging in please wait...");
+            LoginProgressDialogClass.showLoginDialog(this, "Logging in please wait...");
             //This method will ensure the session token is valid before setting the current user
             ParseUser.becomeInBackground(currentUser.getSessionToken(), new LogInCallback() {
                 public void done(ParseUser loggedInUser, ParseException e) {
@@ -178,7 +177,7 @@ public class SignIn_act extends BaseActivity {
                         SignIn_act.this.finish();
                     } else {
                         // The token could not be validated.
-                        LoginDialogClass.dismissLoginDialog();
+                        LoginProgressDialogClass.dismissLoginDialog();
                     }
                 }
             });
@@ -260,7 +259,6 @@ public class SignIn_act extends BaseActivity {
         super.onDestroy();
         //this.mFacebookLoginClass.stopTracking();
         this.mParseFacebookLogin.stopTracking();
-        LoginDialogClass.dismissLoginDialog();
     }
 
     /**

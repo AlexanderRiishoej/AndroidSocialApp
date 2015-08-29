@@ -7,6 +7,8 @@
     <color name="windowBackground">@color/white</color>
     <color name="textColorPrimary">@color/text_light_theme</color>
 
+    <color name="transparent">#F00000</color>
+
     <!-- Facebook colors-->
     <color name="com_facebook_button_background_color">#415dae</color>
     <color name="com_facebook_button_background_color_disabled">#bdc1c9</color>

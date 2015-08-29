@@ -4,8 +4,6 @@ package com.mycompany.loginapp.base;
  * Created by Alexander on 06-02-2015.
  */
 
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.general.Startup_act;
-import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
-import com.mycompany.loginapp.login.LoginDialogClass;
 import com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment;
-import com.mycompany.loginapp.profile.ProfileImageHolder;
-import com.parse.ParseUser;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String LOG = BaseActivity.class.getSimpleName();

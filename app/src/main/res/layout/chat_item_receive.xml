@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/lbl1"
+        android:id="@+id/timestamp_of_message_receive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -44,7 +44,7 @@
             android:paddingTop="@dimen/pad_10dp">
 
             <TextView
-                android:id="@+id/lbl2"
+                android:id="@+id/chat_item_receive_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/send_message"
@@ -55,7 +55,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/lbl3"
+        android:id="@+id/chat_item_status_text_receive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/pad_20dp"

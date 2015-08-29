@@ -3,7 +3,6 @@ package com.mycompany.loginapp.profile;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toolbar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -31,18 +29,15 @@ import com.mycompany.loginapp.adapters.MaterialDialogCustomAdapter;
 import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.constants.Constants;
-import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUpdateCoverPhoto;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
 import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
-import com.mycompany.loginapp.login.LoginDialogClass;
-import com.mycompany.loginapp.news.Social_act;
+import com.mycompany.loginapp.profile.editProfile.EditProfileDialogHelper;
 import com.mycompany.loginapp.profile.imageLoaders.CoverPhotoLoader;
 import com.mycompany.loginapp.profile.imageLoaders.ProfilePhotoLoader;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
@@ -99,51 +94,7 @@ public class ProfilePrivate_act extends BaseActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.edit_name:
-                final EditText mFirstName;
-                final EditText mLastName;
-                final View mPositiveAction;
-
-                MaterialDialog mNameDialog = new MaterialDialog.Builder(this)
-                        .title("Edit name")
-                        .customView(R.layout.material_dialog_edit_name, true)
-                        .inputType(InputType.TYPE_CLASS_TEXT |
-                                InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
-                                InputType.TYPE_TEXT_FLAG_CAP_WORDS)
-                        .positiveText("Save")
-                        .negativeText("Cancel")
-                        .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
-                        .build();
-
-                mPositiveAction = mNameDialog.getActionButton(DialogAction.POSITIVE);
-                //noinspection ConstantConditions
-                mFirstName = (EditText) mNameDialog.getCustomView().findViewById(R.id.firstname);
-                mFirstName.addTextChangedListener(new MyCustomTextWatcher(mPositiveAction));
-                mLastName = (EditText) mNameDialog.getCustomView().findViewById(R.id.lastname);
-                mNameDialog.getBuilder().callback(new MaterialDialog.ButtonCallback() {
-                    @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        ApplicationMain.mCurrentParseUser.put("firstName", mFirstName.getText().toString());
-                        ApplicationMain.mCurrentParseUser.put("lastName", mLastName.getText().toString());
-                        ApplicationMain.mCurrentParseUser.put("fullName", mFirstName.getText().toString().concat(" " + mLastName.getText().toString()));
-                        ApplicationMain.mCurrentParseUser.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if(e == null){
-                                    mPrivateProfileFragment.setName(ApplicationMain.mCurrentParseUser.getString("fullName"));
-                                }
-                                else {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onNegative(MaterialDialog dialog) {
-                    }
-                });
-                mNameDialog.show();
-                mPositiveAction.setEnabled(false);
+                EditProfileDialogHelper.showEditNameDialog(this, mPrivateProfileFragment.getNameTextView());
                 return true;
 //            case R.id.action_chat:
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -169,7 +120,6 @@ public class ProfilePrivate_act extends BaseActivity {
                                         break;
                                 }
                                 dialog.dismiss();
-                                //showToast(item.getContent().toString());
                             }
                         })
                         .show();
@@ -197,7 +147,6 @@ public class ProfilePrivate_act extends BaseActivity {
                                         break;
                                 }
                                 dialog.dismiss();
-                                //showToast(item.getContent().toString());
                             }
                         })
                         .show();

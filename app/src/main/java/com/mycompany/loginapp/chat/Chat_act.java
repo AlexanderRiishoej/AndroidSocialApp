@@ -72,7 +72,7 @@ public class Chat_act extends BaseActivity {
         txt = (EditText) findViewById(R.id.txt);
         //receiver = getIntent().getStringExtra(Constants.EXTRA_DATA);
         mUserChatObject = EventBus.getDefault().getStickyEvent(MessageUserChat.class).mUserChatObject;
-        receiver = getChatReceiver();
+        receiver = this.getChatReceiver();
         mConversationList = new ArrayList<Conversation>();
         this.initializeRecyclerView();
         mChatRecyclerAdapter = new ChatRecyclerAdapter(this, mConversationList, mUserChatObject);
@@ -82,14 +82,15 @@ public class Chat_act extends BaseActivity {
 
         mToolbarImageView = (ImageView) findViewById(R.id.chat_image);
 
-        this.getToolbarPhoto();
+        this.setToolbarPhoto();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         }
     }
 
-    private void getToolbarPhoto() {
+    /** Sets the Toolbar picture to the receiver */
+    private void setToolbarPhoto() {
         if(mUserChatObject.getParseUser(ParseConstants.USERNAME).getUsername().equals(receiver.getUsername())) {
             if(mUserChatObject.getParseUser(ParseConstants.USERNAME).getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
                 MySingleton.getMySingleton().getPicasso().load(mUserChatObject.getParseUser(ParseConstants.USERNAME).
@@ -141,6 +142,7 @@ public class Chat_act extends BaseActivity {
         // And passing the titles,icons,navigation_header view name, navigation_header view email,
         // and navigation_header view profile_image picture
         mLinearLayoutManager = new LinearLayoutManager(this);
+        //reverses the data-layout direction of the adapter
         mLinearLayoutManager.setStackFromEnd(true);
         //mLinearLayoutManager.setReverseLayout(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -302,7 +304,7 @@ public class Chat_act extends BaseActivity {
 //        InputMethodManager imm = (InputMethodManager) getSystemService(Chat_act.INPUT_METHOD_SERVICE);
 //        imm.hideSoftInputFromWindow(txt.getWindowToken(), 0);
         final String message = txt.getText().toString();
-        final Conversation conversation = new Conversation(message, Calendar.getInstance().getTime(), ApplicationMain.mCurrentParseUser, null);
+        final Conversation conversation = new Conversation(message, Calendar.getInstance().getTime(), ApplicationMain.mCurrentParseUser, receiver);
         conversation.setStatus(Conversation.STATUS_SENDING);
         //mConversationList.add(conversation);
         mChatRecyclerAdapter.addItem(conversation);
@@ -387,7 +389,7 @@ public class Chat_act extends BaseActivity {
             }
             // get the messages the receiver sends to parse
             chatQuery.whereEqualTo(ParseConstants.CHAT_SENDER, receiver);
-            chatQuery.whereEqualTo(ParseConstants.CHAT_RECEIVER, ParseUser.getCurrentUser().getUsername());
+            chatQuery.whereEqualTo(ParseConstants.CHAT_RECEIVER, ApplicationMain.mCurrentParseUser.getUsername());
             chatQuery.include(ParseConstants.CHAT_RECEIVER);
         }
         chatQuery.orderByDescending(ParseConstants.CREATED_AT);
@@ -457,6 +459,11 @@ public class Chat_act extends BaseActivity {
             ParseObject po = chatMessages.get(i);
             Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getParseUser(ParseConstants.CHAT_SENDER),
                     po.getParseUser(ParseConstants.CHAT_RECEIVER));
+
+            //to check if the last message has been seen
+            if(i == 0 && chatMessages.get(i).getBoolean(ParseConstants.SEEN)){
+                conversation.isSeen = true;
+            }
             newConversationList.add(conversation);
         }
 
@@ -485,10 +492,16 @@ public class Chat_act extends BaseActivity {
     //adds newly created chat messages to the conversation list
     private List<Conversation> addOldConversationObjects(List<ParseObject> chatMessages) {
         final List<Conversation> oldConversationList = new ArrayList<>();
-        for (int i = chatMessages.size() - 1; i >= 0; i--) {
+
+        for (int i = 0; i < chatMessages.size(); i++) {
             ParseObject po = chatMessages.get(i);
             Conversation conversation = new Conversation(po.getString(ParseConstants.MESSAGE), po.getCreatedAt(), po.getParseUser(ParseConstants.CHAT_SENDER),
                     po.getParseUser(ParseConstants.CHAT_RECEIVER));
+
+            //to check if the last message has been seen
+            if(i == 0 && chatMessages.get(i).getBoolean(ParseConstants.SEEN)){
+                conversation.isSeen = true;
+            }
             oldConversationList.add(0, conversation);
         }
 

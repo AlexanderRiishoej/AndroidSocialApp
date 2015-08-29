@@ -48,6 +48,7 @@ public class Conversation {
 
     private boolean isProgress = false;
     private String chatMessageId;
+    public boolean isSeen = false;
 
     /**
      * Instantiates a new conversation.
@@ -119,9 +120,6 @@ public class Conversation {
      *
      * @return the sender
      */
-    public ParseUser getChatUser() {
-        return this.isSender() ? sender : receiver;
-    }
 
     public ParseUser getSender(){
         return sender;

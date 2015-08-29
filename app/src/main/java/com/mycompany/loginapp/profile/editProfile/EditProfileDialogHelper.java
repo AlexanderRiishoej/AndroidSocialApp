@@ -27,6 +27,7 @@ public class EditProfileDialogHelper {
     public EditProfileDialogHelper(){
     }
 
+    /** Shows a dialog to edit the name of the user */
     public static void showEditUsernameDialog(Context mActivityContext, final TextView mUsernameTextView){
         final EditText mUsername;
         final TextView mHeaderTextView;
@@ -69,7 +70,8 @@ public class EditProfileDialogHelper {
         mUsernameDialog.show();
         mPositiveAction.setEnabled(false);
     }
-
+    
+    /** Shows a dialog to edit the Username of the user */
     public static void showEditNameDialog(Context mActivityContext, final TextView mNameTextView){
         final EditText mName;
         final TextView mHeaderTextView;
@@ -82,6 +84,7 @@ public class EditProfileDialogHelper {
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .positiveText("Save")
                 .negativeText("Cancel")
+                .positiveColorRes(R.color.teal_500)
                 .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
                 .build();
 
