@@ -1,0 +1,293 @@
+<!-- Main content layout -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/pad_16dp"
+        android:gravity="center_horizontal"
+        android:text="Create account"
+        android:textSize="@dimen/txt_20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dividers_light_theme"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Content layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/pad_16dp"
+            android:layout_marginStart="@dimen/pad_16dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/fb_sign_up"
+                style="@style/ButtonLoginStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/pad_56dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/pad_16dp"
+                android:layout_marginTop="@dimen/pad_16dp"
+                android:background="@drawable/ripple_button_special_blue"
+                android:drawableStart="@drawable/com_facebook_button_icon_xhdpi"
+                android:onClick="register"
+                android:paddingEnd="@dimen/pad_16dp"
+                android:paddingStart="@dimen/pad_16dp"
+                android:text="Sign up with facebook " />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_8dp"
+                android:background="@color/grey_300">
+
+                <EditText
+                    android:id="@+id/username_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:padding="@dimen/pad_16dp"
+                    android:background="@color/white"
+                    android:hint="Username"
+                    android:maxLength="140"
+                    android:singleLine="true"
+                    android:textSize="@dimen/txt_16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_8dp"
+                android:background="@color/grey_300">
+
+                <EditText
+                    android:id="@+id/password_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:padding="@dimen/pad_16dp"
+                    android:background="@color/white"
+                    android:hint="Password"
+                    android:maxLength="140"
+                    android:singleLine="true"
+                    android:textSize="@dimen/txt_16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_8dp"
+                android:background="@color/grey_300">
+
+                <EditText
+                    android:id="@+id/full_name_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:padding="@dimen/pad_16dp"
+                    android:background="@color/white"
+                    android:hint="Full Name"
+                    android:maxLength="140"
+                    android:singleLine="true"
+                    android:textSize="@dimen/txt_16sp" />
+                <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:id="@+id/fullname_textinput"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/white"-->
+                <!--android:orientation="vertical"-->
+                <!--android:layout_margin="1dp"-->
+                <!--app:errorEnabled="false"-->
+                <!--app:hintAnimationEnabled="false"-->
+                <!--app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">-->
+
+                <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Full Name"-->
+                <!--android:maxLength="140"-->
+                <!--android:singleLine="true"-->
+                <!--android:background="@null"-->
+                <!--android:textSize="@dimen/txt_16sp">-->
+
+                <!--&lt;!&ndash;<requestFocus />&ndash;&gt;-->
+                <!--</EditText>-->
+
+                <!--</android.support.design.widget.TextInputLayout>-->
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_8dp"
+                android:background="@color/grey_300">
+
+                <EditText
+                    android:id="@+id/phone_number_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:padding="@dimen/pad_16dp"
+                    android:background="@color/white"
+                    android:hint="Phone Number"
+                    android:maxLength="140"
+                    android:singleLine="true"
+                    android:textSize="@dimen/txt_16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_8dp"
+                android:background="@color/grey_300">
+
+                <EditText
+                    android:id="@+id/email_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:padding="@dimen/pad_16dp"
+                    android:background="@color/white"
+                    android:hint="Email"
+                    android:maxLength="140"
+                    android:singleLine="true"
+                    android:textSize="@dimen/txt_16sp" />
+            </RelativeLayout>
+
+            <!--&lt;!&ndash; Username &ndash;&gt;-->
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="@dimen/pad_16dp">-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/username_textinput"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical"-->
+                    <!--app:errorEnabled="true"-->
+                    <!--app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">-->
+
+                    <!--<EditText-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="@string/username"-->
+                        <!--android:singleLine="true"-->
+                        <!--android:textSize="@dimen/txt_16sp"-->
+                        <!--android:transitionName="@string/transition_username" />-->
+                <!--</android.support.design.widget.TextInputLayout>-->
+            <!--</RelativeLayout>-->
+
+            <!--&lt;!&ndash; e-mail &ndash;&gt;-->
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="@dimen/pad_16dp">-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/email_textinput"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical"-->
+                    <!--app:errorEnabled="true"-->
+                    <!--app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">-->
+
+                    <!--<EditText-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="@string/email"-->
+                        <!--android:singleLine="true"-->
+                        <!--android:textSize="@dimen/txt_16sp"-->
+                        <!--android:transitionName="@string/transition_username" />-->
+                <!--</android.support.design.widget.TextInputLayout>-->
+            <!--</RelativeLayout>-->
+
+            <!--&lt;!&ndash; Password &ndash;&gt;-->
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="@dimen/pad_16dp">-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/password_textinput"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical"-->
+                    <!--app:errorEnabled="true"-->
+                    <!--app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">-->
+
+                    <!--<EditText-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="@string/password"-->
+                        <!--android:inputType="textPassword"-->
+                        <!--android:singleLine="true"-->
+                        <!--android:textSize="@dimen/txt_16sp"-->
+                        <!--android:transitionName="@string/transition_username" />-->
+                <!--</android.support.design.widget.TextInputLayout>-->
+            <!--</RelativeLayout>-->
+
+            <!--&lt;!&ndash; Confirm password &ndash;&gt;-->
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="@dimen/pad_16dp">-->
+
+                <!--<android.support.design.widget.TextInputLayout-->
+                    <!--android:id="@+id/confirm_password_textinput"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical"-->
+                    <!--app:errorEnabled="true"-->
+                    <!--app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">-->
+
+                    <!--<EditText-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="@string/confirm_password"-->
+                        <!--android:inputType="textPassword"-->
+                        <!--android:singleLine="true"-->
+                        <!--android:textSize="@dimen/txt_16sp"-->
+                        <!--android:transitionName="@string/transition_username" />-->
+                <!--</android.support.design.widget.TextInputLayout>-->
+            <!--</RelativeLayout>-->
+
+            <Button
+                android:id="@+id/Register"
+                style="@style/ButtonLoginStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/pad_56dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/pad_16dp"
+                android:layout_marginEnd="@dimen/pad_16dp"
+                android:layout_marginStart="@dimen/pad_16dp"
+                android:onClick="register"
+                android:text="Create" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/pad_16dp"
+                android:layout_marginEnd="@dimen/pad_30dp"
+                android:layout_marginStart="@dimen/pad_30dp"
+                android:gravity="center"
+                android:textSize="@dimen/txt_12sp"
+                android:text="By creating an account you accept our Terms of Use policies"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

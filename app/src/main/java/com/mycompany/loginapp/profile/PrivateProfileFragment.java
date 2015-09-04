@@ -44,6 +44,8 @@ import com.squareup.picasso.Callback;
 import java.io.File;
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -54,7 +56,7 @@ import de.greenrobot.event.EventBus;
 public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener {
 
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private RecyclerView mRecyclerView;                           // Declaring RecyclerView
+    private RecyclerView mHorizontalGalleryRecyclerView;                           // Declaring RecyclerView
     private LinearLayoutManager mLayoutManager;
     private Toolbar mToolbar;
     private ProfileGalleryAdapter mProfileGalleryAdapter;
@@ -64,7 +66,7 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
     private ImageView mParallaxImageView, mProfilePictureImageView;
     private TextView mCity, mNameTextView, mOnlineStatus, mBirthday;
     private TextView mFriends, mFollowers, mInCommon, mVideos, mPhotos;
-    private Button mEditProfileButton;
+    @Bind(R.id.edit_profile) Button mEditProfileButton;
 
     public PrivateProfileFragment() {
         // Required empty public constructor
@@ -85,6 +87,8 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_private_profile, container, false);
+        //Bind this fragment to the view so ButterKnife can be used in this fragment
+        ButterKnife.bind(this, view);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         //collapsingToolbar.setTitle(ApplicationMain.mCurrentParseUser.getUsername());
         mCollapsingToolbarLayout.setTitle(ApplicationMain.mCurrentParseUser.getUsername());
@@ -121,23 +125,26 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
 
     private void initializeRecyclerView(View view){
         /** The RecyclerView for this NavigationDrawer */
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.gallery);
-        mRecyclerView.setHasFixedSize(true);
+        mHorizontalGalleryRecyclerView = (RecyclerView) view.findViewById(R.id.gallery);
+        mHorizontalGalleryRecyclerView.setHasFixedSize(true);
         mProfileGalleryAdapter = new ProfileGalleryAdapter(getActivity(), new ArrayList<ParseObject>());
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRecyclerView.setAdapter(mProfileGalleryAdapter);
-        mRecyclerView.setHorizontalScrollBarEnabled(true);
+        mHorizontalGalleryRecyclerView.setAdapter(mProfileGalleryAdapter);
+        mHorizontalGalleryRecyclerView.setHorizontalScrollBarEnabled(true);
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mHorizontalGalleryRecyclerView.setLayoutManager(mLayoutManager);
         /** OnItemTouchListener for the RecyclerView */
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), mRecyclerView, new ClickListener() {
+        mHorizontalGalleryRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), mHorizontalGalleryRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 // Create the fragment and show it as a dialog.
-                EventBus.getDefault().postSticky(new MessageImageDialog<File>(mProfileGalleryAdapter.mImagePaths.get(position)));
-                ImageDialogFragment newFragment = ImageDialogFragment.newInstance();
-                newFragment.show(getActivity().getSupportFragmentManager(), "ImageDialog");
+                //if there is no images i.e. if its a newly registered user
+                if (mProfileGalleryAdapter.mImagePaths.size() > 0) {
+                    EventBus.getDefault().postSticky(new MessageImageDialog<File>(mProfileGalleryAdapter.mImagePaths.get(position)));
+                    ImageDialogFragment newFragment = ImageDialogFragment.newInstance();
+                    newFragment.show(getActivity().getSupportFragmentManager(), "ImageDialog");
+                }
             }
 
             @Override
@@ -195,7 +202,7 @@ public class PrivateProfileFragment extends Fragment implements AppBarLayout.OnO
         mNameTextView = (TextView) fragmentView.findViewById(R.id.wall_post_username);
         mOnlineStatus = (TextView) fragmentView.findViewById(R.id.status);
         mBirthday = (TextView) fragmentView.findViewById(R.id.birth_date);
-        mEditProfileButton = (Button) fragmentView.findViewById(R.id.edit_profile);
+        //mEditProfileButton = (Button) fragmentView.findViewById(R.id.edit_profile);
         this.setUpEditProfileClickListener();
         this.profileHeaderParseQuery();
     }

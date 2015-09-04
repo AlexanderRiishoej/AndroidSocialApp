@@ -66,16 +66,13 @@ public class SignIn_act extends BaseActivity {
 
         user = mTextInputUsernameLayout.getEditText();
         pwd = mTextInputPasswordLayout.getEditText();
-        user.addTextChangedListener(new CharacterCountErrorWatcher(mTextInputUsernameLayout, 5, 20));
-        pwd.addTextChangedListener(new CharacterCountErrorWatcher(mTextInputPasswordLayout, 4, 20));
+        user.addTextChangedListener(new CharacterCountErrorWatcher(mTextInputUsernameLayout, 2, 20));
+        pwd.addTextChangedListener(new CharacterCountErrorWatcher(mTextInputPasswordLayout, 2, 20));
         //mTextInputUsernameLayout.setError("Bob");
         user.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("parseUser", ""));
         pwd.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("password", ""));
     }
 
-    /**
-     * Called when Activity starts and resumes
-     */
     @Override
     protected int getLayoutResource() {
         return R.layout.login_form_2;

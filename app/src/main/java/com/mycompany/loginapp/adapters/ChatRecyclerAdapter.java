@@ -40,7 +40,6 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
     private List<Conversation> mConversationList;
     private ParseObject mUserChatObject;
     private Date lastMessageReceivedDate;
-    private Date lastMessageUpdated;
 
     public ChatRecyclerAdapter(Context actContext, List<Conversation> conversationList, ParseObject userChatObject) {
         this.activityContext = actContext;
@@ -50,26 +49,6 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
         this.mUserChatObject = userChatObject;
     }
 
-    //    public void setChatList(List<Conversation> mConversationList) {
-//        //this.mConversationList = new ArrayList<>(mConversationList);
-//        this.mConversationList.addAll(mConversationList);
-//        this.notifyDataSetChanged();
-//    }
-//
-//    public void addRangeList(List<Conversation> mConversationList) {
-//        final int positionStart = this.mConversationList.size();
-////        this.mConversationList.clear();
-////        this.mConversationList.addAll(mConversationList);
-//        this.mConversationList = new ArrayList<>(mConversationList);
-//        //this.notifyDataSetChanged();
-//        this.notifyItemRangeInserted(positionStart, mConversationList.size());
-//    }
-//
-//    public void addNewMessages(List<Conversation> mConversationList){
-//        final int positionStart = this.mConversationList.size();
-//        this.mConversationList.addAll(mConversationList);
-//        this.notifyItemRangeInserted(positionStart, mConversationList.size());
-//    }
     public void setChatList(List<Conversation> conversationList) {
         this.mConversationList.addAll(conversationList);
         this.notifyDataSetChanged();
@@ -214,8 +193,16 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatRecyclerAdapte
         } else if (itemViewType == Constants.CHAT_ITEM_RECEIVE) {
             final Conversation mChatConversationObject = mConversationList.get(position);
 
-            MySingleton.getMySingleton().getPicasso().load(mChatConversationObject.getSender().
-                    getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(chatViewHolder.mChatImageView);
+            if(mChatConversationObject.getSender().
+                    getParseFile(ParseConstants.PROFILE_PICTURE) != null) {
+                MySingleton.getMySingleton().getPicasso().load(mChatConversationObject.getSender().
+                        getParseFile(ParseConstants.PROFILE_PICTURE).getUrl()).centerCrop().fit().noPlaceholder().into(chatViewHolder.mChatImageView);
+            }
+            else {
+                MySingleton.getMySingleton().getPicasso().load(R.drawable.com_facebook_profile_picture_blank_portrait).centerCrop().fit().into(chatViewHolder.mChatImageView);
+                final int color = ApplicationMain.getAppContext().getResources().getColor(R.color.teal_500);
+                chatViewHolder.mChatImageView.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            }
 
             chatViewHolder.timeTextView.setText(DateUtils.getRelativeDateTimeString(activityContext, mConversationList.get(position)
                     .getDate().getTime(), DateUtils.SECOND_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));

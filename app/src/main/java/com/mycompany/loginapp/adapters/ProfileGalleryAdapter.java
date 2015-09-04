@@ -39,6 +39,7 @@ public class ProfileGalleryAdapter extends RecyclerView.Adapter<ProfileGalleryAd
         this.mImageUrls = new ArrayList<>();
     }
 
+    /** For loading the images of the current user */
     public void addAllFiles(){
         for(int i = 0; i < 20; i++){
             if(i == 2  | i == 4 | i == 6){
@@ -50,6 +51,7 @@ public class ProfileGalleryAdapter extends RecyclerView.Adapter<ProfileGalleryAd
         }
     }
 
+    /** For loading urls of public users */
     public void addAllUrls(ParseUser mPublicParseUser){
         for(int i = 0; i < 20; i++){
             if(i == 2  | i == 4 | i == 6){
@@ -102,12 +104,6 @@ public class ProfileGalleryAdapter extends RecyclerView.Adapter<ProfileGalleryAd
                 holder.mImageView.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             }
         }
-//        if(position == 2 | position == 4 | position == 6) {
-//            MySingleton.getMySingleton().getPicasso().load(mImagePaths.get(position)).centerCrop().fit().into(holder.mImageView);
-//        }
-//        else {
-//            MySingleton.getMySingleton().getPicasso().load(mImagePaths.get(position)).centerCrop().fit().into(holder.mImageView);
-//        }
     }
 
     @Override

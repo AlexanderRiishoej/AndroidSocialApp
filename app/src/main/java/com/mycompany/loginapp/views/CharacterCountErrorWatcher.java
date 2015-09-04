@@ -28,8 +28,8 @@ public class CharacterCountErrorWatcher
     private final ForegroundColorSpan mNormalTextAppearance;
     private final AlignmentSpan mAlignmentSpan = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE);
     private final SpannableStringBuilder mErrorText = new SpannableStringBuilder();
-    private int mMinLen;
-    private int mMaxLen;
+    final private int mMinLen;
+    final private int mMaxLen;
 
     public CharacterCountErrorWatcher(TextInputLayout textInputLayout, int minLen, int maxLen) {
         mTextInputLayout = textInputLayout;
@@ -52,13 +52,14 @@ public class CharacterCountErrorWatcher
             if (hasValidLength()) {
                 mErrorText.setSpan(mNormalTextAppearance, 0, mErrorText.length(),
                         Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                mTextInputLayout.setError(null);
+                return;
             }
             else {
-                //mTextInputLayout.getEditText().setHighlightColor(ApplicationMain.getAppContext().getResources().getColor(R.color.red_500));
-                //mTextInputLayout.getEditText().setTextColor(ApplicationMain.getAppContext().getResources().getColor(R.color.red_500));
+                mTextInputLayout.setError(mErrorText);
             }
         }
-        mTextInputLayout.setError(mErrorText);
+        //mTextInputLayout.setError(mErrorText);
     }
 
     public boolean hasValidLength() {

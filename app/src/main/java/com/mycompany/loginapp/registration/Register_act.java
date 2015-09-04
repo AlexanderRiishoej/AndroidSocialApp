@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ScrollView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -33,6 +36,10 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -45,6 +52,9 @@ public class Register_act extends BaseActivity {
     public static final String LOG = Register_act.class.getSimpleName();
     private AQuery aQuery;
     private ScrollView mScrollView;
+    private EditText mUsernameEdt, mPasswordEdt, mFullNameEdt, mPhoneNumberEdt, mEmailEdt;
+    @Bind({ R.id.username_edit_text, R.id.password_edit_text, R.id.full_name_edit_text, R.id.phone_number_edit_text, R.id.email_edit_text})
+    List<EditText> mRegisterViews;
     private FirstNameTextWatcher mFirstNameTextWatcher;
     private LastNameTextWatcher mLastNameTextWatcher;
     private UsernameTextWatcher mUsernameTextWatcher;
@@ -57,39 +67,44 @@ public class Register_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.teal_700));
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         makeWindowTransition();
+        this.setUpEditTexts();
         aQuery = new AQuery(this);
-        aQuery.id(R.id.toolbar_title).text("Create an account");
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         }
-        setUpRegisterForm();
+        //setUpRegisterForm();
     }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.register;
+        return R.layout.register2;
     }
 
+    private void setUpEditTexts(){
+        mUsernameEdt = ButterKnife.findById(this, R.id.username_edit_text);
+        mPasswordEdt = ButterKnife.findById(this, R.id.password_edit_text);
+        mFullNameEdt = ButterKnife.findById(this, R.id.full_name_edit_text);
+        mPhoneNumberEdt = (ButterKnife.findById(this, R.id.phone_number_edit_text));
+        mEmailEdt = (ButterKnife.findById(this, R.id.email_edit_text));
+    }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_register, menu);
-//        return true;
-//    }
+    static final ButterKnife.Action<View> mAction = new ButterKnife.Action<View>() {
+        @Override
+        public void apply(View view, int index) {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.onBackPressed();
-                return true;
         }
-        return super.onOptionsItemSelected(item);
-    }
+    };
 
     public void register(View view) {
        final MaterialDialog singupDialog =  new MaterialDialog.Builder(this)
@@ -98,9 +113,11 @@ public class Register_act extends BaseActivity {
                 .progress(true, 0)
                 .show();
         final ParseUser parseUser = new ParseUser();
-        parseUser.setPassword(mPasswordTextWatcher.getEditText().getText().toString());
-        parseUser.setEmail(mEmailTextWatcher.getEditText().getText().toString());
-        parseUser.setUsername(mUsernameTextWatcher.getEditText().getText().toString());
+        parseUser.setPassword(mPasswordEdt.getText().toString());
+        parseUser.setEmail(mEmailEdt.getText().toString());
+        parseUser.setUsername(mUsernameEdt.getText().toString());
+        parseUser.put("phoneNumber", mPhoneNumberEdt.getText().toString());
+        parseUser.put("fullName", mFullNameEdt.getText().toString());
 //        if (noErrors()){
 //            final ParseUser parseUser = new ParseUser();
 //            parseUser.setPassword(mPasswordTextWatcher.getEditText().getText().toString());
@@ -112,20 +129,14 @@ public class Register_act extends BaseActivity {
                 public void done(ParseException e) {
                     singupDialog.dismiss();
                     if (e == null) {
-//                        parseUser.put("mobilePhoneNumber", mMobilePhoneNumberTextWatcher.getEditText().getText().toString());
-//                        parseUser.put("firstname", mFirstNameTextWatcher.getEditText().getText().toString());
-//                        parseUser.put("lastname", mLastNameTextWatcher.getEditText().getText().toString());
-//                        parseUser.put("gender", mMobilePhoneNumberTextWatcher.getEditText().getText().toString());
                         ApplicationMain.mCurrentParseUser = parseUser;
                         startActivity(new Intent(Register_act.this, ProfilePrivate_act.class));
-                        Log.d(LOG, "Current user is: " + ParseUser.getCurrentUser().getUsername());
-                        setResult(RESULT_OK);
+                        //Log.d(LOG, "Current user is: " + ParseUser.getCurrentUser().getUsername());
+                        //setResult(RESULT_OK);
                         finish();
                     } else {
-                        Utilities.showDialog(
-                                Register_act.this,
-                                getString(R.string.err_singup) + " "
-                                        + e.getMessage());
+                        new MaterialDialog.Builder(Register_act.this).content(getString(R.string.err_singup) + " "
+                                + e.getMessage()).title("Error occurred").show();
                         e.printStackTrace();
                     }
                 }
@@ -142,44 +153,50 @@ public class Register_act extends BaseActivity {
 
     private void setUpRegisterForm() {
         //firstname
-        final TextInputLayout mTextInputFirstname = (TextInputLayout) findViewById(R.id.firstname_textinput);
-        mFirstNameTextWatcher = new FirstNameTextWatcher(mTextInputFirstname);
-        mTextInputFirstname.getEditText().addTextChangedListener(mFirstNameTextWatcher);
-        //lastname
-        final TextInputLayout mTextInputLastname = (TextInputLayout) findViewById(R.id.lastname_textinput);
-        mLastNameTextWatcher = new LastNameTextWatcher(mTextInputLastname);
-        mTextInputLastname.getEditText().addTextChangedListener(mLastNameTextWatcher);
+//        final TextInputLayout mTextInputFirstname = (TextInputLayout) findViewById(R.id.fullname_textinput);
+//        mFirstNameTextWatcher = new FirstNameTextWatcher(mTextInputFirstname);
+//        if(mTextInputFirstname.getEditText() != null) {
+//            mTextInputFirstname.getEditText().addTextChangedListener(mFirstNameTextWatcher);
+//        }
         //username
-        final TextInputLayout mTextInputUsername = (TextInputLayout) findViewById(R.id.username_textinput);
-        mUsernameTextWatcher = new UsernameTextWatcher(mTextInputUsername);
-        mTextInputUsername.getEditText().addTextChangedListener(mUsernameTextWatcher);
-        //password
-        final TextInputLayout mTextInputPassword = (TextInputLayout) findViewById(R.id.password_textinput);
-        mPasswordTextWatcher = new PasswordTextWatcher(mTextInputPassword);
-        mTextInputPassword.getEditText().addTextChangedListener(mPasswordTextWatcher);
-        //confirm password
-        final TextInputLayout mTextInputConfirmPassword = (TextInputLayout) findViewById(R.id.confirm_password_textinput);
-        mConfirmPasswordTextWatcher = new ConfirmPasswordTextWatcher(mTextInputConfirmPassword, mTextInputPassword);
-        mTextInputConfirmPassword.getEditText().addTextChangedListener(mConfirmPasswordTextWatcher);
-        //email
-        final TextInputLayout mTextInputEmail = (TextInputLayout) findViewById(R.id.email_textinput);
-        mEmailTextWatcher = new EmailTextWatcher(mTextInputEmail);
-        mTextInputEmail.getEditText().addTextChangedListener(mEmailTextWatcher);
-
-        //birthday
-        final TextInputLayout mTextInputBirthday = (TextInputLayout) findViewById(R.id.birth_month_textinput);
-        mBirthdayTextWatcher = new BirthdayTextWatcher(mTextInputBirthday, this);
-        mTextInputBirthday.getEditText().addTextChangedListener(mBirthdayTextWatcher);
-
-        //final TextInputLayout mTextInputBirthDate = (TextInputLayout) findViewById(R.id.birth_date_textinput);
-        //final TextInputLayout mTextInputBirthYear  = (TextInputLayout) findViewById(R.id.birth_year_textinput);
-        //gender
-        final TextInputLayout mTextInputGender = (TextInputLayout) findViewById(R.id.gender_textinput);
-        mTextInputPassword.getEditText().addTextChangedListener(new PasswordTextWatcher(mTextInputPassword));
+//        final TextInputLayout mTextInputUsername = (TextInputLayout) findViewById(R.id.username_textinput);
+//        mUsernameTextWatcher = new UsernameTextWatcher(mTextInputUsername);
+//        if(mTextInputUsername.getEditText() != null) {
+//            mTextInputUsername.getEditText().addTextChangedListener(mUsernameTextWatcher);
+//        }
+//        //password
+//        final TextInputLayout mTextInputPassword = (TextInputLayout) findViewById(R.id.password_textinput);
+//        mPasswordTextWatcher = new PasswordTextWatcher(mTextInputPassword);
+//        if(mTextInputPassword.getEditText() != null) {
+//            mTextInputPassword.getEditText().addTextChangedListener(mPasswordTextWatcher);
+//        }
+//        //confirm password
+//        final TextInputLayout mTextInputConfirmPassword = (TextInputLayout) findViewById(R.id.confirm_password_textinput);
+//        mConfirmPasswordTextWatcher = new ConfirmPasswordTextWatcher(mTextInputConfirmPassword, mTextInputPassword);
+//        if(mTextInputConfirmPassword.getEditText() != null) {
+//            mTextInputConfirmPassword.getEditText().addTextChangedListener(mConfirmPasswordTextWatcher);
+//        }
+//        //email
+//        final TextInputLayout mTextInputEmail = (TextInputLayout) findViewById(R.id.email_textinput);
+//        mEmailTextWatcher = new EmailTextWatcher(mTextInputEmail);
+//        if(mTextInputEmail.getEditText() != null) {
+//            mTextInputEmail.getEditText().addTextChangedListener(mEmailTextWatcher);
+//        }
+//
+//        //birthday
+////        final TextInputLayout mTextInputBirthday = (TextInputLayout) findViewById(R.id.birth_month_textinput);
+////        mBirthdayTextWatcher = new BirthdayTextWatcher(mTextInputBirthday, this);
+////        if(mTextInputBirthday.getEditText() != null) {
+////            mTextInputBirthday.getEditText().addTextChangedListener(mBirthdayTextWatcher);
+////        }
+//
+//        //final TextInputLayout mTextInputBirthDate = (TextInputLayout) findViewById(R.id.birth_date_textinput);
+//        //final TextInputLayout mTextInputBirthYear  = (TextInputLayout) findViewById(R.id.birth_year_textinput);
+//        //gender
+//        //final TextInputLayout mTextInputGender = (TextInputLayout) findViewById(R.id.gender_textinput);
+//        mTextInputPassword.getEditText().addTextChangedListener(new PasswordTextWatcher(mTextInputPassword));
         //mobile phone number
-        final TextInputLayout mTextInputMobilePhoneNumber = (TextInputLayout) findViewById(R.id.mobile_phone_number_textinput);
-        mTextInputPassword.getEditText().addTextChangedListener(new PasswordTextWatcher(mTextInputPassword));
-
+        //final TextInputLayout mTextInputMobilePhoneNumber = (TextInputLayout) findViewById(R.id.mobile_phone_number_textinput);
     }
 
     //Checks if any fields is in its error state

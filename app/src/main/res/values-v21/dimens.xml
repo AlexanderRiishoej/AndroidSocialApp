@@ -1,15 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Navigation Drawer -->
-
-    <!-- NavHeaderHeight = navWidth * 9/16 -->
-    <dimen name="navigation_header_height">171dp</dimen>
-    <!-- NavDrawerMaxWidth = 320dp.
-         NavDrawerWidth = ScreenSize - ActionBarSize
-         Nexus 5: 360dp - 56dp = 304dp -->
-    <dimen name="navigation_width">304dp</dimen>
-
-    <!-- Statusbar -->
-    <dimen name="statusbar_height">24dp</dimen>
-
 </resources>

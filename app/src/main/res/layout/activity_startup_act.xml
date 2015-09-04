@@ -19,6 +19,7 @@
         <!--android:layout_alignParentBottom="true"-->
         <!--app:tabIndicatorColor="@color/white" />-->
 
+    <!-- Replacement of the TabLayout for Circular Indicator -->
     <me.relex.circleindicator.CircleIndicator
         android:id="@+id/indicator_default"
         android:layout_alignParentBottom="true"
@@ -29,7 +30,7 @@
         app:ci_animator="@animator/viewpager_animator"
         app:ci_drawable="@drawable/round_viewpager_selected"
         app:ci_drawable_unselected="@drawable/round_viewpager_unselected"
-        app:ci_width="4dp"
-        app:ci_height="4dp"
+        app:ci_width="6dp"
+        app:ci_height="6dp"
         app:ci_margin="6dp"/>
 </RelativeLayout>

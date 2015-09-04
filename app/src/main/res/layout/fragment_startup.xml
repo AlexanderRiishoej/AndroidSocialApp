@@ -78,7 +78,7 @@
                 android:layout_marginEnd="@dimen/pad_16dp"
                 android:layout_marginStart="@dimen/pad_30dp"
                 android:layout_marginTop="@dimen/pad_16dp"
-                android:text="Bring your friends together and join the community. Chat with friends, meet new people and share your experiences. ."
+                android:text="Bring your friends together and join the community. Chat with friends, meet new people and share your experiences."
                 android:textSize="@dimen/txt_12sp" />
 
             <!--<Button-->
