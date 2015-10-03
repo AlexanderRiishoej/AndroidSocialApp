@@ -85,10 +85,10 @@ public class ProfileRecyclerAdapter extends RecyclerView.Adapter<ProfileRecycler
             final MyProfileViewHolder viewHolderFinal = myProfileViewHolder;
 
             try {
-                if (ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()) {
+                if (ProfileImageHolder.mProfilePhotoFile != null && ProfileImageHolder.mProfilePhotoFile.exists()) {
                     // the noPlaceholder() did the trick... Now i am not receiving any null pointer exception regarding the gedWidth().
                     // the order has to be centerCrop().fit(). centerCrop() crops the image to fit its width/height and fit() fits the image into the imageView
-                    picasso.load(ProfileImageHolder.imageFile).centerCrop().fit().noPlaceholder().into(myProfileViewHolder.profilePicture);
+                    picasso.load(ProfileImageHolder.mProfilePhotoFile).centerCrop().fit().noPlaceholder().into(myProfileViewHolder.profilePicture);
 
                 } else {
                     ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {

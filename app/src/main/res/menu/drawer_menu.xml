@@ -31,13 +31,27 @@
             android:icon="@drawable/ic_chat_grey600_24dp"
             android:orderInCategory="4"
             android:title="New Chat" />
+
+        <item
+            android:id="@+id/navigation_sub_item_5"
+            android:checkable="true"
+            android:icon="@drawable/ic_friends_24dp"
+            android:orderInCategory="5"
+            android:title="Friends list" />
+
+        <item
+            android:id="@+id/navigation_sub_item_6"
+            android:checkable="true"
+            android:icon="@drawable/ic_explore_24dp"
+            android:orderInCategory="6"
+            android:title="Explore" />
     </group>
 
     <group >
         <item
-            android:id="@+id/navigation_sub_item_5"
+            android:id="@+id/navigation_sub_item_7"
             android:checkable="true"
-            android:orderInCategory="5"
+            android:orderInCategory="7"
             android:icon="@drawable/ic_logout_grey600_24dp"
             android:title="Log out" />
     </group>

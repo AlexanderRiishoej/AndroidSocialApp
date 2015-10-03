@@ -86,4 +86,5 @@
     <string name="title_activity_startup_act">Startup_act</string>
     <string name="title_activity_public_profile_act">PublicProfile_act</string>
     <string name="title_activity_edit_profile_act">EditProfile_act</string>
+    <string name="title_activity_find_friends_act">FindFriends_act</string>
 </resources>

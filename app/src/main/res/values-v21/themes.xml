@@ -65,7 +65,7 @@
         <!-- Color of popup item text -->
         <item name="android:textColorPrimary">@color/text_light_theme</item>
         <item name="android:textViewStyle">@style/customTextViewStyle</item>
-        <item name="android:selectableItemBackgroundBorderless">@drawable/ripple_toolbar_item</item>
+        <item name="android:selectableItemBackground">@drawable/ripple_toolbar_item</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_gravity">center_vertical</item>
         <!--<item name="selectableItemBackgroundBorderless">@drawable/ripple_toolbar_item</item>-->

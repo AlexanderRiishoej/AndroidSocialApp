@@ -21,6 +21,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Alexander on 19-07-2015.
  */
@@ -43,10 +46,10 @@ public class ProfileGalleryAdapter extends RecyclerView.Adapter<ProfileGalleryAd
     public void addAllFiles(){
         for(int i = 0; i < 20; i++){
             if(i == 2  | i == 4 | i == 6){
-                mImagePaths.add(i, ProfileImageHolder.profileCoverPhotoFile);
+                mImagePaths.add(i, ProfileImageHolder.mProfileCoverPhotoFile);
             }
             else {
-                mImagePaths.add(i, ProfileImageHolder.imageFile);
+                mImagePaths.add(i, ProfileImageHolder.mProfilePhotoFile);
             }
         }
     }
@@ -113,12 +116,13 @@ public class ProfileGalleryAdapter extends RecyclerView.Adapter<ProfileGalleryAd
 
     public static class MyImageViewHolder extends RecyclerView.ViewHolder {
         final private Context mActivityContext;
-        public ImageView mImageView;
+        @Bind(R.id.gallery_image) ImageView mImageView;
 
         public MyImageViewHolder(View itemView, Context activityContext) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
             this.mActivityContext = activityContext;
-            mImageView = (ImageView) itemView.findViewById(R.id.gallery_image);
+            //mImageView = (ImageView) itemView.findViewById(R.id.gallery_image);
         }
     }
 }

@@ -42,6 +42,8 @@
         <item name="android:colorControlHighlight">@color/colorControlHighlight</item>
         <item name="android:colorButtonNormal">@color/colorButtonNormal</item>
         <item name="android:colorControlActivated">@color/colorControlActivated</item>
+        <item name="colorPrimaryDark">@color/teal_700</item>
+        <item name="android:colorForeground">@color/teal_500</item>
     </style>
 
     <!-- ToolBar Theme -->
@@ -57,14 +59,14 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
-    <!-- Toolbar Popup Theme -->
+     Toolbar Popup Theme
     <style name="Base.Widget.AppCompat.Toolbar.Popup.Teal" parent="Base.Widget.AppCompat.Toolbar">
         <!-- Background of popup item -->
-        <item name="android:colorBackground">@color/white</item>
+        <!--<item name="android:colorBackground">@color/white</item>-->
         <!-- Color of popup item text -->
         <item name="android:textColorPrimary">@color/text_light_theme</item>
         <item name="android:textViewStyle">@style/customTextViewStyle</item>
-        <item name="selectableItemBackgroundBorderless">@drawable/selector_white_background</item>
+        <item name="android:selectableItemBackgroundBorderless">@drawable/selector_white_background</item>
         <item name="android:selectableItemBackground">@drawable/selector_white_background</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_gravity">center_vertical</item>

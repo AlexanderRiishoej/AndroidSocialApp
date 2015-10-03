@@ -137,28 +137,4 @@
         </LinearLayout>
 
     </RelativeLayout>
-    <!-- The navigation drawer -->
-    <!--<com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout-->
-    <!--android:id="@+id/scrimInsetsFrameLayout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_gravity="start"-->
-    <!--android:fitsSystemWindows="true">-->
-
-    <!--<fragment-->
-    <!--android:id="@+id/fragment_navigation_view"-->
-    <!--android:name="com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment"-->
-    <!--android:layout_width="@dimen/navigation_width"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_gravity="left|start"-->
-    <!--app:layout="@layout/fragment_navigation_view" />-->
-
-    <!--</com.mycompany.loginapp.views.transparentStatusbar.ScrimInsetFrameLayout>-->
-    <!--<android.support.design.widget.NavigationView-->
-    <!--android:id="@+id/navigation_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_gravity="start"-->
-    <!--app:headerLayout="@layout/navigation_header"-->
-    <!--app:menu="@menu/drawer_menu"/>-->
 </android.support.v4.widget.DrawerLayout>

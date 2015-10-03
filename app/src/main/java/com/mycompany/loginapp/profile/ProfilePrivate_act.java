@@ -8,7 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
-import android.text.InputType;
+import android.support.v4.app.Fragment;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -18,68 +18,65 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.androidquery.AQuery;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.adapters.MaterialDialogCustomAdapter;
-import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
 import com.mycompany.loginapp.eventMessages.MessageUpdateCoverPhoto;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.fragmentFactory.FragmentFactory;
 import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
+import com.mycompany.loginapp.helperClasses.SnackBarHelperClass;
 import com.mycompany.loginapp.profile.editProfile.EditProfileDialogHelper;
-import com.mycompany.loginapp.profile.imageLoaders.CoverPhotoLoader;
-import com.mycompany.loginapp.profile.imageLoaders.ProfilePhotoLoader;
+import com.mycompany.loginapp.profile.imageLoaders.IPhotoLoader;
+import com.mycompany.loginapp.profile.imageLoaders.ImageFileCreator;
+import com.mycompany.loginapp.profile.imageLoaders.abstractFactoryPattern.PhotoLoaderFactory;
+import com.mycompany.loginapp.profile.imageLoaders.abstractFactoryPattern.PhotoLoaderFactoryCreator;
 import com.mycompany.loginapp.utilities.Utilities;
-import com.parse.ParseException;
-import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ProfilePrivate_act extends BaseActivity {
     public static final String LOG = ProfilePrivate_act.class.getSimpleName();
-    private AQuery aQuery;
-    private ProfilePhotoLoader mProfilePictureImageLoader;
-    private CoverPhotoLoader mProfileCoverPhotoLoader;
-    private PrivateProfileFragment mPrivateProfileFragment;
+    private IPhotoLoader mProfilePictureImageLoader;
+    private IPhotoLoader mProfileCoverPhotoLoader;
+    private Fragment mPrivateProfileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //LoginDialogClass.dismissLoginDialog();
-        //makeWindowTransition();
-        ProfileHelperClass.setOnline();
+        ProfileHelperClass.setUserOnline();
         EventBus.getDefault().register(this);
-        mPrivateProfileFragment = PrivateProfileFragment.newInstance();
-        aQuery = new AQuery(this);
-        //setActionBarIcon(R.drawable.ic_arrow_back_white_24dp);
-        //aQuery.id(R.id.toolbar_title).text(ParseUser.getCurrentUser().getUsername());
+        mPrivateProfileFragment = FragmentFactory.getFragmentFactory().getFragment(PrivateProfileFragment.class.getSimpleName());
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_frame, mPrivateProfileFragment)
                     .commit();
         }
-        mProfilePictureImageLoader = new ProfilePhotoLoader(this);
-        mProfileCoverPhotoLoader = new CoverPhotoLoader(this);
-        mProfileCoverPhotoLoader.loadCoverPhoto();
-        mProfilePictureImageLoader.loadProfilePicture();
+
+        PhotoLoaderFactoryCreator photoLoaderFactoryCreator = PhotoLoaderFactory.getPhotoLoaderFactory();
+
+        mProfilePictureImageLoader = photoLoaderFactoryCreator.getPhotoLoaderInstance("ProfilePhotoLoader", this);
+        //mProfilePictureImageLoader.loadImage();
+
+        mProfileCoverPhotoLoader = photoLoaderFactoryCreator.getPhotoLoaderInstance("CoverPhotoLoader", this);
+        //mProfileCoverPhotoLoader.loadImage();
     }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.private_profile;
+        return R.layout.activity_private_profile;
     }
 
 
@@ -94,7 +91,7 @@ public class ProfilePrivate_act extends BaseActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.edit_name:
-                EditProfileDialogHelper.showEditNameDialog(this, mPrivateProfileFragment.getNameTextView());
+                EditProfileDialogHelper.showEditNameDialog(this, ((PrivateProfileFragment) mPrivateProfileFragment).getNameTextView());
                 return true;
 //            case R.id.action_chat:
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -162,17 +159,6 @@ public class ProfilePrivate_act extends BaseActivity {
         super.onDestroy();
     }
 
-    public void showSnackBar(View view) {
-        Snackbar.make(view, "This ia an example!", Snackbar.LENGTH_LONG)
-                .setAction("Do something useful!", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
-                .show(); // Dont forget to show!
-    }
-
     /**
      * Finishes this activity
      */
@@ -186,7 +172,7 @@ public class ProfilePrivate_act extends BaseActivity {
      * ProfilePrivate starts this event from the OnActivityResult() and from within ProfilePhotoLoader
      */
     public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent) {
-        mPrivateProfileFragment.updateProfilePicture();
+        ((PrivateProfileFragment) mPrivateProfileFragment).updateProfilePicture();
     }
 
 // http://developer.android.com/training/camera/photobasics.html - camera intent
@@ -200,15 +186,15 @@ public class ProfilePrivate_act extends BaseActivity {
 
             // If its a picture taken from the camera
             if (requestCode == Constants.REQUEST_PROFILE_IMAGE_CAPTURE) {
-                Log.d(LOG + " onActivityResult", "Photo taken with path: " + ProfileImageHolder.imageFile.getAbsolutePath());
+                Log.d(LOG + " onActivityResult", "Photo taken with path: " + ProfileImageHolder.mProfilePhotoFile.getAbsolutePath());
                 mProfilePictureImageLoader.saveImageToParse();
-                mProfilePictureImageLoader.updateDirectoryPictures();
-                EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.imageFile.getAbsolutePath()));
+                mProfilePictureImageLoader.updateImageDirectory();
+                EventBus.getDefault().post(new MessageUpdateProfilePicture(ProfileImageHolder.mProfilePhotoFile.getAbsolutePath()));
             }
             if (requestCode == Constants.REQUEST_COVER_IMAGE_CAPTURE) {
-                mProfileCoverPhotoLoader.saveCoverPhotoToParse();
-                mProfileCoverPhotoLoader.updateDirectoryPictures();
-                EventBus.getDefault().post(new MessageUpdateCoverPhoto(ProfileImageHolder.profileCoverPhotoFile.getAbsolutePath()));
+                mProfileCoverPhotoLoader.saveImageToParse();
+                mProfileCoverPhotoLoader.updateImageDirectory();
+                EventBus.getDefault().post(new MessageUpdateCoverPhoto(ProfileImageHolder.mProfileCoverPhotoFile.getAbsolutePath()));
             }
             // If is a picture taken from the gallery
             if (requestCode == Constants.REQUEST_CHOOSE_PROFILE_PICTURE) {
@@ -218,19 +204,12 @@ public class ProfilePrivate_act extends BaseActivity {
                 /** Populate image */
                 //Log.d(LOG, "MediaImagePath: " + getMediaImagePath(imageUri));
                 if (path != null && FileUtils.isLocal(path)) {
-                    //ProfileImageHolder.imageFile = new File(getMediaImagePath(imageUri));
-                    ProfileImageHolder.imageFile = new File(path);
+                    //ProfileImageHolder.mProfilePhotoFile = new File(getMediaImagePath(imageUri));
+                    ProfileImageHolder.mProfilePhotoFile = new File(path);
                     mProfilePictureImageLoader.saveImageToParse();
                     EventBus.getDefault().post(new MessageUpdateProfilePicture(path));
                 } else {
-                    Snackbar.make(mPrivateProfileFragment.getView(), "Error choosing image", Snackbar.LENGTH_LONG)
-                            .setAction("", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            })
-                            .show();
+                    SnackBarHelperClass.showBasicSnackBar(ButterKnife.findById(this, R.id.fragment_profile_main_layout), "Couldn't find image", Snackbar.LENGTH_SHORT);
                 }
             }
             //cover photo
@@ -240,23 +219,16 @@ public class ProfilePrivate_act extends BaseActivity {
                 final String path = FileUtils.getPath(this, coverUri);
 
                 if (path != null && FileUtils.isLocal(path)) {
-                    ProfileImageHolder.profileCoverPhotoFile = new File(path);
-                    mProfileCoverPhotoLoader.saveCoverPhotoToParse();
+                    ProfileImageHolder.mProfileCoverPhotoFile = new File(path);
+                    mProfileCoverPhotoLoader.saveImageToParse();
                     EventBus.getDefault().post(new MessageUpdateCoverPhoto(path));
                 } else {
-                    Snackbar.make(mPrivateProfileFragment.getView(), "Error choosing image", Snackbar.LENGTH_LONG)
-                            .setAction("", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            })
-                            .show();
+                    SnackBarHelperClass.showBasicSnackBar(ButterKnife.findById(this, R.id.fragment_profile_main_layout), "Couldn't find image", Snackbar.LENGTH_SHORT);
                 }
             }
 
             if (requestCode == Constants.REQUEST_CHOOSE_VIDEO) {
-                Log.d(LOG + " onActivityResult", "Video chosen with path: " + ProfileImageHolder.imageFile.getAbsolutePath());
+                Log.d(LOG + " onActivityResult", "Video chosen with path: " + ProfileImageHolder.mProfilePhotoFile.getAbsolutePath());
                 if (data == null) {
                     Log.d(LOG, "Data is null");
                 } else {
@@ -288,7 +260,7 @@ public class ProfilePrivate_act extends BaseActivity {
                     }
 
                     //picasso.load(mediaUri).fit().memoryPolicy(MemoryPolicy.NO_CACHE).into(aQuery.id(R.id.profile_picture).getImageView());
-                    //Copy Uri contents into temp imageFile.
+                    //Copy Uri contents into temp mProfilePhotoFile.
                     final String videoPath = FileUtils.getPath(this, mediaUri);
                     if(videoPath != null) {
                     File videoFile = new File(videoPath);
@@ -300,11 +272,11 @@ public class ProfilePrivate_act extends BaseActivity {
         } else if (resultCode == RESULT_CANCELED) {
 //            if (requestCode == Constants.REQUEST_PROFILE_IMAGE_CAPTURE || requestCode == Constants.REQUEST_CHOOSE_PROFILE_PICTURE) {
 //
-//                if (ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()) {
-//                    Log.d(LOG, "Camera request canceled and file exists: " + ProfileImageHolder.imageFile.exists());
-//                    ProfileImageHolder.imageFile.delete();
+//                if (ProfileImageHolder.mProfilePhotoFile != null && ProfileImageHolder.mProfilePhotoFile.exists()) {
+//                    Log.d(LOG, "Camera request canceled and file exists: " + ProfileImageHolder.mProfilePhotoFile.exists());
+//                    ProfileImageHolder.mProfilePhotoFile.delete();
 //
-//                    if (ProfileImageHolder.imageFile == null) {
+//                    if (ProfileImageHolder.mProfilePhotoFile == null) {
 //                        Log.d(LOG, "Camera request canceled and file deleted: " + true);
 //                    } else {
 //                        Log.d(LOG, "Camera request canceled and file deleted: " + false);
@@ -328,12 +300,19 @@ public class ProfilePrivate_act extends BaseActivity {
             // Create the File where the photo should go
             File photoFile = null;
             try {
-                //photoFile = getOutputMediaFile(Constants.MEDIA_TYPE_IMAGE);
-                photoFile = mProfilePictureImageLoader.getOutputMediaFile(Constants.MEDIA_TYPE_IMAGE);
+                if(requestCode == Constants.REQUEST_PROFILE_IMAGE_CAPTURE || requestCode == Constants.REQUEST_CHOOSE_PROFILE_PICTURE) {
+                    photoFile = ImageFileCreator.getOutputMediaFile();
+                    ProfileImageHolder.mProfilePhotoFile = photoFile;
+                }
+                else if (requestCode == Constants.REQUEST_COVER_IMAGE_CAPTURE || requestCode == Constants.REQUEST_CHOOSE_COVER_PHOTO){
+                    photoFile = ImageFileCreator.getOutputMediaFile();
+                    ProfileImageHolder.mProfileCoverPhotoFile = photoFile;
+                }
+                    //photoFile = getOutputMediaFile(Constants.MEDIA_TYPE_IMAGE);
 
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 // Error occurred while creating the File
-                Utilities.showDialog(ProfilePrivate_act.this, "Error loading imageFile" + " " + ex.getMessage());
+                SnackBarHelperClass.showBasicSnackBar(ButterKnife.findById(this, R.id.fragment_profile_main_layout), "Error occurred while taking picture", Snackbar.LENGTH_LONG);
                 ex.printStackTrace();
             }
 
@@ -346,36 +325,8 @@ public class ProfilePrivate_act extends BaseActivity {
                 startActivityForResult(takePictureIntent, requestCode);
 
             } else {
-                Utilities.showDialog(ProfilePrivate_act.this, "There was a problem accessing your device external storage");
+                SnackBarHelperClass.showBasicSnackBar(ButterKnife.findById(this, R.id.fragment_profile_main_layout), "Error occurred while taking picture", Snackbar.LENGTH_LONG);
             }
-        }
-    }
-
-    /**
-     * Opens the gallery
-     */
-    private void choosePictureFromGallery() {
-        if (Build.VERSION.SDK_INT < 19) {
-//            Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
-//            choosePictureIntent.setType("image/*");
-//            startActivityForResult(Intent.createChooser(choosePictureIntent, "Select Picture"), Constants.REQUEST_CHOOSE_COVER_PHOTO);
-            // Use the GET_CONTENT intent from the utility class
-            Intent target = FileUtils.createGetContentIntent();
-            // Create the chooser Intent
-            Intent intent = Intent.createChooser(
-                    target, "Select file");
-            try {
-                startActivityForResult(intent, Constants.REQUEST_CHOOSE_PROFILE_PICTURE);
-            } catch (ActivityNotFoundException e) {
-                // The reason for the existence of aFileChooser
-            }
-        } else {
-            Intent choosePictureIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            //Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            //choosePictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            choosePictureIntent.setType("image/*");
-            //The data that is returned by the result is the path to the image file
-            startActivityForResult(choosePictureIntent, Constants.REQUEST_CHOOSE_PROFILE_PICTURE);
         }
     }
 

@@ -21,6 +21,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -28,6 +30,7 @@ import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.adapters.ChatListRecyclerAdapter;
 import com.mycompany.loginapp.base.BaseActivity;
+import com.mycompany.loginapp.chat.ChatListFragment;
 import com.mycompany.loginapp.chat.Chat_act;
 import com.mycompany.loginapp.chat.DateHolder;
 import com.mycompany.loginapp.chat.NewUserChat_act;
@@ -52,134 +55,22 @@ import de.greenrobot.event.EventBus;
 
 //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class UserChatList_act extends BaseActivity {
-
     public static final String LOG = UserChatList_act.class.getSimpleName();
-    /**
-     * The user.
-     */
-    private ChatListRecyclerAdapter chatListRecyclerAdapter;
-    private RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    private RecyclerView.LayoutManager mLayoutManager;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private AQuery aQuery;
-    private ArrayList<ParseObject> userList;
-    private FloatingActionButton mFabButton;
-    private boolean isRunning;
-    // A list of DateHolders that represents the updated dates of the chats
-    private ArrayList<DateHolder<Date>> dateHolderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        makeWindowTransition();
-        EventBus.getDefault().register(this);
-        aQuery = new AQuery(this);
-        aQuery.id(R.id.toolbar_title).text("Chat users");
-        //mFabButton = (ImageButton) findViewById(R.id.fabButton);
-        initializeRecyclerView();
-        userList = new ArrayList<>();
-        chatListRecyclerAdapter = new ChatListRecyclerAdapter(this, userList);
-        mRecyclerView.setAdapter(chatListRecyclerAdapter);
-        initializeSwipeRefreshLayout();
-        mFabButton = (FloatingActionButton) findViewById(R.id.fab);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.teal_700));
+        ChatListFragment mChatListFragment = ChatListFragment.newInstance();
 
-    private void initializeSwipeRefreshLayout() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.teal_500);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshContent();
-            }
-        });
-//        swipeRefreshLayout.setProgressViewOffset(false, 180, 300);
-    }
-
-    private void initializeRecyclerView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.userChatListRecyclerView);
-        mRecyclerView.setHasFixedSize(false);                            // Letting the system know that the list objects are of fixed size
-        //mRecyclerAdapter = new NavigationRecyclerAdapter(getActivity());       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
-        // And passing the titles,icons,navigation_header view name, navigation_header view email,
-        // and navigation_header view profile_image picture
-        mLayoutManager = new LinearLayoutManager(this);         // Creating a layout Manager
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(this, mRecyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                if (position == Constants.TYPE_HEADER) {
-                    return;
-                }
-                // only for testing purposes
-//                if (position > 2) {
-//                    return;
-//                }
-                final int childViewPosition = position - 1; // minus position of header
-
-                if(userList.size() > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class).
-                                        putExtra(Constants.EXTRA_DATA, userList.get(childViewPosition).getParseUser("username").getUsername()),
-                                ActivityOptions.makeSceneTransitionAnimation(UserChatList_act.this).toBundle());
-                    } else {
-                        EventBus.getDefault().postSticky(new MessageUserChat(userList.get(childViewPosition)));
-                        startActivity(new Intent(UserChatList_act.this, Chat_act.class));
-                    }
-                }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
-//        mRecyclerView.addOnScrollListener(new HidingScrollListener() {
-//            @Override
-//            public void onHide() {
-//                hideViews();
-//            }
-//
-//            @Override
-//            public void onShow() {
-//                showViews();
-//            }
-//        });
-    }
-
-    private void hideViews() {
-        getToolbar().animate().translationY(-getToolbar().getHeight()).setInterpolator(new AccelerateInterpolator(2));
-
-        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mFabButton.getLayoutParams();
-        int fabBottomMargin = lp.bottomMargin;
-        mFabButton.animate().translationY(mFabButton.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
-    }
-
-    private void showViews() {
-        getToolbar().animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
-        mFabButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-    }
-
-    /**
-     * Refreshes the content
-     */
-    private void refreshContent() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshUserList();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1000);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, mChatListFragment)
+                    .commit();
+        }
     }
 
     @Override
@@ -209,289 +100,5 @@ public class UserChatList_act extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * (non-Javadoc)
-     * When the system destroys your activity, it calls the onDestroy() method for your Activity
-     */
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        //updateUserStatus(false);
-        super.onDestroy();
-    }
-
-    /**
-     * Be aware that the system calls this method every time your activity comes into the foreground,
-     * including when it's created for the first time. As such, you should implement onResume() to initialize components
-     * that you release during onPause() and perform any other initializations that must occur each time the activity enters the Resumed state
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        isRunning = true;
-        this.getActiveUserChats();
-        //refreshUserList();
-        //refreshUserList();
-        //loadUserList();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        this.isRunning = false;
-    }
-
-    /**
-     * Finishes this activity
-     *
-     * @param event - received when user presses Log Out
-     */
-    public void onEvent(MessageFinishActivities event) {
-        //Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        Log.d("CLOSE EVENT RECEIVED: ", "FINISHING USER_LIST");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.finishAfterTransition();
-        } else finish();
-    }
-
-    /**
-     * Update user status.
-     *
-     * @param online true if user is online
-     */
-    private void updateUserStatus(boolean online) {
-        ParseUser.getCurrentUser().put(ParseConstants.ONLINE, online);
-        ParseUser.getCurrentUser().saveEventually();
-    }
-
-    /**
-     * Gets all the active chats for the current logged in user
-     */
-    private void refreshUserList() {
-//        final ProgressDialog dia = ProgressDialog.show(this, null,
-//                getString(R.string.alert_loading));
-        final List<ParseObject> userChatList = new ArrayList<ParseObject>();
-        getUserChatListQuery().orderByDescending(ParseConstants.UPDATED_AT).findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
-//                dia.dismiss();
-                if (e == null) {
-                    if (parseUserChatObjects.size() > 0) {
-                        userChatList.addAll(parseUserChatObjects);
-                        userList = new ArrayList<ParseObject>(userChatList);
-                        chatListRecyclerAdapter.setUserChatObjectList(userList);
-                        chatListRecyclerAdapter.notifyItemRangeChanged(1, userList.size());
-                        //userChatListRecyclerAdapter.notifyDataSetChanged();
-
-                    } else {
-                        Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
-                    }
-                } else {
-                    Utilities.showDialog(UserChatList_act.this, "Error: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    /**
-     * Gets the active chat associated with the current logged in user
-     */
-    private void getActiveUserChats() {
-        getUserChatListQuery().orderByDescending(ParseConstants.UPDATED_AT).findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseUserChatObjects, ParseException e) {
-//                dia.dismiss();
-                if (e == null) {
-                    if (parseUserChatObjects.size() > 0) {
-                        //userChatList.addAll(parseUserChatObjects);
-                        //Log.d(LOG, "Size of list of chat users: " + parseUserChatObjects.size());
-                        //Log.d(LOG, "Username: " + parseUserChatObjects.get(0).getParseUser("username").getUsername());
-                        if (userList.size() >= 2) {
-                            //Log.d(LOG, userList.get(0).getUpdatedAt().toString());
-                            //Log.d(LOG, userList.get(1).getUpdatedAt().toString());
-                        }
-                        loadUserList(parseUserChatObjects);
-                    } else {
-                        Utilities.showDialog(UserChatList_act.this, "No users for chat were found. Try reloading the page.");
-                    }
-                } else {
-                    Utilities.showDialog(UserChatList_act.this, "Error: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    /**
-     * Loads the users into the list of chat users
-     */
-    private void loadUserList(List<ParseObject> userChats) {
-        // If the size of the two data sets are different it means that x-number of users has requested a new chat hence
-        // the whole data set has to be notified, since i do not know how many is actively requesting to start a new chat
-        if (userChats.size() != this.userList.size()) {
-            userList = new ArrayList<ParseObject>(userChats);
-            chatListRecyclerAdapter.setUserChatObjectList(userList);
-            chatListRecyclerAdapter.notifyDataSetChanged();
-            dateHolderList = new ArrayList<DateHolder<Date>>();
-            for (ParseObject p : userChats) {
-                dateHolderList.add(new DateHolder<Date>(p.getUpdatedAt()));
-            }
-        }
-        // check and update the
-        checkUpdatedChats(userChats);
-        // update the list of chats every one second
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                if (isRunning) {
-                    getActiveUserChats();
-                }
-            }
-        }, 1000);
-    }
-
-    /**
-     * The query for the list of chats
-     */
-    private ParseQuery<ParseObject> getUserChatListQuery() {
-        ParseQuery<ParseObject> parseObjectQuery = ParseQuery.getQuery("ChatUsers");
-//        parseObjectQuery.whereMatches("chatUserId", ParseUser.getCurrentUser().getUsername());
-        parseObjectQuery.whereMatches("chatId", ParseUser.getCurrentUser().getObjectId());
-        parseObjectQuery.include("username");
-        parseObjectQuery.include("createdBy");
-
-        return parseObjectQuery;
-    }
-
-    /**
-     * Checks whether or not, the current list of chats needs to be updated due to new messages, new chat requests etc.
-     * Iterates through the newly updated list of chats received by Parse and then checks for each old item in
-     * the current list of chats, if anything has changed and needs to be updated.
-     * Hence the items position and id relative to the old list, has to be checked
-     */
-    private void checkUpdatedChats(List<ParseObject> userChats) {
-
-        // iterate through each element in the list of updated userchats
-        for (int i = 0; i < userChats.size(); i++) {
-            // save the object id of the item of the newly updated list from Parse
-            String newListObjectId = userChats.get(i).getObjectId();
-            // now iterate through the old user chatlist in order to check for every item in the old list
-            for (int j = 0; j < userList.size(); j++) {
-                // save the object id of the item of the old list in order to compare it with the object id of the new
-                String oldListObjectId = userList.get(j).getObjectId();
-                // check if any of the old object ids matches the object id of the updated list
-                // if they match, and their positions, relative to the lists, are different, then it means that
-                // the position of the element in the old list has been updated to the one of the new list.
-                if (oldListObjectId.equals(newListObjectId) && i != j) {
-                    // notify that item has changed and should be moved in the adapter to the top
-                    chatListRecyclerAdapter.notifyItemChanged(j + 1); // j+1 due to header
-                    chatListRecyclerAdapter.notifyItemMoved(j + 1, 1); // j+1 due to header
-                    // remove the item from its old position in the list and current dateHolder corresponding to the current chat list
-                    userList.remove(j);
-                    dateHolderList.remove(j);
-                    // insert item at its new position which is at the top of the list
-                    userList.add(0, userChats.get(i));
-                    dateHolderList.add(0, new DateHolder<Date>(userChats.get(i).getUpdatedAt()));
-                    // update the user chatlist of the adapter in order to keep the adapters list up-to-date
-                    chatListRecyclerAdapter.setUserChatObjectList(userList);
-                }
-                // if the position is 0 and the object ids match and the updated date is after the one in the old list
-                // then make sure to update this item in the list
-                if (oldListObjectId.equals(newListObjectId) && i == 0 && j == 0 &&
-                        userChats.get(0).getUpdatedAt().after(dateHolderList.get(0).getLastUpdated())) {
-                    {
-                        userList.set(0, userChats.get(0));
-                        dateHolderList.add(0, new DateHolder<Date>(userChats.get(0).getUpdatedAt()));
-                        chatListRecyclerAdapter.notifyItemChanged(1);
-                    }
-                }
-                // if the two object ids are the same and the are placed on the same position in the list, it means that they have not changed hence
-                // no further actions should be taken
-                else if (oldListObjectId.equals(newListObjectId) && i == j) {
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * -------------------------------------------------------------------------------------------------------------------------------------------------
-     * Window Transitions
-     */
-    private void makeWindowTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setEnterTransition(makeEnterTransition());
-            getWindow().setExitTransition(makeExitTransition());
-//            getWindow().setReenterTransition(makeReenterTransition());
-            getWindow().setReturnTransition(makeReturnTransition());
-            ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-        }
-    }
-
-    private Transition makeEnterTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet enterTransition = new TransitionSet();
-
-            Transition t = new Slide(Gravity.TOP).setDuration(600);
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.appbar, true);
-            enterTransition.addTransition(t);
-
-            Transition tt = new Fade();
-            enterTransition.addTransition(tt).setDuration(1000);
-            return enterTransition;
-        } else return null;
-    }
-
-    private Transition makeExitTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet exitTransition = new TransitionSet();
-            exitTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            exitTransition.excludeTarget(R.id.appbar, true);
-            Transition slideInFromLeft = new Slide(Gravity.LEFT);
-
-            exitTransition.addTransition(slideInFromLeft).setDuration(400);
-            return exitTransition;
-        } else return null;
-    }
-
-    private Transition makeReenterTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet enterTransition = new TransitionSet();
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.toolbar_teal, true);
-
-            Transition slideInFromLeft = new Slide(Gravity.LEFT);
-
-            enterTransition.addTransition(slideInFromLeft).setDuration(200);
-            return enterTransition;
-        } else return null;
-    }
-
-    private Transition makeReturnTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            TransitionSet enterTransition = new TransitionSet();
-
-            Transition leftPartSlide = new Slide(Gravity.LEFT);
-            enterTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-            enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
-            enterTransition.excludeTarget(R.id.appbar, true);
-            enterTransition.addTransition(leftPartSlide);
-
-            Transition fade = new Fade();
-            //enterTransition.addTransition(fade);
-
-            enterTransition.setDuration(300);
-            return enterTransition;
-        } else return null;
     }
 }

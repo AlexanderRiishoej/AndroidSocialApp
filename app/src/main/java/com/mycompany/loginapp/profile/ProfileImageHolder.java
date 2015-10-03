@@ -7,11 +7,8 @@ import java.io.File;
  * Holds a global reference to the profile_image image that all activities and fragments can use
  */
 public class ProfileImageHolder {
-    public static String profileImagePath;
-    public static File imageFile;
-
-    public static String profileCoverPath;
-    public static File profileCoverPhotoFile;
+    public static File mProfilePhotoFile;
+    public static File mProfileCoverPhotoFile;
 
     public ProfileImageHolder(){
 
@@ -19,7 +16,7 @@ public class ProfileImageHolder {
 
     /** Sets the image files to null. Always do this when logging out. */
     public static void setImageFilesNull(){
-        imageFile = null;
-        profileCoverPhotoFile = null;
+        mProfilePhotoFile = null;
+        mProfileCoverPhotoFile = null;
     }
 }

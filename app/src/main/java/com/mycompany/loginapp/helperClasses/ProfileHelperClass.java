@@ -14,13 +14,13 @@ public class ProfileHelperClass {
     }
 
     /** Sets user online */
-    public static void setOnline(){
+    public static void setUserOnline(){
         ApplicationMain.mCurrentParseUser.put(ParseConstants.ONLINE, true);
         ApplicationMain.mCurrentParseUser.saveEventually();
     }
 
     /** Sets user offline */
-    public static void setOffline(){
+    public static void setUserOffline(){
         ApplicationMain.mCurrentParseUser.put(ParseConstants.ONLINE, false);
         ApplicationMain.mCurrentParseUser.saveEventually();
     }

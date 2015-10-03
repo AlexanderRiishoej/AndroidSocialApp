@@ -18,11 +18,13 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mycompany.loginapp.R;
+import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.chat.NewUserChat_act;
 import com.mycompany.loginapp.chat.oldNotUsed.UserChatList_act;
 import com.mycompany.loginapp.constants.Constants;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageUpdateProfilePicture;
+import com.mycompany.loginapp.friends.find_friends.FindFriends_act;
 import com.mycompany.loginapp.general.Startup_act;
 import com.mycompany.loginapp.helperClasses.ProfileHelperClass;
 import com.mycompany.loginapp.login.LoginProgressDialogClass;
@@ -35,6 +37,8 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -48,9 +52,9 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
 
-    public ImageView profile_image;
-    public TextView name;
-    public TextView email;
+    @Bind(R.id.circleView)public ImageView profile_image;
+    @Bind(R.id.name)public TextView name;
+    @Bind(R.id.email)public TextView email;
 
     private int id;
 
@@ -69,9 +73,17 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MenuItem drawerItem = mNavigationView.getMenu().findItem(getDrawerItemId());
+        drawerItem.setChecked(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View navigationView = inflater.inflate(R.layout.fragment_navigation_view, container, false);
+        ButterKnife.bind(this, navigationView);
         mNavigationView = (NavigationView) navigationView.findViewById(R.id.navigation_view);
         MenuItem drawerItem = mNavigationView.getMenu().findItem(getDrawerItemId());
         drawerItem.setChecked(true);
@@ -86,11 +98,12 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        name = (TextView) navigationView.findViewById(R.id.name);         // Creating Text View object from navigation_header.xml_header.xml for name
-        email = (TextView) navigationView.findViewById(R.id.email);       // Creating Text View object from navigation_header.xml_header.xml for email
-        name.setText("Alexander Riishoej");
-        email.setText("alexander_blazer@hotmail.com");
-        profile_image = (ImageView) navigationView.findViewById(R.id.circleView);
+        if (ApplicationMain.mCurrentParseUser.getString("fullName") != null) {
+            name.setText(ApplicationMain.mCurrentParseUser.getString("fullName"));
+        }
+        if (ApplicationMain.mCurrentParseUser.getEmail() != null) {
+            email.setText(ApplicationMain.mCurrentParseUser.getEmail());
+        }
         this.loadNavigationHeaderViewImage();
         // Inflate the layout for this fragment
         return navigationView;
@@ -102,7 +115,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     // The drawer toggle that binds the toolbar together with the navigation drawer
-    private void setupDrawerToggle(){
+    private void setupDrawerToggle() {
         this.mDrawerToggle = new SmoothActionBarDrawerToggle(getActivity(), mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
 
@@ -116,7 +129,7 @@ public class NavigationDrawerFragment extends Fragment {
                 }
                 //getSupportActionBar().setTitle("Navigation!");
                 /** Redraws the toolbar */
-               // getActivity().invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                // getActivity().invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely closed state. */
@@ -138,7 +151,7 @@ public class NavigationDrawerFragment extends Fragment {
         final String activityClassName = getActivity().getClass().getSimpleName();
         switch (item) {
             case 1: // item is Home/User activity
-                if(activityClassName.equals(ProfilePrivate_act.class.getSimpleName())) break;
+                if (activityClassName.equals(ProfilePrivate_act.class.getSimpleName())) break;
                 this.mDrawerToggle.runWhenIdle(new Runnable() {
                     @Override
                     public void run() {
@@ -152,7 +165,7 @@ public class NavigationDrawerFragment extends Fragment {
                 break;
 
             case 2: // item is profile_image not implemented yet
-                if(activityClassName.equals(Social_act.class.getSimpleName())) break;
+                if (activityClassName.equals(Social_act.class.getSimpleName())) break;
                 this.mDrawerToggle.runWhenIdle(new Runnable() {
                     @Override
                     public void run() {
@@ -168,7 +181,7 @@ public class NavigationDrawerFragment extends Fragment {
                 break;
 
             case 3: // item is active chat user list
-                if(activityClassName.equals(UserChatList_act.class.getSimpleName())) break;
+                if (activityClassName.equals(UserChatList_act.class.getSimpleName())) break;
                 this.mDrawerToggle.runWhenIdle(new Runnable() {
                     @Override
                     public void run() {
@@ -182,7 +195,7 @@ public class NavigationDrawerFragment extends Fragment {
                 break;
 
             case 4: // item is create new chat
-                if(activityClassName.equals(NewUserChat_act.class.getSimpleName())) break;
+                if (activityClassName.equals(NewUserChat_act.class.getSimpleName())) break;
                 this.mDrawerToggle.runWhenIdle(new Runnable() {
                     @Override
                     public void run() {
@@ -194,8 +207,20 @@ public class NavigationDrawerFragment extends Fragment {
                     }
                 });
                 break;
-
-            case 5:
+            case 5: // item is create new chat
+                if (activityClassName.equals(FindFriends_act.class.getSimpleName())) break;
+                this.mDrawerToggle.runWhenIdle(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().startActivity(new Intent(getActivity(), FindFriends_act.class), ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                        } else {
+                            getActivity().startActivity(new Intent(getActivity(), FindFriends_act.class));
+                        }
+                    }
+                });
+                break;
+            case 7:
                 this.mDrawerToggle.runWhenIdle(new Runnable() {
                     @Override
                     public void run() {
@@ -205,7 +230,7 @@ public class NavigationDrawerFragment extends Fragment {
                             public void done(ParseException e) {
                                 if (e == null) {
                                     ProfileImageHolder.setImageFilesNull();
-                                    ProfileHelperClass.setOffline();
+                                    ProfileHelperClass.setUserOffline();
                                     getActivity().startActivity(new Intent(getActivity(), Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                                     getActivity().finish();
@@ -239,30 +264,34 @@ public class NavigationDrawerFragment extends Fragment {
             case Constants.NEW_USER_CHAT_ACT_NAME:
                 return R.id.navigation_sub_item_4;
 
+            case Constants.FIND_FRIENDS:
+                return R.id.navigation_sub_item_5;
+
             default:
                 return R.id.navigation_sub_item_1;
         }
     }
 
-    public ActionBarDrawerToggle getNavigationDrawerToggle(){
+    public ActionBarDrawerToggle getNavigationDrawerToggle() {
         return mDrawerToggle;
     }
 
-    public NavigationView getNavigationView(){
+    public NavigationView getNavigationView() {
         return mNavigationView;
     }
 
-    /** Event received when a new profile_image picture has been chosen */
-    public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent){
+    /**
+     * Event received when a new profile_image picture has been chosen
+     */
+    public void onEvent(MessageUpdateProfilePicture newProfilePictureEvent) {
         loadNavigationHeaderViewImage();
     }
 
-    private void loadNavigationHeaderViewImage(){
-        if(ProfileImageHolder.imageFile != null && ProfileImageHolder.imageFile.exists()){
-            MySingleton.getMySingleton().getPicasso().load(ProfileImageHolder.imageFile).centerCrop().fit().noPlaceholder().into(profile_image);
-        }
-        else {
-            ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ParseUser.getCurrentUser().getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
+    private void loadNavigationHeaderViewImage() {
+        if (ProfileImageHolder.mProfilePhotoFile != null && ProfileImageHolder.mProfilePhotoFile.exists()) {
+            MySingleton.getMySingleton().getPicasso().load(ProfileImageHolder.mProfilePhotoFile).centerCrop().fit().noPlaceholder().into(profile_image);
+        } else {
+            ParseUser.getQuery().whereEqualTo(ParseConstants.USERNAME, ApplicationMain.mCurrentParseUser.getUsername()).getFirstInBackground(new GetCallback<ParseUser>() {
                 @Override
                 public void done(ParseUser parseUser, ParseException e) {
                     if (e == null) {

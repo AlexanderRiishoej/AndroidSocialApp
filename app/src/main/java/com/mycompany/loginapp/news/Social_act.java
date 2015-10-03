@@ -13,53 +13,102 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
 import com.mycompany.loginapp.chat.ChatListFragment;
 import com.mycompany.loginapp.chat.NewUserChat_act;
 import com.mycompany.loginapp.eventMessages.MessageFinishActivities;
+import com.mycompany.loginapp.fragmentFactory.FragmentFactory;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 
-public class Social_act extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
-    private ViewPager mViewPager;
+public class Social_act extends BaseActivity {
+    @Bind(R.id.viewPager) ViewPager mViewPager;
+    @Bind(R.id.appbar) AppBarLayout mAppBarLayout;
     private ViewPagerAdapter mViewPagerAdapter;
     private static final int FRAGMENT_0 = 0;
     private static final int FRAGMENT_1 = 1;
     private static final int FRAGMENT_2 = 2;
-    private AQuery aQuery;
-    private AppBarLayout mAppBarLayout;
     private int mFragmentIndex = -1;
     private Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        aQuery = new AQuery(this);
-        aQuery.id(R.id.toolbar_title).text("Social");
+        ButterKnife.bind(this);
+        getToolbar().setTitle("Social");
         EventBus.getDefault().register(this);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-
-        mViewPager = (ViewPager)findViewById(R.id.viewPager);
-
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mViewPagerAdapter);
         // Set the amount of pages to be stored in memory on either side of the current active page
         mViewPager.setOffscreenPageLimit(3);
 
         // Bind the tabs to the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = ButterKnife.findById(this, R.id.tabs);
         //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(1);
+        this.setViewPagerScrollListener();
+        this.setAppBarScrollListener();
+    }
+
+    private void setAppBarScrollListener() {
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                if(i >= 0){
+                    enableDisableSwipeRefresh(true);
+                }
+                else {
+                    enableDisableSwipeRefresh(false);
+                }
+            }
+        });
+    }
+
+    private void setViewPagerScrollListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
+    }
+
+    private void enableDisableSwipeRefresh(boolean b) {
+        final int index = mViewPager.getCurrentItem();
+        if (index != mFragmentIndex) {
+        mFragmentIndex = index;
+        mCurrentFragment = (Fragment) mViewPagerAdapter.instantiateItem(mViewPager, mFragmentIndex);
+    }
+            if(mCurrentFragment instanceof WallPostFragment){
+                ((WallPostFragment)mCurrentFragment).setSwipeRefreshingEnabled(b);
+            }
+            else if(mCurrentFragment instanceof ChatListFragment){
+                ((ChatListFragment)mCurrentFragment).setSwipeRefreshingEnabled(b);
+            }
+            else {
+                ((NewChatFragment)mCurrentFragment).setSwipeRefreshingEnabled(b);
+            }
+//        }
     }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.social;
+        return R.layout.activity_social;
     }
 
 
@@ -100,59 +149,16 @@ public class Social_act extends BaseActivity implements AppBarLayout.OnOffsetCha
         this.finish();
     }
 
-    /** Gets the current fragment associated with the viewPagerAdapter and sets its scrolling enabled/disabled, depending on the amount scrolled */
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        //http://stackoverflow.com/questions/7379165/update-data-in-listfragment-as-part-of-viewpager/8886019#8886019
-        final int index = mViewPager.getCurrentItem();
-        if(index != mFragmentIndex) {
-            mFragmentIndex = index;
-            mCurrentFragment = (Fragment) mViewPagerAdapter.instantiateItem(mViewPager, mFragmentIndex);
-        }
-
-            if(i == 0) {
-                switch (index){
-                    case 0:
-                        WallPostFragment w = (WallPostFragment)mCurrentFragment;
-                        w.setSwipeRefreshingEnabled(true);
-                        return;
-                    case 1:
-                        ChatListFragment c = (ChatListFragment)mCurrentFragment;
-                        c.setSwipeRefreshingEnabled(true);
-                        return;
-                    case 2:
-                        FindFriendsFragment f = (FindFriendsFragment)mCurrentFragment;
-                        f.setSwipeRefreshingEnabled(true);
-                        return;
-                }
-        } else {
-                switch (index){
-                    case 0:
-                        WallPostFragment w = (WallPostFragment)mCurrentFragment;
-                        w.setSwipeRefreshingEnabled(false);
-                        return;
-                    case 1:
-                        ChatListFragment c = (ChatListFragment)mCurrentFragment;
-                        c.setSwipeRefreshingEnabled(false);
-                        return;
-                    case 2:
-                        FindFriendsFragment f = (FindFriendsFragment)mCurrentFragment;
-                        f.setSwipeRefreshingEnabled(false);
-                        return;
-                }
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
-        mAppBarLayout.removeOnOffsetChangedListener(this);
+//        mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mAppBarLayout.addOnOffsetChangedListener(this);
+//        mAppBarLayout.addOnOffsetChangedListener(this);
     }
 
     /** Fragment pager adapter maintaining the fragments
@@ -171,13 +177,13 @@ public class Social_act extends BaseActivity implements AppBarLayout.OnOffsetCha
 
             switch (position){
                 case FRAGMENT_0:
-                    tabFragment = WallPostFragment.newInstance("", "");
+                    tabFragment = FragmentFactory.getFragmentFactory().getFragment(WallPostFragment.class.getSimpleName());
                     break;
                 case FRAGMENT_1:
-                    tabFragment = ChatListFragment.newInstance();
+                    tabFragment = FragmentFactory.getFragmentFactory().getFragment(ChatListFragment.class.getSimpleName());
                     break;
                 case FRAGMENT_2:
-                    tabFragment = FindFriendsFragment.newInstance();
+                    tabFragment = FragmentFactory.getFragmentFactory().getFragment(NewChatFragment.class.getSimpleName());
                     break;
             }
 

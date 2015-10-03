@@ -50,7 +50,7 @@ public class ChatListFragment extends Fragment {
     public static final String LOG = UserChatList_act.class.getSimpleName();
     private ChatListRecyclerAdapter mChatListRecyclerAdapter;
     private RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private AQuery aQuery;
     private List<ParseObject> userList;
@@ -347,6 +347,11 @@ public class ChatListFragment extends Fragment {
                     // notify that item has changed and should be moved in the adapter to the top
                     mChatListRecyclerAdapter.notifyItemChanged(j); // j+1 due to header
                     mChatListRecyclerAdapter.notifyItemMoved(j, 0); // j+1 due to header
+                    //only scroll to the newly updated item of the list if the top is visible
+                    if(mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0){
+                        mLayoutManager.scrollToPosition(0);
+                    }
+
                     // remove the item from its old position in the list and current dateHolder corresponding to the current chat list
                     userList.remove(j);
                     dateHolderList.remove(j);

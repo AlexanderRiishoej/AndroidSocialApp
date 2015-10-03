@@ -5,6 +5,7 @@ package com.mycompany.loginapp.base;
  */
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,20 +15,23 @@ import android.view.MenuItem;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.navigationDrawer.NavigationDrawerFragment;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String LOG = BaseActivity.class.getSimpleName();
 
     private Toolbar mToolbar;
-    private DrawerLayout mDrawerLayout;
-    private NavigationDrawerFragment navigationDrawerFragment;
-
+    @Nullable @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    private NavigationDrawerFragment mNavigationDrawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
+        ButterKnife.bind(this);
         this.getToolbar();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         //mToolbar = (Toolbar) findViewById(R.id.toolbar_teal);
         if (mToolbar != null) {
@@ -43,10 +47,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (mDrawerLayout != null) {
             //setup the navigation drawer fragment
-            navigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().
+            mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().
                     findFragmentById(R.id.fragment_navigation_view);
-            if (navigationDrawerFragment != null && mDrawerLayout != null) {
-                navigationDrawerFragment.setUpDrawer(mDrawerLayout);
+            if (mNavigationDrawerFragment != null && mDrawerLayout != null) {
+                mNavigationDrawerFragment.setUpDrawer(mDrawerLayout);
             }
         }
     }
@@ -56,7 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     // Setting and getting the toolbar
     protected Toolbar getToolbar() {
         if (mToolbar == null) {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar_teal);
+            mToolbar = ButterKnife.findById(this, R.id.toolbar_teal);
             if (mToolbar != null) {
                 setSupportActionBar(mToolbar);
             }
@@ -66,7 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
 //        if (mDrawerToggle.onOptionsItemSelected(item)) {
 //            return true;
@@ -76,53 +80,32 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
 
-        if (navigationDrawerFragment.getNavigationDrawerToggle().onOptionsItemSelected(item) && mDrawerLayout != null) {
+        if (mNavigationDrawerFragment.getNavigationDrawerToggle().onOptionsItemSelected(item) && mDrawerLayout != null) {
             return true;
         }
 
-        switch (id) {
-//            case R.id.action_logout:
-//                LoginDialogClass.showLoginDialog(this, "Logging out. Please wait...");
-//                ParseUser.logOut();
-//                ProfileImageHolder.setImageFilesNull();
-//                ProfileHelperClass.setOffline();
-//                //EventBus.getDefault().post(new MessageFinishActivities());
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                    //startActivity(new Intent(this, Login_act.class));
-//                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-//                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-//
-//                    this.finish();
-//                } else {
-////                    startActivity(new Intent(this, Login_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-//                    startActivity(new Intent(this, Startup_act.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-//                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-//                    this.finish();
-//                }
-//                return true;
-
-        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onDestroy() {
         Log.d(LOG, "BaseActivity is destroyed. Belonging to context: " + this);
+        ButterKnife.unbind(this);
         super.onDestroy();
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (navigationDrawerFragment != null) {
-            navigationDrawerFragment.getNavigationDrawerToggle().syncState();
+        if (mNavigationDrawerFragment != null) {
+            mNavigationDrawerFragment.getNavigationDrawerToggle().syncState();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(navigationDrawerFragment.getNavigationView())) {
-            mDrawerLayout.closeDrawer(navigationDrawerFragment.getNavigationView());
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mNavigationDrawerFragment.getNavigationView())) {
+            mDrawerLayout.closeDrawer(mNavigationDrawerFragment.getNavigationView());
         } else {
             super.onBackPressed();
         }

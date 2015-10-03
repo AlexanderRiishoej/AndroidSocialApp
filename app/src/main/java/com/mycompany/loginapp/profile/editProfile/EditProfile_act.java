@@ -10,7 +10,6 @@ import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.BaseActivity;
 
 public class EditProfile_act extends BaseActivity {
-    private EditProfileFragment mEditProfileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +19,7 @@ public class EditProfile_act extends BaseActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(this.getResources().getColor(R.color.teal_700));
 
-        mEditProfileFragment = EditProfileFragment.newInstance();
+        EditProfileFragment mEditProfileFragment = EditProfileFragment.newInstance();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

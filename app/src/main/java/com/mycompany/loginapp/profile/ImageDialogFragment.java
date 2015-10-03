@@ -75,11 +75,11 @@ public class ImageDialogFragment extends DialogFragment {
                     .content("Error loading image")
                     .show();
         }
-//        final File imageFile = EventBus.getDefault().getStickyEvent(MessageImageDialog.class) == null ? null : (File)EventBus.getDefault().getStickyEvent(MessageImageDialog.class).value;
+//        final File mProfilePhotoFile = EventBus.getDefault().getStickyEvent(MessageImageDialog.class) == null ? null : (File)EventBus.getDefault().getStickyEvent(MessageImageDialog.class).value;
 //        final String imageUrl = EventBus.getDefault().getStickyEvent(MessageImageDialogUrl.class) == null ? null : EventBus.getDefault().getStickyEvent(MessageImageDialogUrl.class).mImageUrl;
 //
-//        if(imageFile != null) {
-//            MySingleton.getMySingleton().getPicasso().load(imageFile).centerCrop().fit().into(mImageView);
+//        if(mProfilePhotoFile != null) {
+//            MySingleton.getMySingleton().getPicasso().load(mProfilePhotoFile).centerCrop().fit().into(mImageView);
 //        }
 //        else if (imageUrl != null) {
 //            MySingleton.getMySingleton().getPicasso().load(imageUrl).centerCrop().fit().into(mImageView);

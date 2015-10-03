@@ -70,23 +70,24 @@
             android:contentDescription="arrow"
             android:visibility="gone"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/find_friends_button_layout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:gravity="center_vertical"
             android:layout_centerVertical="true">
         <Button
             android:id="@+id/find_friends_chat_button"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:background="@drawable/ripple_button_raised"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             android:textColor="@color/white"
             android:textSize="12sp"
+            android:paddingStart="@dimen/pad_16dp"
+            android:paddingEnd="@dimen/pad_16dp"
             android:text="Chat"/>
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
     <!--        android:text="@string/recent_chat"
      android:drawableLeft="@drawable/ic_online"

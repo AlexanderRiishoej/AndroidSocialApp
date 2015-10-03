@@ -65,6 +65,7 @@
         <activity
             android:name=".profile.ProfilePrivate_act"
             android:label="@string/title_activity_user"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -144,6 +145,10 @@
         <activity
             android:name=".profile.editProfile.EditProfile_act"
             android:label="@string/title_activity_edit_profile_act" >
+        </activity>
+        <activity
+            android:name=".friends.find_friends.FindFriends_act"
+            android:label="@string/title_activity_find_friends_act" >
         </activity>
     </application>
 

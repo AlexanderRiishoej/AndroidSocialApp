@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -30,7 +31,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
-public class SignIn_act extends BaseActivity {
+public class SignIn_act extends AppCompatActivity {
 
     public static final String LOG = Login_act.class.getSimpleName();
     private TextInputLayout mTextInputUsernameLayout, mTextInputPasswordLayout;
@@ -40,6 +41,7 @@ public class SignIn_act extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.login_form_2);
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -73,10 +75,10 @@ public class SignIn_act extends BaseActivity {
         pwd.setText(MySingleton.getMySingleton().getDefaultSharedPreferences().getString("password", ""));
     }
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.login_form_2;
-    }
+//    @Override
+//    protected int getLayoutResource() {
+//        return R.layout.login_form_2;
+//    }
 
     /**
      * Logs the User in.

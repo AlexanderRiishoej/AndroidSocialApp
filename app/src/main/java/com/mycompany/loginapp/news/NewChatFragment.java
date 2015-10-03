@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
 import com.mycompany.loginapp.base.ApplicationMain;
 import com.mycompany.loginapp.itemDecorators.FriendsDividerItemDecoration;
@@ -28,6 +27,7 @@ import com.mycompany.loginapp.clickListeners.ClickListener;
 import com.mycompany.loginapp.clickListeners.FriendsClickListener;
 import com.mycompany.loginapp.constants.ParseConstants;
 import com.mycompany.loginapp.eventMessages.MessageFindFriends;
+import com.mycompany.loginapp.itemDecorators.NewChatDividerItemDecoration;
 import com.mycompany.loginapp.profile.ProfilePublic_act;
 import com.mycompany.loginapp.utilities.Utilities;
 import com.parse.FindCallback;
@@ -37,30 +37,32 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FindFriendsFragment#newInstance} factory method to
+ * Use the {@link NewChatFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFriendsFragment extends Fragment {
-    public static final String LOG = FindFriendsFragment.class.getSimpleName();
-    private RecyclerView mRecyclerView;                           // Declaring RecyclerView
+public class NewChatFragment extends Fragment {
+    public static final String LOG = NewChatFragment.class.getSimpleName();
+    @Bind(R.id.finds_friends_recyclerView) RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private FindFriendsRecyclerAdapter mFriendsRecyclerAdapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private AQuery aQuery;
-    private FloatingActionButton mFabButton;
+    private NewChatRecyclerAdapter mFriendsRecyclerAdapter;
+    @Bind(R.id.find_friends_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.fab) FloatingActionButton mFabButton;
     private Context mActivityContext;
     private ProgressBar mProgressBar;
+    private List<ParseUser> mFriendsList;
 
-    public static FindFriendsFragment newInstance() {
-        final FindFriendsFragment fragment = new FindFriendsFragment();
+    public static NewChatFragment newInstance() {
+        final NewChatFragment fragment = new NewChatFragment();
         return fragment;
     }
 
-    public FindFriendsFragment() {
+    public NewChatFragment() {
         // Required empty public constructor
     }
 
@@ -69,18 +71,18 @@ public class FindFriendsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mActivityContext = getActivity();
         //EventBus.getDefault().register(this);
-        aQuery = new AQuery(mActivityContext);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friends, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_chat, container, false);
+        ButterKnife.bind(this, view);
         // Inflate the layout for this fragment
         mProgressBar = (ProgressBar) view.findViewById(R.id.find_friends_progress);
         //mFabButton = (ImageButton) findViewById(R.id.fabButton);
         this.initializeRecyclerView(view);
-        mFriendsRecyclerAdapter = new FindFriendsRecyclerAdapter(mActivityContext, mRecyclerView,
+        mFriendsRecyclerAdapter = new NewChatRecyclerAdapter(mActivityContext, this.mFriendsList,
                 new ClickListener() { //clickListener for the buttons inside every layout row
                     @Override
                     public void onClick(View view, int position) {
@@ -101,12 +103,11 @@ public class FindFriendsFragment extends Fragment {
                 new FriendsClickListener() { //clickListener for the entire main layout of the recyclerViews row
                     @Override
                     public void onClick(int position) {
-                        final int childViewPosition = position; // minus position of header
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            EventBus.getDefault().postSticky(new MessageFindFriends(mFriendsRecyclerAdapter.getParseUser(childViewPosition)));
+                            EventBus.getDefault().postSticky(new MessageFindFriends(mFriendsRecyclerAdapter.getParseUser(position)));
                             mActivityContext.startActivity(new Intent(mActivityContext, ProfilePublic_act.class));
                         } else {
-                            EventBus.getDefault().postSticky(new MessageFindFriends(mFriendsRecyclerAdapter.getParseUser(childViewPosition)));
+                            EventBus.getDefault().postSticky(new MessageFindFriends(mFriendsRecyclerAdapter.getParseUser(position)));
                             mActivityContext.startActivity(new Intent(mActivityContext, ProfilePublic_act.class));
                         }
                     }
@@ -116,8 +117,8 @@ public class FindFriendsFragment extends Fragment {
                 });
 
         mRecyclerView.setAdapter(mFriendsRecyclerAdapter);
+        this.getUsers();
         this.initializeSwipeRefreshLayout(view);
-        mFabButton = (FloatingActionButton) view.findViewById(R.id.fab);
         mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +131,6 @@ public class FindFriendsFragment extends Fragment {
     }
 
     private void initializeSwipeRefreshLayout(View view) {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.find_friends_swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.teal_500);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -154,14 +154,12 @@ public class FindFriendsFragment extends Fragment {
     }
 
     private void initializeRecyclerView(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.finds_friends_recyclerView);
-
         mRecyclerView.requestDisallowInterceptTouchEvent(true);
 
         mRecyclerView.setHasFixedSize(false);                            // Letting the system know that the list objects are of fixed size
         mLayoutManager = new LinearLayoutManager(mActivityContext);         // Creating a layout Manager
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new FriendsDividerItemDecoration(mActivityContext));
+        mRecyclerView.addItemDecoration(new NewChatDividerItemDecoration(mActivityContext));
         this.setItemTouchHelper();
         //not using the recyclers onClickListener since this recyclerView has different childViews with different independent clicks
 //        final RecyclerFindFriendsOnTouchListener mRecyclerFindFriendsOnTouchListener = new RecyclerFindFriendsOnTouchListener(mActivityContext, mRecyclerView, new ClickListener() {
@@ -215,6 +213,7 @@ public class FindFriendsFragment extends Fragment {
             @Override
             public void run() {
                 //refreshUserList();
+                getUsers();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
@@ -223,8 +222,8 @@ public class FindFriendsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mProgressBar.setVisibility(View.VISIBLE);
-        this.getUsers();
+        //mProgressBar.setVisibility(View.VISIBLE);
+        //this.getUsers();
     }
 
     /**

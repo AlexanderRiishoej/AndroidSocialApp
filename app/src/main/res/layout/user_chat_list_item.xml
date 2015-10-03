@@ -50,6 +50,7 @@
             android:orientation="horizontal"
             android:text="@string/username"
             android:textColor="@color/text_light_theme"
+            android:layout_marginRight="36dp"
             android:textSize="@dimen/txt_16sp" />
             <TextView
                 android:id="@+id/user_list_message_date"

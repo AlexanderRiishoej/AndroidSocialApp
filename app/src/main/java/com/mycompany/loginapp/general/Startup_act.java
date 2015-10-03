@@ -13,9 +13,6 @@ import android.view.View;
 
 import com.androidquery.AQuery;
 import com.mycompany.loginapp.R;
-import com.mycompany.loginapp.chat.ChatListFragment;
-import com.mycompany.loginapp.news.FindFriendsFragment;
-import com.mycompany.loginapp.news.WallPostFragment;
 
 import me.relex.circleindicator.CircleIndicator;
 

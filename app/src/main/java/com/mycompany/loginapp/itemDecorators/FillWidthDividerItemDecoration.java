@@ -25,7 +25,7 @@ public class FillWidthDividerItemDecoration extends RecyclerView.ItemDecoration 
 
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            if(i != 0 || i != 4) {
+            if(i != 0) {
                 View child = parent.getChildAt(i);
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();

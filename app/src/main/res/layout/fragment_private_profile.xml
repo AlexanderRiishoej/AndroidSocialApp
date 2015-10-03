@@ -1,7 +1,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_profile_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="false"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -256,7 +258,6 @@
                                 android:layout_marginBottom="@dimen/pad_8dp"
                                 android:layout_marginTop="@dimen/pad_8dp"
                                 android:layout_weight="0.5"
-                                android:onClick="showSnackBar"
                                 android:text="Edit profile" />
 
                             <Button

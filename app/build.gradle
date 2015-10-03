@@ -24,8 +24,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: 'android-query-full.0.26.8.jar') // https://code.google.com/p/android-query/
     compile fileTree(dir: 'libs', include: 'guava-18.0.jar') // https://code.google.com/p/guava-libraries/
     compile 'com.facebook.android:facebook-android-sdk:4.2.0'
-    compile 'com.android.support:design:23.0.0'
-    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.0'
     compile 'com.android.support:recyclerview-v7:23.0.0'
     compile 'com.jakewharton:butterknife:7.0.1' // https://github.com/JakeWharton/butterknife and http://jakewharton.github.io/butterknife/ for description
